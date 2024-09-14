@@ -1,16 +1,21 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { Suspense } from 'react';
 
-export default function ForgotPassword() {
+function ForgotPasswordContent() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [token, setToken] = useState<string | null>(null);
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const token = searchParams.get("token");
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    setToken(searchParams.get("token"));
+  }, []);
 
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -136,5 +141,13 @@ export default function ForgotPassword() {
 
       {message && <p className="mt-4 text-sm text-green-600">{message}</p>}
     </>
+  );
+}
+
+export default function ForgotPassword() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ForgotPasswordContent />
+    </Suspense>
   );
 }
