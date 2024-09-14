@@ -1,9 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../auth/[...nextauth]/options";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/prisma";
 
 export async function POST(req: Request) {
     const session = await getServerSession(authOptions);
@@ -22,6 +20,7 @@ export async function POST(req: Request) {
 
         return NextResponse.json({ user: updatedUser });
     } catch (error) {
+        console.error("Error in user update route:", error);
         return NextResponse.json({ error: "Failed to update user" }, { status: 500 });
     }
 }
