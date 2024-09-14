@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/prisma";
 
 export async function POST(req: Request) {
     try {
@@ -20,6 +18,7 @@ export async function POST(req: Request) {
 
         return NextResponse.json({ user: { id: user.id, name: user.name, email: user.email } });
     } catch (error: any) {
+        console.error("Error in signup route:", error);
         return NextResponse.json({ error: error.message || "User creation failed" }, { status: 500 });
     }
 }

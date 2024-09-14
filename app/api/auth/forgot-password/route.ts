@@ -1,9 +1,7 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
 import crypto from "crypto";
-import { sendPasswordResetEmail } from "@/lib/email"; // We'll create this next
-
-const prisma = new PrismaClient();
+import { sendPasswordResetEmail } from "@/lib/email";
+import { prisma } from "@/lib/prisma";
 
 export async function POST(req: Request) {
     const { email } = await req.json();
@@ -21,14 +19,13 @@ export async function POST(req: Request) {
             });
 
             // Send password reset email
-            const info = await sendPasswordResetEmail(email, resetToken);
-            console.log("Email sent:", info);
+            await sendPasswordResetEmail(email, resetToken);
         }
 
         // Always return a success message to prevent email enumeration
         return NextResponse.json({ message: "If an account exists for that email, a password reset link has been sent." });
     } catch (error) {
         console.error("Error in forgot-password route:", error);
-        return NextResponse.json({ error: "An error occurred: " + (error instanceof Error ? error.message : String(error)) }, { status: 500 });
+        return NextResponse.json({ error: "An error occurred" }, { status: 500 });
     }
 }

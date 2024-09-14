@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/prisma";
 
 export async function POST(req: Request) {
     const { token, password } = await req.json();
@@ -32,6 +30,7 @@ export async function POST(req: Request) {
 
         return NextResponse.json({ message: "Password reset successfully" });
     } catch (error) {
+        console.error("Error in reset-password route:", error);
         return NextResponse.json({ error: "An error occurred" }, { status: 500 });
     }
 }
