@@ -11,9 +11,10 @@ import React, { useState, useEffect } from 'react';
 type ChatBubbleProps = {
   type: 'student' | 'ai' | 'advisor' | 'system';
   children: React.ReactNode;
+  isVisible: boolean;
 };
 
-const ChatBubble: React.FC<ChatBubbleProps> = ({ type, children }) => {
+const ChatBubble: React.FC<ChatBubbleProps> = ({ type, children, isVisible }) => {
   const bubbleClasses = {
     student: 'bg-blue-100 text-blue-800 ml-auto',
     ai: 'bg-gray-100 text-gray-800',
@@ -22,7 +23,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ type, children }) => {
   };
 
   return (
-    <div className={`rounded-lg p-3 max-w-[80%] ${bubbleClasses[type]}`}>
+    <div className={`rounded-lg p-3 max-w-[80%] ${bubbleClasses[type]} transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
       {children}
     </div>
   );
@@ -125,8 +126,8 @@ export default function HeroHome() {
               <div className={`absolute inset-0 flex flex-col h-full transition-opacity duration-1000 ${isAdvisorChat ? 'opacity-0' : 'opacity-100'}`}>
                 <div className="mb-4 text-gray-500 text-sm">Chat with AI Assistant</div>
                 <div className="flex-grow overflow-y-auto space-y-4">
-                  {chatSteps.slice(0, currentStep + 1).map((step, index) => (
-                    <ChatBubble key={index} type={step.type as 'student' | 'ai' | 'system'}>
+                  {chatSteps.map((step, index) => (
+                    <ChatBubble key={index} type={step.type as 'student' | 'ai' | 'system'} isVisible={index <= currentStep}>
                       {step.message}
                     </ChatBubble>
                   ))}
@@ -135,8 +136,8 @@ export default function HeroHome() {
               <div className={`absolute inset-0 flex flex-col h-full transition-opacity duration-1000 ${isAdvisorChat ? 'opacity-100' : 'opacity-0'}`}>
                 <div className="mb-4 text-gray-500 text-sm">Chat with Academic Advisor</div>
                 <div className="flex-grow overflow-y-auto space-y-4">
-                  {advisorChat.slice(0, currentStep + 1).map((step, index) => (
-                    <ChatBubble key={index} type={step.type as 'advisor' | 'student'}>
+                  {advisorChat.map((step, index) => (
+                    <ChatBubble key={index} type={step.type as 'advisor' | 'student'} isVisible={index <= currentStep}>
                       {step.message}
                     </ChatBubble>
                   ))}
