@@ -14,9 +14,9 @@ export default function Sidebar({ expanded, setExpanded }: SidebarProps) {
     const pathname = usePathname();
 
     return (
-        <div className="fixed inset-y-0 left-0 flex items-center">
+        <div className={`fixed inset-y-0 left-0 z-30 transition-all duration-500 ease-in-out ${expanded ? "w-48" : "w-16"}`}>
             <div
-                className={`bg-white rounded-r-3xl shadow-lg transition-all duration-500 ease-in-out flex flex-col h-screen ${expanded ? "w-48" : "w-16"}`}
+                className="bg-white h-full rounded-r-3xl shadow-lg flex flex-col"
                 onMouseEnter={() => setExpanded(true)}
                 onMouseLeave={() => setExpanded(false)}
             >
