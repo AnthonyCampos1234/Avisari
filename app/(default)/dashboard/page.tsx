@@ -16,28 +16,30 @@ export default function Dashboard() {
     return (
         <div className="flex h-screen bg-gray-100">
             {/* Sidebar */}
-            <div
-                className={`bg-white shadow-lg transition-all duration-300 ease-in-out ${sidebarExpanded ? 'w-64' : 'w-16'}`}
-                onMouseEnter={() => setSidebarExpanded(true)}
-                onMouseLeave={() => setSidebarExpanded(false)}
-            >
-                <div className="flex h-16 items-center justify-center">
-                    <FiMenu className="text-2xl text-gray-600" />
+            <div className="p-4">
+                <div
+                    className={`bg-white rounded-3xl shadow-lg transition-all duration-300 ease-in-out h-[calc(100vh-2rem)] ${sidebarExpanded ? 'w-60' : 'w-20'}`}
+                    onMouseEnter={() => setSidebarExpanded(true)}
+                    onMouseLeave={() => setSidebarExpanded(false)}
+                >
+                    <div className="flex h-16 items-center justify-center">
+                        <FiMenu className="text-2xl text-gray-600" />
+                    </div>
+                    <nav className="mt-8">
+                        <SidebarLink icon={<FiHome />} title="Home" href="/dashboard" expanded={sidebarExpanded} />
+                        <SidebarLink icon={<FiBook />} title="Insight" href="/dashboard/insight" expanded={sidebarExpanded} />
+                        <SidebarLink icon={<FiDollarSign />} title="Savior" href="/dashboard/savior" expanded={sidebarExpanded} />
+                        <SidebarLink icon={<FiUser />} title="Profile" href="/dashboard/profile" expanded={sidebarExpanded} />
+                    </nav>
                 </div>
-                <nav className="mt-8">
-                    <SidebarLink icon={<FiHome />} title="Home" href="/dashboard" expanded={sidebarExpanded} />
-                    <SidebarLink icon={<FiBook />} title="Insight" href="/dashboard/insight" expanded={sidebarExpanded} />
-                    <SidebarLink icon={<FiDollarSign />} title="Savior" href="/dashboard/savior" expanded={sidebarExpanded} />
-                    <SidebarLink icon={<FiUser />} title="Profile" href="/dashboard/profile" expanded={sidebarExpanded} />
-                </nav>
             </div>
 
             {/* Main content */}
-            <div className="flex-1 overflow-auto">
-                <header className="bg-white p-4 shadow">
+            <div className="flex-1 flex flex-col overflow-hidden">
+                <header className="bg-white p-4 shadow z-10">
                     <h1 className="text-2xl font-semibold">Welcome, {session?.user?.name}!</h1>
                 </header>
-                <main className="p-6">
+                <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
                     <div className="grid gap-6 md:grid-cols-2">
                         {/* Insight Section */}
                         <DashboardCard
@@ -63,7 +65,7 @@ export default function Dashboard() {
 
 function SidebarLink({ icon, title, href, expanded }: { icon: React.ReactNode; title: string; href: string; expanded: boolean }) {
     return (
-        <Link href={href} className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-200">
+        <Link href={href} className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-200 rounded-lg">
             <span className="text-lg">{icon}</span>
             {expanded && <span className="ml-4">{title}</span>}
         </Link>
