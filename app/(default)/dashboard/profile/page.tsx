@@ -91,28 +91,6 @@ export default function Profile() {
     return (
         <div className="p-6 bg-gray-100 min-h-screen">
             <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
-                <div className="border-b border-gray-200 p-2 flex relative">
-                    <IconButton onClick={() => handlePopoverToggle('profile')} className="rounded-full transition-all duration-300 hover:bg-gray-100">
-                        <PersonIcon />
-                    </IconButton>
-                    <IconButton onClick={() => handlePopoverToggle('edit')} className="rounded-full transition-all duration-300 hover:bg-gray-100">
-                        <EditIcon />
-                    </IconButton>
-                    <AnimatePresence>
-                        {openPopover && (
-                            <motion.div
-                                ref={popoverRef}
-                                initial="hidden"
-                                animate="visible"
-                                exit="exit"
-                                variants={popoverVariants}
-                                className="absolute top-full left-0 mt-2 bg-white rounded-lg shadow-lg z-20"
-                            >
-                                <PopoverContent type={openPopover} />
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                </div>
                 <div className="p-6">
                     <h1 className="text-3xl font-bold text-gray-900 mb-6">User Profile</h1>
                     <motion.div

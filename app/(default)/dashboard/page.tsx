@@ -60,31 +60,6 @@ export default function Dashboard() {
     return (
         <div className="p-6 bg-gray-100 min-h-screen">
             <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
-                <div className="border-b border-gray-200 p-2 flex relative">
-                    <IconButton onClick={() => handlePopoverToggle('insight')} className="rounded-full transition-all duration-300 hover:bg-gray-100">
-                        <AssessmentIcon />
-                    </IconButton>
-                    <IconButton onClick={() => handlePopoverToggle('savior')} className="rounded-full transition-all duration-300 hover:bg-gray-100">
-                        <AttachMoneyIcon />
-                    </IconButton>
-                    <IconButton onClick={() => handlePopoverToggle('profile')} className="rounded-full transition-all duration-300 hover:bg-gray-100">
-                        <PersonIcon />
-                    </IconButton>
-                    <AnimatePresence>
-                        {openPopover && (
-                            <motion.div
-                                ref={popoverRef}
-                                initial="hidden"
-                                animate="visible"
-                                exit="exit"
-                                variants={popoverVariants}
-                                className="absolute top-full left-0 mt-2 bg-white rounded-lg shadow-lg z-20"
-                            >
-                                <PopoverContent type={openPopover} />
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                </div>
                 <div className="p-6">
                     <h1 className="text-3xl font-bold text-gray-900 mb-6">Welcome, {session?.user?.name}!</h1>
                     <div className="grid gap-6 md:grid-cols-3">
