@@ -1,84 +1,25 @@
 import Image from "next/image";
-import Canvas_Bug_Color_RGB from "@/public/images/Canvas_Bug_Color_RGB.svg";
-import Instructure_Bug_Color_RGB from "@/public/images/Instructure_Bug_Color_RGB.svg"
-import Google_Classroom from "@/public/images/Google_Classroom.svg";
-import LogoImage from "@/public/images/logo-01.svg";
-import AvatarImage01 from "@/public/images/avatar-01.jpg";
-import AvatarImage02 from "@/public/images/avatar-02.jpg";
-import AvatarImage03 from "@/public/images/avatar-03.jpg";
-import AvatarImage04 from "@/public/images/avatar-04.jpg";
+import Logo01 from "@/public/images/logo-01.svg";
+import Logo02 from "@/public/images/logo-02.svg";
+import Logo03 from "@/public/images/logo-03.svg";
+import Logo04 from "@/public/images/logo-04.svg";
+import Logo05 from "@/public/images/logo-05.svg";
+import Logo06 from "@/public/images/logo-06.svg";
+import Logo07 from "@/public/images/logo-07.svg";
+import Logo08 from "@/public/images/logo-08.svg";
+import Logo09 from "@/public/images/logo-09.svg";
 
 export default function BusinessCategories() {
   return (
     <section>
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="pb-12 md:pb-20">
-          {/* Section header */}
-          <div className="mx-auto max-w-3xl pb-12 text-center md:pb-20">
-            <h2 className="text-3xl font-bold text-gray-900 md:text-4xl">
-              Integrations
-            </h2>
-            <p className="mt-4 text-xl text-gray-600">
-              Nota Solutions seamlessly integrates with your favorite educational and scheduling tools
-            </p>
-          </div>
-          {/* Logos */}
+          {/* Tab panels */}
           <div className="relative flex h-[324px] items-center justify-center">
-            {/* Gradient glow */}
+            {/* Small blue dots */}
             <div className="absolute -z-10">
               <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width={432}
-                height={160}
-                viewBox="0 0 432 160"
-                fill="none"
-              >
-                <g opacity="0.6" filter="url(#filter0_f_2044_9)">
-                  <path
-                    className="fill-gradient"
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M80 112C62.3269 112 48 97.6731 48 80C48 62.3269 62.3269 48 80 48C97.6731 48 171 62.3269 171 80C171 97.6731 97.6731 112 80 112ZM352 112C369.673 112 384 97.6731 384 80C384 62.3269 369.673 48 352 48C334.327 48 261 62.3269 261 80C261 97.6731 334.327 112 352 112Z"
-                    fill="url(#colorfulGradient)"
-                  />
-                </g>
-                <defs>
-                  <linearGradient id="colorfulGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#FF6B6B" />
-                    <stop offset="25%" stopColor="#4ECDC4" />
-                    <stop offset="50%" stopColor="#45B7D1" />
-                    <stop offset="75%" stopColor="#6A5ACD" />
-                    <stop offset="100%" stopColor="#FF69B4" />
-                  </linearGradient>
-                  <filter
-                    id="filter0_f_2044_9"
-                    x={0}
-                    y={0}
-                    width={432}
-                    height={160}
-                    filterUnits="userSpaceOnUse"
-                    colorInterpolationFilters="sRGB"
-                  >
-                    <feFlood floodOpacity={0} result="BackgroundImageFix" />
-                    <feBlend
-                      mode="normal"
-                      in="SourceGraphic"
-                      in2="BackgroundImageFix"
-                      result="shape"
-                    />
-                    <feGaussianBlur
-                      stdDeviation={32}
-                      result="effect1_foregroundBlur_2044_9"
-                    />
-                  </filter>
-                </defs>
-              </svg>
-            </div>
-
-            {/* Small colorful dots */}
-            <div className="absolute -z-10">
-              <svg
-                className="fill-[url(#colorfulGradient)]"
+                className="fill-blue-500"
                 xmlns="http://www.w3.org/2000/svg"
                 width={164}
                 height={41}
@@ -178,13 +119,54 @@ export default function BusinessCategories() {
                 />
               </svg>
             </div>
-
+            {/* Blue glow */}
+            <div className="absolute -z-10">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width={432}
+                height={160}
+                viewBox="0 0 432 160"
+                fill="none"
+              >
+                <g opacity="0.6" filter="url(#filter0_f_2044_9)">
+                  <path
+                    className="fill-blue-500"
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M80 112C62.3269 112 48 97.6731 48 80C48 62.3269 62.3269 48 80 48C97.6731 48 171 62.3269 171 80C171 97.6731 97.6731 112 80 112ZM352 112C369.673 112 384 97.6731 384 80C384 62.3269 369.673 48 352 48C334.327 48 261 62.3269 261 80C261 97.6731 334.327 112 352 112Z"
+                  />
+                </g>
+                <defs>
+                  <filter
+                    id="filter0_f_2044_9"
+                    x={0}
+                    y={0}
+                    width={432}
+                    height={160}
+                    filterUnits="userSpaceOnUse"
+                    colorInterpolationFilters="sRGB"
+                  >
+                    <feFlood floodOpacity={0} result="BackgroundImageFix" />
+                    <feBlend
+                      mode="normal"
+                      in="SourceGraphic"
+                      in2="BackgroundImageFix"
+                      result="shape"
+                    />
+                    <feGaussianBlur
+                      stdDeviation={32}
+                      result="effect1_foregroundBlur_2044_9"
+                    />
+                  </filter>
+                </defs>
+              </svg>
+            </div>
             {/* Horizontal lines */}
-            <div className="absolute inset-x-0 top-0 -z-10 h-px bg-gradient-to-r from-transparent via-black to-transparent mix-blend-multiply"></div>
-            <div className="absolute inset-x-0 bottom-0 -z-10 h-px bg-gradient-to-r from-transparent via-black to-transparent mix-blend-multiply"></div>
-            <div className="absolute inset-x-[200px] top-1/2 -z-10 h-px bg-gradient-to-r from-transparent via-black/60 to-transparent mix-blend-multiply"></div>
-            <div className="absolute inset-x-0 top-1/2 -z-10 h-px -translate-y-[82px] bg-gradient-to-r from-transparent via-black to-transparent mix-blend-multiply before:absolute before:inset-y-0 before:w-24 before:animate-[line_10s_ease-in-out_infinite_both] before:bg-gradient-to-r before:via-black"></div>
-            <div className="absolute inset-x-0 top-1/2 -z-10 h-px translate-y-[82px] bg-gradient-to-r from-transparent via-black to-transparent mix-blend-multiply before:absolute before:inset-y-0 before:w-24 before:animate-[line_10s_ease-in-out_infinite_5s_both] before:bg-gradient-to-r before:via-black"></div>
+            <div className="absolute inset-x-0 top-0 -z-10 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent mix-blend-multiply"></div>
+            <div className="absolute inset-x-0 bottom-0 -z-10 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent mix-blend-multiply"></div>
+            <div className="absolute inset-x-[200px] top-1/2 -z-10 h-px bg-gradient-to-r from-transparent via-blue-500/60 to-transparent mix-blend-multiply"></div>
+            <div className="absolute inset-x-0 top-1/2 -z-10 h-px -translate-y-[82px] bg-gradient-to-r from-transparent via-gray-200 to-transparent mix-blend-multiply before:absolute before:inset-y-0 before:w-24 before:animate-[line_10s_ease-in-out_infinite_both] before:bg-gradient-to-r before:via-blue-500"></div>
+            <div className="absolute inset-x-0 top-1/2 -z-10 h-px translate-y-[82px] bg-gradient-to-r from-transparent via-gray-200 to-transparent mix-blend-multiply before:absolute before:inset-y-0 before:w-24 before:animate-[line_10s_ease-in-out_infinite_5s_both] before:bg-gradient-to-r before:via-blue-500"></div>
             {/* Diagonal lines */}
             <div className="absolute inset-x-[300px] top-1/2 -z-10 h-px rotate-[20deg] bg-gradient-to-r from-transparent via-gray-200 to-transparent mix-blend-multiply"></div>
             <div className="absolute inset-x-[300px] top-1/2 -z-10 h-px -rotate-[20deg] bg-gradient-to-r from-transparent via-gray-200 to-transparent mix-blend-multiply"></div>
@@ -192,15 +174,15 @@ export default function BusinessCategories() {
             <div className="absolute inset-y-0 left-1/2 -z-10 w-px -translate-x-[216px] bg-gradient-to-b from-gray-200 to-transparent mix-blend-multiply"></div>
             <div className="absolute inset-y-0 left-1/2 -z-10 w-px translate-x-[216px] bg-gradient-to-t from-gray-200 to-transparent mix-blend-multiply"></div>
             {/* Logos */}
-            <div className="absolute before:absolute before:-inset-3 before:animate-[spin_3s_linear_infinite] before:rounded-full before:border before:border-transparent before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)] before:[background:conic-gradient(from_180deg,transparent,url(#colorfulGradient))_border-box]">
+            <div className="absolute before:absolute before:-inset-3 before:animate-[spin_3s_linear_infinite] before:rounded-full before:border before:border-transparent before:[mask-composite:exclude_!important] before:[mask:linear-gradient(white_0_0)_padding-box,_linear-gradient(white_0_0)] before:[background:conic-gradient(from_180deg,transparent,theme(colors.blue.500))_border-box]">
               <div className="animate-[breath_8s_ease-in-out_infinite_both]">
                 <div className="flex h-24 w-24 items-center justify-center rounded-full bg-white shadow-lg shadow-black/[0.03] before:absolute before:inset-0 before:m-[8.334%] before:rounded-[inherit] before:border before:border-gray-700/5 before:bg-gray-200/60 before:[mask-image:linear-gradient(to_bottom,black,transparent)]">
                   <Image
                     className="relative"
-                    src={LogoImage}
+                    src={Logo01}
                     width={32}
                     height={32}
-                    alt="Nota Logo"
+                    alt="Logo 01"
                   />
                 </div>
               </div>
@@ -208,19 +190,28 @@ export default function BusinessCategories() {
 
             <div className="relative flex flex-col">
               <article className="flex h-full w-full items-center justify-center focus-visible:outline-none focus-visible:ring focus-visible:ring-indigo-300">
-                {/* Students */}
-                <div className="absolute -translate-x-[216px] -translate-y-[120px] text-center">
-                  <span className="text-sm font-semibold text-gray-700">Students</span>
-                </div>
                 <div className="absolute -translate-x-[136px]">
                   <div className="animate-[breath_7s_ease-in-out_3s_infinite_both]">
                     <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-lg shadow-black/[0.03] before:absolute before:inset-0 before:m-[8.334%] before:rounded-[inherit] before:border before:border-gray-700/5 before:bg-gray-200/60 before:[mask-image:linear-gradient(to_bottom,black,transparent)]">
                       <Image
                         className="relative"
-                        src={AvatarImage01}
+                        src={Logo02}
                         width={23}
                         height={22}
-                        alt="Student Avatar 01"
+                        alt="Logo 02"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="absolute translate-x-[136px]">
+                  <div className="animate-[breath_7s_ease-in-out_3.5s_infinite_both]">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-lg shadow-black/[0.03] before:absolute before:inset-0 before:m-[8.334%] before:rounded-[inherit] before:border before:border-gray-700/5 before:bg-gray-200/60 before:[mask-image:linear-gradient(to_bottom,black,transparent)]">
+                      <Image
+                        className="relative"
+                        src={Logo03}
+                        width={22}
+                        height={22}
+                        alt="Logo 03"
                       />
                     </div>
                   </div>
@@ -230,41 +221,75 @@ export default function BusinessCategories() {
                     <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white shadow-lg shadow-black/[0.03] before:absolute before:inset-0 before:m-[8.334%] before:rounded-[inherit] before:border before:border-gray-700/5 before:bg-gray-200/60 before:[mask-image:linear-gradient(to_bottom,black,transparent)]">
                       <Image
                         className="relative"
-                        src={AvatarImage02}
+                        src={Logo04}
                         width={24}
                         height={22}
-                        alt="Student Avatar 02"
+                        alt="Logo 04"
                       />
                     </div>
                   </div>
                 </div>
-
-                {/* Advisors */}
-                <div className="absolute translate-x-[216px] -translate-y-[120px] text-center">
-                  <span className="text-sm font-semibold text-gray-700">Advisors</span>
-                </div>
-                <div className="absolute translate-x-[136px]">
-                  <div className="animate-[breath_8s_ease-in-out_4s_infinite_both]">
-                    <div className="flex h-18 w-18 items-center justify-center rounded-full bg-white shadow-lg shadow-black/[0.03] before:absolute before:inset-0 before:m-[8.334%] before:rounded-[inherit] before:border before:border-gray-700/5 before:bg-gray-200/60 before:[mask-image:linear-gradient(to_bottom,black,transparent)]">
+                <div className="absolute -translate-y-[82px] translate-x-[216px]">
+                  <div className="animate-[breath_6s_ease-in-out_1.5s_infinite_both]">
+                    <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white shadow-lg shadow-black/[0.03] before:absolute before:inset-0 before:m-[8.334%] before:rounded-[inherit] before:border before:border-gray-700/5 before:bg-gray-200/60 before:[mask-image:linear-gradient(to_bottom,black,transparent)]">
                       <Image
                         className="relative"
-                        src={AvatarImage03}
-                        width={26}
-                        height={24}
-                        alt="Advisor Avatar 01"
+                        src={Logo05}
+                        width={25}
+                        height={25}
+                        alt="Logo 05"
                       />
                     </div>
                   </div>
                 </div>
                 <div className="absolute translate-x-[216px] translate-y-[82px]">
-                  <div className="animate-[breath_7s_ease-in-out_4.5s_infinite_both]">
-                    <div className="flex h-22 w-22 items-center justify-center rounded-full bg-white shadow-lg shadow-black/[0.03] before:absolute before:inset-0 before:m-[8.334%] before:rounded-[inherit] before:border before:border-gray-700/5 before:bg-gray-200/60 before:[mask-image:linear-gradient(to_bottom,black,transparent)]">
+                  <div className="animate-[breath_6s_ease-in-out_2s_infinite_both]">
+                    <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white shadow-lg shadow-black/[0.03] before:absolute before:inset-0 before:m-[8.334%] before:rounded-[inherit] before:border before:border-gray-700/5 before:bg-gray-200/60 before:[mask-image:linear-gradient(to_bottom,black,transparent)]">
                       <Image
                         className="relative"
-                        src={AvatarImage04}
-                        width={28}
-                        height={26}
-                        alt="Advisor Avatar 02"
+                        src={Logo06}
+                        width={20}
+                        height={18}
+                        alt="Logo 06"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="absolute -translate-x-[216px] translate-y-[82px]">
+                  <div className="animate-[breath_6s_ease-in-out_2.5s_infinite_both]">
+                    <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white shadow-lg shadow-black/[0.03] before:absolute before:inset-0 before:m-[8.334%] before:rounded-[inherit] before:border before:border-gray-700/5 before:bg-gray-200/60 before:[mask-image:linear-gradient(to_bottom,black,transparent)]">
+                      <Image
+                        className="relative"
+                        src={Logo07}
+                        width={25}
+                        height={25}
+                        alt="Logo 07"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="absolute -translate-x-[292px] opacity-40">
+                  <div className="animate-[breath_6s_ease-in-out_2s_infinite_both]">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full border border-gray-200/60 bg-white shadow-lg">
+                      <Image
+                        className="relative"
+                        src={Logo08}
+                        width={20}
+                        height={20}
+                        alt="Logo 08"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="absolute translate-x-[292px] opacity-40">
+                  <div className="animate-[breath_6s_ease-in-out_4s_infinite_both]">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full border border-gray-200/60 bg-white shadow-lg">
+                      <Image
+                        className="relative"
+                        src={Logo09}
+                        width={21}
+                        height={13}
+                        alt="Logo 09"
                       />
                     </div>
                   </div>
