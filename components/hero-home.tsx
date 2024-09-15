@@ -68,8 +68,7 @@ export default function HeroHome() {
   return (
     <section className="relative">
       <PageIllustration />
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        {/* Hero content */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6"> {/* Increased max-width */}
         <div className="pb-12 pt-32 md:pb-20 md:pt-40">
           {/* Section header */}
           <div className="pb-12 text-center md:pb-16">
@@ -118,14 +117,14 @@ export default function HeroHome() {
           </div>
           {/* Hero image */}
           <div
-            className="mx-auto max-w-3xl"
+            className="mx-auto max-w-4xl"
             data-aos="zoom-y-out"
             data-aos-delay={600}
           >
-            <div className="relative aspect-video rounded-2xl bg-white p-8 shadow-xl overflow-hidden">
+            <div className="relative aspect-video rounded-2xl bg-white p-10 shadow-xl overflow-hidden"> {/* Increased padding */}
               <div className={`absolute inset-0 flex flex-col h-full transition-opacity duration-1000 ${isAdvisorChat ? 'opacity-0' : 'opacity-100'}`}>
-                <div className="mb-4 text-gray-500 text-sm font-medium ml-2">Chat with AI Assistant</div>
-                <div className="flex-grow overflow-y-auto space-y-4 pr-4">
+                <div className="mb-6 text-gray-500 text-sm font-medium ml-4">Chat with AI Assistant</div> {/* Increased margin */}
+                <div className="flex-grow overflow-y-auto space-y-4 px-4"> {/* Added horizontal padding */}
                   {chatSteps.map((step, index) => (
                     <ChatBubble key={index} type={step.type as 'student' | 'ai' | 'system'} isVisible={index <= currentStep}>
                       {step.message}
@@ -134,8 +133,8 @@ export default function HeroHome() {
                 </div>
               </div>
               <div className={`absolute inset-0 flex flex-col h-full transition-opacity duration-1000 ${isAdvisorChat ? 'opacity-100' : 'opacity-0'}`}>
-                <div className="mb-4 text-gray-500 text-sm font-medium ml-2">Chat with Academic Advisor</div>
-                <div className="flex-grow overflow-y-auto space-y-4 pr-4">
+                <div className="mb-6 text-gray-500 text-sm font-medium ml-4">Chat with Academic Advisor</div> {/* Increased margin */}
+                <div className="flex-grow overflow-y-auto space-y-4 px-4"> {/* Added horizontal padding */}
                   {advisorChat.map((step, index) => (
                     <ChatBubble key={index} type={step.type as 'advisor' | 'student'} isVisible={index <= currentStep}>
                       {step.message}
