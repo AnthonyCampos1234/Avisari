@@ -6,6 +6,7 @@ export async function POST(req: Request) {
     try {
         const { name, email, phone, password } = await req.json();
         const hashedPassword = await bcrypt.hash(password, 10);
+        const now = new Date().toISOString();
 
         const { data: user, error } = await supabase
             .from('User')
@@ -14,6 +15,8 @@ export async function POST(req: Request) {
                 email,
                 phone,
                 password: hashedPassword,
+                createdAt: now,
+                updatedAt: now,
             })
             .select('id, name, email')
             .single();
