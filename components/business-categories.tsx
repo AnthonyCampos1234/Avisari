@@ -1,9 +1,10 @@
 import Image from "next/image";
+import Canvas_Bug_Color_RGB from "@/public/images/Canvas_Bug_Color_RGB.svg";
+import Instructure_Bug_Color_RGB from "@/public/images/Instructure_Bug_Color_RGB.svg"
+import Google_Classroom from "@/public/images/Google_Classroom.svg";
 import LogoImage from "@/public/images/logo-01.svg";
-import Avatar01 from "@/public/images/avatar-01.jpg";
-import Avatar02 from "@/public/images/avatar-02.jpg";
-import Avatar03 from "@/public/images/avatar-03.jpg";
-import Avatar04 from "@/public/images/avatar-04.jpg";
+import AvatarImage01 from "@/public/images/avatar-01.jpg";
+import AvatarImage02 from "@/public/images/avatar-02.jpg";
 
 export default function BusinessCategories() {
   return (
@@ -203,46 +204,35 @@ export default function BusinessCategories() {
               </div>
             </div>
 
-            <div className="relative flex w-full justify-between">
-              {/* Students (Left side) */}
-              <div className="absolute left-0 flex -translate-x-24 flex-col items-center">
-                <div className="flex flex-wrap justify-center gap-2">
-                  {[Avatar01, Avatar02, Avatar03].map((avatar, index) => (
-                    <div key={index} className={`animate-[breath_${6 + index}s_ease-in-out_${index * 0.5}s_infinite_both]`}>
-                      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-lg shadow-black/[0.03] before:absolute before:inset-0 before:m-[8.334%] before:rounded-[inherit] before:border before:border-gray-700/5 before:bg-gray-200/60 before:[mask-image:linear-gradient(to_bottom,black,transparent)]">
-                        <Image
-                          className="relative rounded-full"
-                          src={avatar}
-                          width={23}
-                          height={23}
-                          alt={`Student ${index + 1}`}
-                        />
-                      </div>
+            <div className="relative flex flex-col">
+              <article className="flex h-full w-full items-center justify-center focus-visible:outline-none focus-visible:ring focus-visible:ring-indigo-300">
+                <div className="absolute -translate-x-[136px]">
+                  <div className="animate-[breath_7s_ease-in-out_3s_infinite_both]">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-lg shadow-black/[0.03] before:absolute before:inset-0 before:m-[8.334%] before:rounded-[inherit] before:border before:border-gray-700/5 before:bg-gray-200/60 before:[mask-image:linear-gradient(to_bottom,black,transparent)]">
+                      <Image
+                        className="relative"
+                        src={AvatarImage01}
+                        width={23}
+                        height={22}
+                        alt="Avatar Logo 01"
+                      />
                     </div>
-                  ))}
+                  </div>
                 </div>
-                <p className="mt-4 text-center text-sm font-medium">Students</p>
-              </div>
-
-              {/* Advisors (Right side) */}
-              <div className="absolute right-0 flex translate-x-24 flex-col items-center">
-                <div className="flex flex-wrap justify-center gap-2">
-                  {[Avatar02, Avatar03, Avatar04].map((avatar, index) => (
-                    <div key={index} className={`animate-[breath_${7 + index}s_ease-in-out_${index * 0.5 + 1.5}s_infinite_both]`}>
-                      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-lg shadow-black/[0.03] before:absolute before:inset-0 before:m-[8.334%] before:rounded-[inherit] before:border before:border-gray-700/5 before:bg-gray-200/60 before:[mask-image:linear-gradient(to_bottom,black,transparent)]">
-                        <Image
-                          className="relative rounded-full"
-                          src={avatar}
-                          width={23}
-                          height={23}
-                          alt={`Advisor ${index + 1}`}
-                        />
-                      </div>
+                <div className="absolute -translate-x-[216px] -translate-y-[82px]">
+                  <div className="animate-[breath_6s_ease-in-out_3.5s_infinite_both]">
+                    <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white shadow-lg shadow-black/[0.03] before:absolute before:inset-0 before:m-[8.334%] before:rounded-[inherit] before:border before:border-gray-700/5 before:bg-gray-200/60 before:[mask-image:linear-gradient(to_bottom,black,transparent)]">
+                      <Image
+                        className="relative"
+                        src={AvatarImage02}
+                        width={24}
+                        height={22}
+                        alt="Avatar Logo 02"
+                      />
                     </div>
-                  ))}
+                  </div>
                 </div>
-                <p className="mt-4 text-center text-sm font-medium">Advisors</p>
-              </div>
+              </article>
             </div>
           </div>
         </div>
