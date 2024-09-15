@@ -4,10 +4,10 @@ import Logo02 from "@/public/images/noun-student-1939899.svg";
 import Logo03 from "@/public/images/noun-woman-advisor-5130955.svg";
 import Logo04 from "@/public/images/noun-student-1939899.svg";
 import Logo05 from "@/public/images/noun-woman-advisor-5130955.svg";
-import Logo06 from "@/public/images/noun-student-1939899.svg";
-import Logo07 from "@/public/images/noun-woman-advisor-5130955.svg";
-import Logo08 from "@/public/images/noun-woman-advisor-5130955.svg";
-import Logo09 from "@/public/images/noun-student-1939899.svg";
+import Logo06 from "@/public/images/noun-woman-advisor-5130955.svg";
+import Logo07 from "@/public/images/noun-student-1939899.svg";
+import Logo08 from "@/public/images/noun-student-1939899.svg";
+import Logo09 from "@/public/images/noun-woman-advisor-5130955.svg";
 
 export default function BusinessCategories() {
   return (
