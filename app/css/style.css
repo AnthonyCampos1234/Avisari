@@ -36,3 +36,7 @@
     animation-iteration-count: infinite;
     background: linear-gradient(45deg, #3498db, #e91e63, #9b59b6, #e74c3c);
 }
+
+.fill-gradient {
+    fill: url(#gradient);
+}
