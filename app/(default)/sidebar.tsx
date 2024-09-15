@@ -13,20 +13,13 @@ export default function Sidebar({ expanded, setExpanded }: SidebarProps) {
     const pathname = usePathname();
 
     return (
-        <div className="p-4 flex items-center">
+        <div className="h-full">
             <div
-                className={`bg-white/70 backdrop-blur-sm rounded-3xl shadow-lg transition-all duration-500 ease-in-out flex flex-col items-center py-4 ${expanded ? "w-48" : "w-16"
+                className={`h-full bg-white/70 backdrop-blur-sm shadow-lg transition-all duration-500 ease-in-out flex flex-col items-center py-4 ${expanded ? "w-48" : "w-16"
                     }`}
                 onMouseEnter={() => setExpanded(true)}
                 onMouseLeave={() => setExpanded(false)}
             >
-                <SidebarLink
-                    icon={<FiHome />}
-                    title="Home"
-                    href="/dashboard"
-                    expanded={expanded}
-                    active={pathname === "/dashboard"}
-                />
                 <SidebarLink
                     icon={<FiBook />}
                     title="Insight"
