@@ -1,32 +1,38 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 
 export async function POST(req: Request) {
     const { token, password } = await req.json();
 
     try {
-        const user = await prisma.user.findFirst({
-            where: {
-                resetToken: token,
-                resetTokenExpiry: { gt: new Date() },
-            },
-        });
+        // Find user with valid reset token
+        const { data: user, error: findError } = await supabase
+            .from('User')
+            .select('id')
+            .eq('resetToken', token)
+            .gt('resetTokenExpiry', new Date().toISOString())
+            .single();
 
-        if (!user) {
+        if (findError || !user) {
             return NextResponse.json({ error: "Invalid or expired reset token" }, { status: 400 });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        await prisma.user.update({
-            where: { id: user.id },
-            data: {
+        // Update user's password and clear reset token
+        const { error: updateError } = await supabase
+            .from('User')
+            .update({
                 password: hashedPassword,
                 resetToken: null,
                 resetTokenExpiry: null,
-            },
-        });
+            })
+            .eq('id', user.id);
+
+        if (updateError) {
+            throw updateError;
+        }
 
         return NextResponse.json({ message: "Password reset successfully" });
     } catch (error) {
