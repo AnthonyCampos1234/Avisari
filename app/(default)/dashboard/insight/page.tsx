@@ -6,18 +6,20 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 export default function Insight() {
     return (
-        <div className="p-8 bg-gray-50 min-h-screen pt-24"> {/* Added pt-24 for top padding */}
-            <h1 className="mb-8 text-4xl font-bold text-gray-900">Course Planner</h1>
-            <div className="grid grid-cols-12 gap-8">
-                <div className="col-span-12 lg:col-span-8">
-                    <Schedule />
-                </div>
-                <div className="col-span-12 lg:col-span-4 space-y-8">
-                    <ClassInputInterface />
-                    <AIAssistedModification />
-                    <AdvisorInteraction />
-                    <ProgressTracking />
-                    <ExportAndSharing />
+        <div className="p-8 bg-gray-50 min-h-screen pt-24 flex flex-col items-center">
+            <h1 className="mb-8 text-4xl font-bold text-gray-900 text-center">Course Planner</h1>
+            <div className="max-w-6xl w-full">
+                <div className="grid grid-cols-12 gap-8">
+                    <div className="col-span-12 lg:col-span-8">
+                        <Schedule />
+                    </div>
+                    <div className="col-span-12 lg:col-span-4 space-y-8">
+                        <ClassInputInterface />
+                        <AIAssistedModification />
+                        <AdvisorInteraction />
+                        <ProgressTracking />
+                        <ExportAndSharing />
+                    </div>
                 </div>
             </div>
         </div>

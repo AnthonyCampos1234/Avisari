@@ -16,47 +16,50 @@ export default function Sidebar({ expanded, setExpanded }: SidebarProps) {
     return (
         <div className="fixed inset-y-0 left-0 flex items-center">
             <div
-                className={`bg-white rounded-r-3xl shadow-lg transition-all duration-500 ease-in-out flex flex-col items-center justify-start py-8 h-screen ${expanded ? "w-48" : "w-16"
-                    }`}
+                className={`bg-white rounded-r-3xl shadow-lg transition-all duration-500 ease-in-out flex flex-col h-screen ${expanded ? "w-48" : "w-16"}`}
                 onMouseEnter={() => setExpanded(true)}
                 onMouseLeave={() => setExpanded(false)}
             >
-                <SidebarLink
-                    icon={<FiHome />}
-                    title="Home"
-                    href="/dashboard"
-                    expanded={expanded}
-                    active={pathname === "/dashboard"}
-                />
-                <SidebarLink
-                    icon={<FiBook />}
-                    title="Insight"
-                    href="/dashboard/insight"
-                    expanded={expanded}
-                    active={pathname === "/dashboard/insight"}
-                />
-                <SidebarLink
-                    icon={<FiDollarSign />}
-                    title="Savior"
-                    href="/dashboard/savior"
-                    expanded={expanded}
-                    active={pathname === "/dashboard/savior"}
-                />
-                <SidebarLink
-                    icon={<FiUser />}
-                    title="Profile"
-                    href="/dashboard/profile"
-                    expanded={expanded}
-                    active={pathname === "/dashboard/profile"}
-                />
-                <SidebarLink
-                    icon={<FiLogOut />}
-                    title="Logout"
-                    href="#"
-                    expanded={expanded}
-                    active={false}
-                    onClick={() => signOut()}
-                />
+                <div className="flex-grow flex flex-col items-center justify-start py-8">
+                    <SidebarLink
+                        icon={<FiHome />}
+                        title="Home"
+                        href="/dashboard"
+                        expanded={expanded}
+                        active={pathname === "/dashboard"}
+                    />
+                    <SidebarLink
+                        icon={<FiBook />}
+                        title="Insight"
+                        href="/dashboard/insight"
+                        expanded={expanded}
+                        active={pathname === "/dashboard/insight"}
+                    />
+                    <SidebarLink
+                        icon={<FiDollarSign />}
+                        title="Savior"
+                        href="/dashboard/savior"
+                        expanded={expanded}
+                        active={pathname === "/dashboard/savior"}
+                    />
+                    <SidebarLink
+                        icon={<FiUser />}
+                        title="Profile"
+                        href="/dashboard/profile"
+                        expanded={expanded}
+                        active={pathname === "/dashboard/profile"}
+                    />
+                </div>
+                <div className="mb-8">
+                    <SidebarLink
+                        icon={<FiLogOut />}
+                        title="Logout"
+                        href="#"
+                        expanded={expanded}
+                        active={false}
+                        onClick={() => signOut()}
+                    />
+                </div>
             </div>
         </div>
     );
