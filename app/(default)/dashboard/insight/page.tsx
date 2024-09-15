@@ -238,7 +238,7 @@ export default function Insight() {
                     </AnimatePresence>
                 </div>
                 <div className="p-6">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-6">Course Planner</h1>
+                    <h1 className="text-3xl font-bold text-gray-900 mb-6">Insight</h1>
                     <div className="mb-6">
                         <Button
                             onClick={handleGenerateAISchedule}
