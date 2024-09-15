@@ -16,7 +16,7 @@ export default function Sidebar({ expanded, setExpanded }: SidebarProps) {
     return (
         <div className="fixed inset-y-0 left-0 flex items-center">
             <div
-                className={`bg-white rounded-r-3xl shadow-lg transition-all duration-500 ease-in-out flex flex-col items-center justify-center py-4 h-[80vh] ${expanded ? "w-48" : "w-16"
+                className={`bg-white rounded-r-3xl shadow-lg transition-all duration-500 ease-in-out flex flex-col items-center justify-start py-8 h-screen ${expanded ? "w-48" : "w-16"
                     }`}
                 onMouseEnter={() => setExpanded(true)}
                 onMouseLeave={() => setExpanded(false)}

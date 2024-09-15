@@ -31,7 +31,7 @@ export default function Header() {
                 <li>
                   <button
                     onClick={() => signOut()}
-                    className="btn-sm bg-gray-800 text-gray-200 shadow hover:bg-gray-900"
+                    className="btn-sm bg-black text-white shadow hover:bg-gray-900"
                   >
                     Sign Out
                   </button>
@@ -50,7 +50,7 @@ export default function Header() {
                 <li>
                   <Link
                     href="/signup"
-                    className="btn-sm bg-gray-800 text-gray-200 shadow hover:bg-gray-900"
+                    className="btn-sm bg-black text-white shadow hover:bg-gray-900"
                   >
                     Register
                   </Link>
