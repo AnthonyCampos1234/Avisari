@@ -1,5 +1,6 @@
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 250">
-  <g transform="translate(70,125) scale(1.2)">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+
+  <g transform="translate(100,50) scale(1.9)">
     <circle cx="27" cy="19" r="2" fill="#00FF00"/>
     <circle cx="37" cy="19" r="2" fill="#00FF00"/>
     <path d="M32,25.91a6.38,6.38,0,0,0,3.55-1.08l-1.1-1.66a4.41,4.41,0,0,1-4.9,0l-1.1,1.66A6.38,6.38,0,0,0,32,25.91Z" fill="#00FF00"/>
