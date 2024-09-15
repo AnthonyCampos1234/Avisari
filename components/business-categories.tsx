@@ -6,14 +6,17 @@ import Logo04 from "@/public/images/noun-student-1939899.svg";
 import Logo05 from "@/public/images/noun-woman-advisor-5130955.svg";
 import Logo06 from "@/public/images/noun-student-1939899.svg";
 import Logo07 from "@/public/images/noun-woman-advisor-5130955.svg";
-import Logo08 from "@/public/images/noun-student-1939899.svg";
-import Logo09 from "@/public/images/noun-woman-advisor-5130955.svg";
+import Logo08 from "@/public/images/noun-woman-advisor-5130955.svg";
+import Logo09 from "@/public/images/noun-student-1939899.svg";
 
 export default function BusinessCategories() {
   return (
     <section>
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="pb-12 md:pb-20">
+          {/* Added title */}
+          <h2 className="text-3xl font-bold text-center mb-8">Connecting Students With Advisors</h2>
+
           {/* Tab panels */}
           <div className="relative flex h-[324px] items-center justify-center">
             {/* Small blue dots */}
