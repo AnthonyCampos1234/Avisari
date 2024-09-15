@@ -50,7 +50,7 @@ export default function Sidebar({ expanded, setExpanded }: SidebarProps) {
                         active={pathname === "/dashboard/profile"}
                     />
                 </div>
-                <div className="mb-8">
+                <div className="mb-8 flex justify-center w-full">
                     <SidebarLink
                         icon={<FiLogOut />}
                         title="Logout"
