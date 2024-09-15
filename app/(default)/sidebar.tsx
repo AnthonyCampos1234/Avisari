@@ -54,7 +54,7 @@ export default function Sidebar({ expanded, setExpanded }: SidebarProps) {
                     <SidebarLink
                         icon={<FiLogOut />}
                         title="Logout"
-                        href="#"
+                        href="/"
                         expanded={expanded}
                         active={false}
                         onClick={() => signOut()}
