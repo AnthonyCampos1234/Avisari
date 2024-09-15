@@ -1,11 +1,18 @@
-import { AuthOptions } from "next-auth";
+import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { supabase } from "@/lib/supabase";
 import bcrypt from "bcrypt";
-import { prisma } from "@/lib/prisma";
+import { DefaultSession } from "next-auth";
 
-export const authOptions: AuthOptions = {
-    adapter: PrismaAdapter(prisma),
+declare module "next-auth" {
+    interface Session extends DefaultSession {
+        user?: {
+            id: string;
+        } & DefaultSession["user"]
+    }
+}
+
+export const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
             name: "Credentials",
@@ -17,21 +24,23 @@ export const authOptions: AuthOptions = {
                 if (!credentials?.email || !credentials?.password) {
                     return null;
                 }
-                const user = await prisma.user.findUnique({
-                    where: {
-                        email: credentials.email
-                    }
-                });
-                if (!user) {
+
+                const { data: user, error } = await supabase
+                    .from('User')
+                    .select('*')
+                    .eq('email', credentials.email)
+                    .single();
+
+                if (error || !user) {
                     return null;
                 }
-                const isPasswordValid = await bcrypt.compare(
-                    credentials.password,
-                    user.password
-                );
+
+                const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
+
                 if (!isPasswordValid) {
                     return null;
                 }
+
                 return {
                     id: user.id,
                     email: user.email,
@@ -40,11 +49,21 @@ export const authOptions: AuthOptions = {
             }
         })
     ],
-    session: {
-        strategy: "jwt" as const
+    callbacks: {
+        async jwt({ token, user }) {
+            if (user) {
+                token.id = user.id;
+            }
+            return token;
+        },
+        async session({ session, token }) {
+            if (session.user) {
+                session.user.id = token.id as string;
+            }
+            return session;
+        }
     },
-    secret: process.env.NEXTAUTH_SECRET,
     pages: {
-        signIn: "/signin",
+        signIn: '/auth/signin',
     },
 };

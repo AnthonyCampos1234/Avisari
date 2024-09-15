@@ -1,22 +1,35 @@
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { sendPasswordResetEmail } from "@/lib/email";
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 
 export async function POST(req: Request) {
     const { email } = await req.json();
 
     try {
-        const user = await prisma.user.findUnique({ where: { email } });
+        // Check if user exists
+        const { data: user, error: findError } = await supabase
+            .from('User')
+            .select('id')
+            .eq('email', email)
+            .single();
 
         if (user) {
             const resetToken = crypto.randomBytes(20).toString("hex");
             const resetTokenExpiry = new Date(Date.now() + 3600000); // 1 hour from now
 
-            await prisma.user.update({
-                where: { email },
-                data: { resetToken, resetTokenExpiry },
-            });
+            // Update user with reset token
+            const { error: updateError } = await supabase
+                .from('User')
+                .update({
+                    resetToken,
+                    resetTokenExpiry: resetTokenExpiry.toISOString(),
+                })
+                .eq('email', email);
+
+            if (updateError) {
+                throw updateError;
+            }
 
             // Send password reset email
             await sendPasswordResetEmail(email, resetToken);

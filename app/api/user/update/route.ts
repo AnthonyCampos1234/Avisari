@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../auth/[...nextauth]/options";
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 
 export async function POST(req: Request) {
     const session = await getServerSession(authOptions);
@@ -13,10 +13,20 @@ export async function POST(req: Request) {
     const { name, email } = await req.json();
 
     try {
-        const updatedUser = await prisma.user.update({
-            where: { email: session.user?.email as string },
-            data: { name, email },
-        });
+        const { data: updatedUser, error } = await supabase
+            .from('User')
+            .update({ name, email })
+            .eq('email', session.user?.email as string)
+            .select()
+            .single();
+
+        if (error) {
+            throw error;
+        }
+
+        if (!updatedUser) {
+            return NextResponse.json({ error: "User not found" }, { status: 404 });
+        }
 
         return NextResponse.json({ user: updatedUser });
     } catch (error) {
