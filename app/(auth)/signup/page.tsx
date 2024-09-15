@@ -202,7 +202,7 @@ export default function SignUp() {
               '&:hover': { bgcolor: '#555' }
             }}
           >
-            Continue with your University
+            University Signup
           </Button>
           <Box sx={{ mt: 2, textAlign: 'center' }}>
             <Typography variant="body2" color="text.secondary">
