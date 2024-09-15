@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { Button, IconButton, Popover } from '@mui/material';
+import { Button, IconButton, TextField, List, ListItem, ListItemText } from '@mui/material';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import AddIcon from '@mui/icons-material/Add';
 import ChatIcon from '@mui/icons-material/Chat';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import ShareIcon from '@mui/icons-material/Share';
+import { motion, AnimatePresence } from 'framer-motion';
 
 type Semester = {
     name: string;
@@ -19,10 +20,11 @@ type Year = {
 };
 
 export default function Insight() {
-    const [activeSection, setActiveSection] = useState('schedule');
     const [schedule, setSchedule] = useState<Year[]>([]);
-    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const [openPopover, setOpenPopover] = useState('');
+    const [newCourse, setNewCourse] = useState({ code: '', name: '' });
+    const [chatMessage, setChatMessage] = useState('');
+    const [chatHistory, setChatHistory] = useState<string[]>([]);
 
     useEffect(() => {
         // Initialize empty schedule structure
@@ -55,42 +57,155 @@ export default function Insight() {
         setSchedule(data);
     };
 
-    const handlePopoverOpen = (event: React.MouseEvent<HTMLButtonElement>, popoverId: string) => {
-        setAnchorEl(event.currentTarget);
-        setOpenPopover(popoverId);
+    const handlePopoverToggle = (popoverId: string) => {
+        setOpenPopover(openPopover === popoverId ? '' : popoverId);
     };
 
-    const handlePopoverClose = () => {
-        setAnchorEl(null);
-        setOpenPopover('');
+    const handleAddCourse = () => {
+        if (newCourse.code && newCourse.name) {
+            // Add the new course to the first available semester
+            const updatedSchedule = [...schedule];
+            const firstYear = updatedSchedule[0];
+            const firstSemester = firstYear.semesters[0];
+            firstSemester.courses.push({
+                id: `course-${Date.now()}`, // Generate a unique ID
+                ...newCourse
+            });
+            setSchedule(updatedSchedule);
+            setNewCourse({ code: '', name: '' });
+            handlePopoverToggle(''); // Close the popover
+        }
+    };
+
+    const handleChatSubmit = () => {
+        if (chatMessage.trim()) {
+            setChatHistory(prev => [...prev, `You: ${chatMessage}`]);
+            // Here you would typically send the message to an AI service and get a response
+            // For now, we'll just echo a simple response
+            setTimeout(() => {
+                setChatHistory(prev => [...prev, `AI: Thanks for your message about "${chatMessage}". How can I assist you further?`]);
+            }, 1000);
+            setChatMessage('');
+        }
     };
 
     const renderPopoverContent = () => {
         switch (openPopover) {
             case 'add':
-                return <div className="p-4"><h2 className="text-lg font-bold">Add Courses</h2></div>;
+                return (
+                    <div className="p-4 w-64">
+                        <h2 className="text-lg font-bold mb-2">Add Course</h2>
+                        <TextField
+                            label="Course Code"
+                            value={newCourse.code}
+                            onChange={(e) => setNewCourse({ ...newCourse, code: e.target.value })}
+                            fullWidth
+                            margin="normal"
+                        />
+                        <TextField
+                            label="Course Name"
+                            value={newCourse.name}
+                            onChange={(e) => setNewCourse({ ...newCourse, name: e.target.value })}
+                            fullWidth
+                            margin="normal"
+                        />
+                        <Button onClick={handleAddCourse} variant="contained" color="primary" fullWidth>
+                            Add Course
+                        </Button>
+                    </div>
+                );
             case 'chat':
-                return <div className="p-4"><h2 className="text-lg font-bold">AI Assistant</h2></div>;
+                return (
+                    <div className="p-4 w-64">
+                        <h2 className="text-lg font-bold mb-2">AI Assistant</h2>
+                        <List className="h-40 overflow-y-auto mb-2">
+                            {chatHistory.map((msg, index) => (
+                                <ListItem key={index}>
+                                    <ListItemText primary={msg} />
+                                </ListItem>
+                            ))}
+                        </List>
+                        <TextField
+                            label="Message"
+                            value={chatMessage}
+                            onChange={(e) => setChatMessage(e.target.value)}
+                            fullWidth
+                            margin="normal"
+                        />
+                        <Button onClick={handleChatSubmit} variant="contained" color="primary" fullWidth>
+                            Send
+                        </Button>
+                    </div>
+                );
             case 'progress':
-                return <div className="p-4"><h2 className="text-lg font-bold">Progress Tracking</h2></div>;
+                return <div className="p-4 w-64"><h2 className="text-lg font-bold">Progress Tracking</h2></div>;
             case 'share':
-                return <div className="p-4"><h2 className="text-lg font-bold">Export/Share</h2></div>;
+                return <div className="p-4 w-64"><h2 className="text-lg font-bold">Export/Share</h2></div>;
             default:
                 return null;
         }
     };
 
-    const renderContent = () => {
-        switch (activeSection) {
-            case 'schedule':
-                return (
-                    <>
+    const popoverVariants = {
+        hidden: { opacity: 0, scale: 0.8, y: -20 },
+        visible: {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            transition: {
+                type: "spring",
+                stiffness: 300,
+                damping: 20
+            }
+        },
+        exit: {
+            opacity: 0,
+            scale: 0.8,
+            y: -20,
+            transition: {
+                duration: 0.2
+            }
+        }
+    };
+
+    return (
+        <div className="min-h-screen bg-gray-100">
+            <div className="max-w-7xl mx-auto p-4">
+                <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div className="border-b border-gray-200 p-2 flex relative">
+                        <IconButton onClick={() => handlePopoverToggle('add')} className="rounded-full transition-all duration-300 hover:bg-gray-100">
+                            <AddIcon />
+                        </IconButton>
+                        <IconButton onClick={() => handlePopoverToggle('chat')} className="rounded-full transition-all duration-300 hover:bg-gray-100">
+                            <ChatIcon />
+                        </IconButton>
+                        <IconButton onClick={() => handlePopoverToggle('progress')} className="rounded-full transition-all duration-300 hover:bg-gray-100">
+                            <AssessmentIcon />
+                        </IconButton>
+                        <IconButton onClick={() => handlePopoverToggle('share')} className="rounded-full transition-all duration-300 hover:bg-gray-100">
+                            <ShareIcon />
+                        </IconButton>
+                        <AnimatePresence>
+                            {openPopover && (
+                                <motion.div
+                                    initial="hidden"
+                                    animate="visible"
+                                    exit="exit"
+                                    variants={popoverVariants}
+                                    className="absolute top-full left-0 mt-2 bg-white rounded-lg shadow-lg z-10"
+                                >
+                                    {renderPopoverContent()}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
+                    <div className="p-6">
                         <h1 className="text-3xl font-bold text-gray-900 mb-6">Course Planner</h1>
                         <div className="mb-6">
                             <Button
                                 onClick={handleGenerateAISchedule}
                                 variant="contained"
-                                className="bg-gray-900 hover:bg-gray-700 text-white"
+                                className="bg-gray-900 hover:bg-gray-700 text-white rounded-full"
                             >
                                 Generate with AI
                             </Button>
@@ -136,59 +251,9 @@ export default function Insight() {
                                 </div>
                             ))}
                         </DragDropContext>
-                    </>
-                );
-            case 'add':
-                return <h2 className="text-2xl font-bold">Add Courses</h2>;
-            case 'chat':
-                return <h2 className="text-2xl font-bold">AI Assistant</h2>;
-            case 'progress':
-                return <h2 className="text-2xl font-bold">Progress Tracking</h2>;
-            case 'share':
-                return <h2 className="text-2xl font-bold">Export/Share</h2>;
-            default:
-                return null;
-        }
-    };
-
-    return (
-        <div className="p-4 bg-white min-h-screen">
-            <div className="w-full max-w-6xl mx-auto bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
-                <div className="flex flex-col">
-                    <div className="border-b border-gray-200 p-2 flex">
-                        <IconButton onClick={(e) => handlePopoverOpen(e, 'add')}>
-                            <AddIcon />
-                        </IconButton>
-                        <IconButton onClick={(e) => handlePopoverOpen(e, 'chat')}>
-                            <ChatIcon />
-                        </IconButton>
-                        <IconButton onClick={(e) => handlePopoverOpen(e, 'progress')}>
-                            <AssessmentIcon />
-                        </IconButton>
-                        <IconButton onClick={(e) => handlePopoverOpen(e, 'share')}>
-                            <ShareIcon />
-                        </IconButton>
-                    </div>
-                    <div className="flex-1 p-6 overflow-y-auto max-h-screen">
-                        {renderContent()}
                     </div>
                 </div>
             </div>
-            <Popover
-                open={Boolean(anchorEl)}
-                anchorEl={anchorEl}
-                onClose={handlePopoverClose}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                }}
-                transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'left',
-                }}
-            >
-                {renderPopoverContent()}
-            </Popover>
         </div>
     );
 }
