@@ -7,84 +7,27 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 export default function Insight() {
     return (
         <div className="p-8 bg-gray-50 min-h-screen">
-            <h1 className="mb-8 text-4xl font-bold text-gray-900">Course Planner</h1>
-            <div className="grid grid-cols-12 gap-8">
-                <div className="col-span-12 lg:col-span-8">
-                    <Schedule />
+            <h1 className="mb-8 text-4xl font-bold text-gray-900">Insight</h1>
+            <div className="grid grid-cols-12 gap-6">
+                <div className="col-span-12 lg:col-span-8 space-y-6">
+                    <AIGeneratedSchedule />
+                    <ScheduleCustomization />
                 </div>
-                <div className="col-span-12 lg:col-span-4 space-y-8">
+                <div className="col-span-12 lg:col-span-4 space-y-6">
                     <ClassInputInterface />
                     <AIAssistedModification />
                     <AdvisorInteraction />
+                </div>
+                <div className="col-span-12 md:col-span-6 lg:col-span-4">
                     <ProgressTracking />
+                </div>
+                <div className="col-span-12 md:col-span-6 lg:col-span-4">
+                    <CourseInformation />
+                </div>
+                <div className="col-span-12 lg:col-span-4">
                     <ExportAndSharing />
                 </div>
             </div>
-        </div>
-    );
-}
-
-function Schedule() {
-    const [semesters, setSemesters] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-
-    const onDragEnd = (result: any) => {
-        // Implement drag and drop logic here
-    };
-
-    const handleGenerateAISchedule = async () => {
-        setIsLoading(true);
-        // API call to get AI-generated schedule
-        // This is a placeholder and should be replaced with actual API call
-        const response = await fetch('/api/generate-schedule');
-        const data = await response.json();
-        setSemesters(data);
-        setIsLoading(false);
-    };
-
-    return (
-        <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200">
-            <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-semibold text-gray-900">Your Schedule</h2>
-                <Button
-                    onClick={handleGenerateAISchedule}
-                    variant="contained"
-                    className="bg-blue-600 hover:bg-blue-700 text-white"
-                    disabled={isLoading}
-                >
-                    {isLoading ? 'Generating...' : 'Generate with AI'}
-                </Button>
-            </div>
-            <DragDropContext onDragEnd={onDragEnd}>
-                {semesters.map((semester: any, semesterIndex: number) => (
-                    <Droppable droppableId={`semester-${semesterIndex}`} key={semesterIndex}>
-                        {(provided) => (
-                            <div
-                                {...provided.droppableProps}
-                                ref={provided.innerRef}
-                                className="mb-6 p-4 bg-gray-50 rounded-lg"
-                            >
-                                <h3 className="font-semibold text-lg text-gray-900 mb-3">Semester {semesterIndex + 1}</h3>
-                                {semester.courses.map((course: any, index: number) => (
-                                    <Draggable key={course.id} draggableId={course.id} index={index}>
-                                        {(provided) => (
-                                            <div
-                                                ref={provided.innerRef}
-                                                {...provided.draggableProps}
-                                                {...provided.dragHandleProps}
-                                                className="bg-white p-3 mb-2 rounded-md shadow-sm border border-gray-200 transition-all hover:shadow-md"
-                                            >
-                                                <span className="font-medium">{course.code}:</span> {course.name}
-                                            </div>
-                                        )}
-                                    </Draggable>
-                                ))}
-                                {provided.placeholder}
-                            </div>
-                        )}
-                    </Droppable>
-                ))}
-            </DragDropContext>
         </div>
     );
 }
@@ -101,21 +44,19 @@ function ClassInputInterface() {
     };
 
     return (
-        <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-200">
-            <h2 className="text-xl font-semibold mb-4 text-gray-900">Add Course</h2>
+        <div className="bg-white p-6 rounded-2xl shadow-md transition-all duration-300 hover:shadow-lg border border-gray-100">
+            <h2 className="text-xl font-semibold mb-4 text-gray-900">Add Completed Course</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <Autocomplete
                     options={[]} // This should be populated with course codes
-                    renderInput={(params) => <TextField {...params} label="Course Code" variant="outlined" />}
+                    renderInput={(params) => <TextField {...params} label="Course Code" />}
                     onInputChange={(_, newValue) => setCourseCode(newValue)}
-                    fullWidth
                 />
                 <TextField
                     label="Course Name"
                     value={courseName}
                     onChange={(e) => setCourseName(e.target.value)}
                     fullWidth
-                    variant="outlined"
                 />
                 <TextField
                     label="Credits"
@@ -123,19 +64,94 @@ function ClassInputInterface() {
                     value={credits}
                     onChange={(e) => setCredits(e.target.value)}
                     fullWidth
-                    variant="outlined"
                 />
                 <TextField
-                    label="Semester"
+                    label="Semester Taken"
                     value={semester}
                     onChange={(e) => setSemester(e.target.value)}
                     fullWidth
-                    variant="outlined"
                 />
-                <Button type="submit" variant="contained" fullWidth className="bg-green-600 hover:bg-green-700 text-white">
+                <Button type="submit" variant="contained" className="bg-gray-900 hover:bg-gray-800">
                     Add Course
                 </Button>
             </form>
+        </div>
+    );
+}
+
+function AIGeneratedSchedule() {
+    const [schedule, setSchedule] = useState([]);
+
+    useEffect(() => {
+        // Fetch AI-generated schedule from backend
+        fetchAISchedule();
+    }, []);
+
+    const fetchAISchedule = async () => {
+        // API call to get AI-generated schedule
+        // This is a placeholder and should be replaced with actual API call
+        const response = await fetch('/api/generate-schedule');
+        const data = await response.json();
+        setSchedule(data);
+    };
+
+    return (
+        <div className="bg-white p-8 rounded-2xl shadow-md transition-all duration-300 hover:shadow-lg border border-gray-100">
+            <h2 className="text-2xl font-semibold mb-6 text-gray-900">AI-Generated Schedule</h2>
+            {schedule.map((semester: any, index: number) => (
+                <div key={index} className="mb-4">
+                    <h3 className="font-semibold text-gray-900">Semester {index + 1}</h3>
+                    <ul>
+                        {semester.courses.map((course: any, courseIndex: number) => (
+                            <li key={courseIndex} className="text-gray-900">{course.code}: {course.name}</li>
+                        ))}
+                    </ul>
+                </div>
+            ))}
+        </div>
+    );
+}
+
+function ScheduleCustomization() {
+    const [semesters, setSemesters] = useState([]);
+
+    const onDragEnd = (result: any) => {
+        // Implement drag and drop logic here
+    };
+
+    return (
+        <div className="bg-white p-8 rounded-2xl shadow-md transition-all duration-300 hover:shadow-lg border border-gray-100">
+            <h2 className="text-2xl font-semibold mb-6 text-gray-900">Customize Your Schedule</h2>
+            <DragDropContext onDragEnd={onDragEnd}>
+                {semesters.map((semester: any, semesterIndex: number) => (
+                    <Droppable droppableId={`semester-${semesterIndex}`} key={semesterIndex}>
+                        {(provided) => (
+                            <div
+                                {...provided.droppableProps}
+                                ref={provided.innerRef}
+                                className="mb-4"
+                            >
+                                <h3 className="font-semibold text-gray-900">Semester {semesterIndex + 1}</h3>
+                                {semester.courses.map((course: any, index: number) => (
+                                    <Draggable key={course.id} draggableId={course.id} index={index}>
+                                        {(provided) => (
+                                            <div
+                                                ref={provided.innerRef}
+                                                {...provided.draggableProps}
+                                                {...provided.dragHandleProps}
+                                                className="bg-gray-100 p-2 mb-2 rounded text-gray-900"
+                                            >
+                                                {course.code}: {course.name}
+                                            </div>
+                                        )}
+                                    </Draggable>
+                                ))}
+                                {provided.placeholder}
+                            </div>
+                        )}
+                    </Droppable>
+                ))}
+            </DragDropContext>
         </div>
     );
 }
@@ -158,9 +174,9 @@ function AIAssistedModification() {
     };
 
     return (
-        <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-200">
-            <h2 className="text-xl font-semibold mb-4 text-gray-900">AI Assistant</h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="bg-white p-6 rounded-2xl shadow-md transition-all duration-300 hover:shadow-lg border border-gray-100">
+            <h2 className="text-xl font-semibold mb-4 text-gray-900">AI-Assisted Modification</h2>
+            <form onSubmit={handleSubmit} className="mb-4">
                 <TextField
                     label="Ask AI for schedule modifications"
                     value={userInput}
@@ -168,16 +184,15 @@ function AIAssistedModification() {
                     fullWidth
                     multiline
                     rows={3}
-                    variant="outlined"
                 />
-                <Button type="submit" variant="contained" fullWidth className="bg-purple-600 hover:bg-purple-700 text-white">
-                    Get AI Suggestions
+                <Button type="submit" variant="contained" className="mt-2 bg-gray-900 hover:bg-gray-800">
+                    Submit
                 </Button>
             </form>
             {aiResponse && (
-                <div className="mt-4 bg-purple-50 p-4 rounded-lg">
-                    <h3 className="font-semibold mb-2 text-purple-900">AI Suggestion:</h3>
-                    <p className="text-purple-800">{aiResponse}</p>
+                <div className="bg-gray-100 p-3 rounded">
+                    <h3 className="font-semibold mb-2 text-gray-900">AI Response:</h3>
+                    <p className="text-gray-900">{aiResponse}</p>
                 </div>
             )}
         </div>
@@ -201,7 +216,7 @@ function AdvisorInteraction() {
     };
 
     return (
-        <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-200">
+        <div className="bg-white p-6 rounded-2xl shadow-md transition-all duration-300 hover:shadow-lg border border-gray-100">
             <h2 className="text-xl font-semibold mb-4 text-gray-900">Advisor Interaction</h2>
             <div className="h-64 overflow-y-auto mb-4 border rounded p-2">
                 {messages.map((message: Message, index: number) => (
@@ -243,7 +258,7 @@ function ProgressTracking() {
     };
 
     return (
-        <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-200">
+        <div className="bg-white p-6 rounded-2xl shadow-md transition-all duration-300 hover:shadow-lg border border-gray-100">
             <h2 className="text-xl font-semibold mb-4 text-gray-900">Progress Tracking</h2>
             <div className="relative pt-1">
                 <div className="flex mb-2 items-center justify-between">
@@ -266,6 +281,25 @@ function ProgressTracking() {
     );
 }
 
+function CourseInformation() {
+    const [selectedCourse, setSelectedCourse] = useState<any>(null);
+
+    return (
+        <div className="bg-white p-6 rounded-2xl shadow-md transition-all duration-300 hover:shadow-lg border border-gray-100">
+            <h2 className="text-xl font-semibold mb-4 text-gray-900">Course Information</h2>
+            {selectedCourse ? (
+                <div>
+                    <h3 className="font-semibold mb-2 text-gray-900">{selectedCourse.code}: {selectedCourse.name}</h3>
+                    <p className="mb-2 text-gray-900">{selectedCourse.description}</p>
+                    <a href={selectedCourse.syllabus} target="_blank" rel="noopener noreferrer" className="text-gray-900 hover:underline">View Syllabus</a>
+                </div>
+            ) : (
+                <p className="text-gray-900">Select a course to view its information.</p>
+            )}
+        </div>
+    );
+}
+
 function ExportAndSharing() {
     const handleExport = (format: string) => {
         // Logic to export schedule in different formats
@@ -276,7 +310,7 @@ function ExportAndSharing() {
     };
 
     return (
-        <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-200">
+        <div className="bg-white p-6 rounded-2xl shadow-md transition-all duration-300 hover:shadow-lg border border-gray-100">
             <h2 className="text-xl font-semibold mb-4 text-gray-900">Export and Sharing</h2>
             <div className="space-x-2">
                 <Button onClick={() => handleExport('pdf')} variant="outlined" className="text-gray-900 border-gray-900 hover:bg-gray-900 hover:text-white">Export as PDF</Button>
