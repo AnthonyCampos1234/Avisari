@@ -7,3 +7,32 @@
 @import "additional-styles/theme.css";
 
 @import "tailwindcss/utilities";
+
+/* Gradient animation styles */
+@keyframes move {
+    100% {
+        transform: translate3d(0, 0, 1px) rotate(360deg);
+    }
+}
+
+.background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+}
+
+.background span {
+    width: 20vmin;
+    height: 20vmin;
+    border-radius: 20vmin;
+    backface-visibility: hidden;
+    position: absolute;
+    animation: move;
+    animation-duration: 45s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    background: linear-gradient(45deg, #3498db, #e91e63, #9b59b6, #e74c3c);
+}
