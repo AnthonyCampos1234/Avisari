@@ -70,17 +70,17 @@ function SidebarLink({
         <Link
             href={href}
             className={`flex items-center ${expanded ? "w-full" : "w-10"
-                } px-3 py-2 mb-2 text-gray-700 hover:bg-gray-200 rounded-full transition-all duration-500 ease-in-out ${active ? "bg-black text-white" : ""
+                } px-3 py-2 mb-2 text-gray-700 hover:bg-gray-200 rounded-full ${active ? "bg-black text-white" : ""
                 }`}
         >
             <div className={`flex items-center justify-center ${expanded ? "w-10" : "w-full"} transition-all duration-500 ease-in-out`}>
-                <span className="text-lg">{icon}</span>
+                <span className="text-lg transition-colors duration-200">{icon}</span>
             </div>
             <span
                 className={`ml-3 text-sm overflow-hidden transition-all duration-500 ease-in-out ${expanded ? "max-w-[100px] opacity-100" : "max-w-0 opacity-0"
                     }`}
             >
-                {title}
+                <span className="transition-colors duration-200">{title}</span>
             </span>
         </Link>
     );
