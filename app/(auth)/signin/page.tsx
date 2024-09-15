@@ -75,37 +75,6 @@ export default function SignIn() {
           overflow: 'hidden',
         }}
       >
-        <Box sx={{ width: '100%', borderBottom: 1, borderColor: 'divider', p: 2, display: 'flex', justifyContent: 'flex-start' }}>
-          <IconButton onClick={() => handlePopoverToggle('signin')} sx={{ mr: 1 }}>
-            <LoginIcon />
-          </IconButton>
-          <IconButton onClick={() => handlePopoverToggle('help')}>
-            <HelpIcon />
-          </IconButton>
-          <AnimatePresence>
-            {openPopover && (
-              <motion.div
-                ref={popoverRef}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                variants={popoverVariants}
-                style={{
-                  position: 'absolute',
-                  top: '100%',
-                  left: 0,
-                  zIndex: 1,
-                  marginTop: '0.5rem',
-                  backgroundColor: 'white',
-                  borderRadius: '0.5rem',
-                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-                }}
-              >
-                <PopoverContent type={openPopover} />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </Box>
         <Box sx={{ mt: 3, mb: 2, px: 4, width: '100%' }}>
           <Typography component="h1" variant="h4" align="center" gutterBottom>
             Sign in to your account
