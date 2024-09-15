@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import Link from "next/link";
-import { FiHome, FiBook, FiDollarSign, FiUser, FiMenu } from "react-icons/fi";
+import { FiHome, FiBook, FiDollarSign, FiUser } from "react-icons/fi";
 
 export default function Dashboard() {
     const { session, status } = useAuth(true);
@@ -18,19 +18,14 @@ export default function Dashboard() {
             {/* Sidebar */}
             <div className="p-4">
                 <div
-                    className={`bg-white rounded-3xl shadow-lg transition-all duration-300 ease-in-out h-[calc(100vh-2rem)] ${sidebarExpanded ? 'w-60' : 'w-20'}`}
+                    className={`bg-white rounded-3xl shadow-lg transition-all duration-300 ease-in-out h-[calc(100vh-2rem)] flex flex-col justify-between py-8 ${sidebarExpanded ? 'w-60' : 'w-20'}`}
                     onMouseEnter={() => setSidebarExpanded(true)}
                     onMouseLeave={() => setSidebarExpanded(false)}
                 >
-                    <div className="flex h-16 items-center justify-center">
-                        <FiMenu className="text-2xl text-gray-600" />
-                    </div>
-                    <nav className="mt-8">
-                        <SidebarLink icon={<FiHome />} title="Home" href="/dashboard" expanded={sidebarExpanded} />
-                        <SidebarLink icon={<FiBook />} title="Insight" href="/dashboard/insight" expanded={sidebarExpanded} />
-                        <SidebarLink icon={<FiDollarSign />} title="Savior" href="/dashboard/savior" expanded={sidebarExpanded} />
-                        <SidebarLink icon={<FiUser />} title="Profile" href="/dashboard/profile" expanded={sidebarExpanded} />
-                    </nav>
+                    <SidebarLink icon={<FiHome />} title="Home" href="/dashboard" expanded={sidebarExpanded} />
+                    <SidebarLink icon={<FiBook />} title="Insight" href="/dashboard/insight" expanded={sidebarExpanded} />
+                    <SidebarLink icon={<FiDollarSign />} title="Savior" href="/dashboard/savior" expanded={sidebarExpanded} />
+                    <SidebarLink icon={<FiUser />} title="Profile" href="/dashboard/profile" expanded={sidebarExpanded} />
                 </div>
             </div>
 
@@ -39,7 +34,7 @@ export default function Dashboard() {
                 <header className="bg-white p-4 shadow z-10">
                     <h1 className="text-2xl font-semibold">Welcome, {session?.user?.name}!</h1>
                 </header>
-                <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
+                <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6 pt-20">
                     <div className="grid gap-6 md:grid-cols-2">
                         {/* Insight Section */}
                         <DashboardCard
