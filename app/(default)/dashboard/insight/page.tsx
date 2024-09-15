@@ -6,9 +6,9 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 export default function Insight() {
     return (
-        <div className="p-6">
-            <h1 className="mb-4 text-2xl font-semibold">Insight</h1>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="p-6 bg-gray-100 min-h-screen">
+            <h1 className="mb-6 text-3xl font-bold text-gray-800">Insight</h1>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <ClassInputInterface />
                 <AIGeneratedSchedule />
                 <ScheduleCustomization />
@@ -34,7 +34,7 @@ function ClassInputInterface() {
     };
 
     return (
-        <div className="bg-white p-4 rounded-lg shadow">
+        <div className="bg-white p-6 rounded-xl shadow-lg transition-shadow duration-300 hover:shadow-xl">
             <h2 className="text-xl font-semibold mb-4">Add Completed Course</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <Autocomplete
@@ -86,7 +86,7 @@ function AIGeneratedSchedule() {
     };
 
     return (
-        <div className="bg-white p-4 rounded-lg shadow">
+        <div className="bg-white p-6 rounded-xl shadow-lg transition-shadow duration-300 hover:shadow-xl">
             <h2 className="text-xl font-semibold mb-4">AI-Generated Schedule</h2>
             {schedule.map((semester: any, index: number) => (
                 <div key={index} className="mb-4">
@@ -110,7 +110,7 @@ function ScheduleCustomization() {
     };
 
     return (
-        <div className="bg-white p-4 rounded-lg shadow">
+        <div className="bg-white p-6 rounded-xl shadow-lg transition-shadow duration-300 hover:shadow-xl">
             <h2 className="text-xl font-semibold mb-4">Customize Your Schedule</h2>
             <DragDropContext onDragEnd={onDragEnd}>
                 {semesters.map((semester: any, semesterIndex: number) => (
@@ -164,7 +164,7 @@ function AIAssistedModification() {
     };
 
     return (
-        <div className="bg-white p-4 rounded-lg shadow">
+        <div className="bg-white p-6 rounded-xl shadow-lg transition-shadow duration-300 hover:shadow-xl">
             <h2 className="text-xl font-semibold mb-4">AI-Assisted Modification</h2>
             <form onSubmit={handleSubmit} className="mb-4">
                 <TextField
@@ -206,7 +206,7 @@ function AdvisorInteraction() {
     };
 
     return (
-        <div className="bg-white p-4 rounded-lg shadow">
+        <div className="bg-white p-6 rounded-xl shadow-lg transition-shadow duration-300 hover:shadow-xl">
             <h2 className="text-xl font-semibold mb-4">Advisor Interaction</h2>
             <div className="h-64 overflow-y-auto mb-4 border rounded p-2">
                 {messages.map((message: Message, index: number) => (
@@ -248,7 +248,7 @@ function ProgressTracking() {
     };
 
     return (
-        <div className="bg-white p-4 rounded-lg shadow">
+        <div className="bg-white p-6 rounded-xl shadow-lg transition-shadow duration-300 hover:shadow-xl">
             <h2 className="text-xl font-semibold mb-4">Progress Tracking</h2>
             <div className="relative pt-1">
                 <div className="flex mb-2 items-center justify-between">
@@ -275,7 +275,7 @@ function CourseInformation() {
     const [selectedCourse, setSelectedCourse] = useState<any>(null);
 
     return (
-        <div className="bg-white p-4 rounded-lg shadow">
+        <div className="bg-white p-6 rounded-xl shadow-lg transition-shadow duration-300 hover:shadow-xl">
             <h2 className="text-xl font-semibold mb-4">Course Information</h2>
             {selectedCourse ? (
                 <div>
@@ -300,7 +300,7 @@ function ExportAndSharing() {
     };
 
     return (
-        <div className="bg-white p-4 rounded-lg shadow">
+        <div className="bg-white p-6 rounded-xl shadow-lg transition-shadow duration-300 hover:shadow-xl">
             <h2 className="text-xl font-semibold mb-4">Export and Sharing</h2>
             <div className="space-x-2">
                 <Button onClick={() => handleExport('pdf')} variant="outlined">Export as PDF</Button>
