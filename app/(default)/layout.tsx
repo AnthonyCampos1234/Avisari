@@ -1,18 +1,22 @@
 "use client";
 
-import { useEffect } from "react";
-
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
 import Header from "@/components/ui/header";
 import Footer from "@/components/ui/footer";
+import DashboardSidebar from "@/app/(default)/dashboard/sidebar/page";
 
 export default function DefaultLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+  const [sidebarExpanded, setSidebarExpanded] = useState(false);
+
   useEffect(() => {
     AOS.init({
       once: true,
@@ -22,12 +26,29 @@ export default function DefaultLayout({
     });
   });
 
+  const isDashboardRoute = pathname?.startsWith("/dashboard");
+
+  if (isDashboardRoute) {
+    return (
+      <div className="flex h-screen bg-gray-100">
+        <DashboardSidebar
+          expanded={sidebarExpanded}
+          setExpanded={setSidebarExpanded}
+        />
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <Header />
+          <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
+            {children}
+          </main>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <Header />
-
       <main className="grow">{children}</main>
-
       <Footer border={true} />
     </>
   );
