@@ -42,19 +42,27 @@ export default function HeroHome() {
 
   const advisorChat = [
     { type: 'advisor', message: "Hi there! I'm your academic advisor. I see you're interested in computer science courses. Let's discuss your academic goals and create a plan that aligns with your interests and degree requirements." },
+    { type: 'student', message: "Thank you! I'd love to discuss my options for next semester." },
+    { type: 'advisor', message: "Great! Let's start by reviewing your current progress and then we can explore some course options that will help you meet your goals." },
   ];
 
   useEffect(() => {
     const timer = setInterval(() => {
-      if (currentStep < chatSteps.length - 1) {
+      if (!isAdvisorChat && currentStep < chatSteps.length - 1) {
         setCurrentStep(prev => prev + 1);
-      } else if (currentStep === chatSteps.length - 1) {
+      } else if (!isAdvisorChat && currentStep === chatSteps.length - 1) {
         setIsAdvisorChat(true);
+        setCurrentStep(0);
+      } else if (isAdvisorChat && currentStep < advisorChat.length - 1) {
+        setCurrentStep(prev => prev + 1);
+      } else {
+        setIsAdvisorChat(false);
+        setCurrentStep(0);
       }
-    }, 2000); // Adjust timing as needed
+    }, 3000); // Adjust timing as needed
 
     return () => clearInterval(timer);
-  }, [currentStep]);
+  }, [currentStep, isAdvisorChat]);
 
   return (
     <section className="relative">
@@ -114,7 +122,7 @@ export default function HeroHome() {
             data-aos-delay={600}
           >
             <div className="relative aspect-video rounded-2xl bg-white p-6 shadow-xl overflow-hidden">
-              <div className={`flex flex-col h-full transition-opacity duration-500 ${isAdvisorChat ? 'opacity-0' : 'opacity-100'}`}>
+              <div className={`absolute inset-0 flex flex-col h-full transition-opacity duration-1000 ${isAdvisorChat ? 'opacity-0' : 'opacity-100'}`}>
                 <div className="mb-4 text-gray-500 text-sm">Chat with AI Assistant</div>
                 <div className="flex-grow overflow-y-auto space-y-4">
                   {chatSteps.slice(0, currentStep + 1).map((step, index) => (
@@ -124,11 +132,11 @@ export default function HeroHome() {
                   ))}
                 </div>
               </div>
-              <div className={`absolute inset-0 flex flex-col h-full transition-opacity duration-500 ${isAdvisorChat ? 'opacity-100' : 'opacity-0'}`}>
+              <div className={`absolute inset-0 flex flex-col h-full transition-opacity duration-1000 ${isAdvisorChat ? 'opacity-100' : 'opacity-0'}`}>
                 <div className="mb-4 text-gray-500 text-sm">Chat with Academic Advisor</div>
                 <div className="flex-grow overflow-y-auto space-y-4">
-                  {advisorChat.map((step, index) => (
-                    <ChatBubble key={index} type={step.type as 'advisor'}>
+                  {advisorChat.slice(0, currentStep + 1).map((step, index) => (
+                    <ChatBubble key={index} type={step.type as 'advisor' | 'student'}>
                       {step.message}
                     </ChatBubble>
                   ))}
