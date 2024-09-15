@@ -1,10 +1,9 @@
 import Image from "next/image";
 import PlanetImg from "@/public/images/planet.png";
 import PlanetOverlayImg from "@/public/images/planet-overlay.svg";
-import PlanetTagImg01 from "@/public/images/planet-tag-01.png";
-import PlanetTagImg02 from "@/public/images/planet-tag-02.png";
-import PlanetTagImg03 from "@/public/images/planet-tag-03.png";
-import PlanetTagImg04 from "@/public/images/planet-tag-04.png";
+import Boston_University_wordmark from "@/public/images/Boston_University_wordmark.svg";
+import Harvard_University_logo from "@/public/images/Harvard University logo.svg";
+import MIT_logo from "@/public/images/MIT_logo.svg";
 import Northeastern_Huskies from "@/public/images/Northeastern_Huskies.svg";
 
 export default function FeaturesPlanet() {
@@ -47,21 +46,21 @@ export default function FeaturesPlanet() {
                     />
                     <Image
                       className="absolute left-56 top-7 z-10 animate-[float_4s_ease-in-out_infinite_1s_both] opacity-30 transition-opacity duration-500"
-                      src={PlanetTagImg02}
+                      src={Boston_University_wordmark}
                       width={241}
                       height={56}
                       alt="Tag 02"
                     />
                     <Image
                       className="absolute -left-20 bottom-24 z-10 animate-[float_4s_ease-in-out_infinite_2s_both] opacity-25 transition-opacity duration-500"
-                      src={PlanetTagImg03}
+                      src={Harvard_University_logo}
                       width={243}
                       height={56}
                       alt="Tag 03"
                     />
                     <Image
                       className="absolute bottom-32 left-64 z-10 animate-[float_4s_ease-in-out_infinite_3s_both] opacity-80 transition-opacity duration-500"
-                      src={PlanetTagImg04}
+                      src={MIT_logo}
                       width={251}
                       height={56}
                       alt="Tag 04"
