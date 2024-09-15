@@ -7,7 +7,7 @@ import "aos/dist/aos.css";
 
 import Header from "@/components/ui/header";
 import Footer from "@/components/ui/footer";
-import Sidebar from "@/app/(default)/dashboard/sidebar/page";
+import Sidebar from "@/app/(default)/sidebar";
 
 export default function DefaultLayout({
   children,
