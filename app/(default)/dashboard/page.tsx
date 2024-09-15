@@ -14,11 +14,11 @@ export default function Dashboard() {
     }
 
     return (
-        <div className="flex h-screen bg-gray-100">
+        <div className="flex h-screen bg-gray-100 pt-16"> {/* Added pt-16 here */}
             {/* Sidebar */}
-            <div className="p-4">
+            <div className="p-4 flex items-center">
                 <div
-                    className={`bg-white/90 backdrop-blur-sm rounded-3xl shadow-lg transition-all duration-500 ease-in-out h-[calc(100vh-2rem)] flex flex-col justify-start py-4 ${sidebarExpanded ? 'w-48' : 'w-16'}`}
+                    className={`bg-white/90 backdrop-blur-sm rounded-3xl shadow-lg transition-all duration-500 ease-in-out h-[60vh] flex flex-col justify-center ${sidebarExpanded ? 'w-48' : 'w-16'}`}
                     onMouseEnter={() => setSidebarExpanded(true)}
                     onMouseLeave={() => setSidebarExpanded(false)}
                 >
@@ -31,10 +31,8 @@ export default function Dashboard() {
 
             {/* Main content */}
             <div className="flex-1 flex flex-col overflow-hidden">
-                <header className="bg-white/90 backdrop-blur-sm p-4 shadow z-10">
-                    <h1 className="text-2xl font-semibold">Welcome, {session?.user?.name}!</h1>
-                </header>
-                <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6 mt-16">
+                <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
+                    <h1 className="text-2xl font-semibold mb-6">Welcome, {session?.user?.name}!</h1>
                     <div className="grid gap-6 md:grid-cols-2">
                         {/* Insight Section */}
                         <DashboardCard
