@@ -30,7 +30,7 @@ export default function LargeTestimonial() {
               />
             </div>
             <p className="text-2xl font-bold text-gray-900">
-              “Notasolutions has been a game changer for our students. It's now easier than ever to{" "}
+              “Nota Solutions has been a game changer for our students. It's now easier than ever to{" "}
               <em className="italic text-gray-500">keep track of tasks</em>,
               it's become my go-to tool for everything.”
             </p>
