@@ -6,7 +6,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 export default function Insight() {
     return (
-        <div className="p-8 bg-gray-50 min-h-screen">
+        <div className="p-8 bg-gray-50 min-h-screen pt-24"> {/* Added pt-24 for top padding */}
             <h1 className="mb-8 text-4xl font-bold text-gray-900">Course Planner</h1>
             <div className="grid grid-cols-12 gap-8">
                 <div className="col-span-12 lg:col-span-8">
