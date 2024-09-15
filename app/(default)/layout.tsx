@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { useSession } from "next-auth/react";
 
 import Header from "@/components/ui/header";
 import Footer from "@/components/ui/footer";
@@ -16,6 +17,7 @@ export default function DefaultLayout({
 }) {
   const pathname = usePathname();
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
+  const { data: session, status } = useSession();
 
   useEffect(() => {
     AOS.init({
@@ -28,22 +30,23 @@ export default function DefaultLayout({
 
   const isDashboardRoute = pathname?.startsWith("/dashboard");
 
-  return (
-    <div className="flex h-screen bg-gray-100">
-      <div className="flex-shrink-0">
-        <Sidebar
-          expanded={sidebarExpanded}
-          setExpanded={setSidebarExpanded}
-        />
+  if (status === "authenticated") {
+    return (
+      <div className="flex h-screen bg-gray-100">
+        <div className="flex-shrink-0">
+          <Sidebar
+            expanded={sidebarExpanded}
+            setExpanded={setSidebarExpanded}
+          />
+        </div>
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
+            {children}
+          </main>
+        </div>
       </div>
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Header />
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
-          {children}
-        </main>
-      </div>
-    </div>
-  );
+    );
+  }
 
   return (
     <>
