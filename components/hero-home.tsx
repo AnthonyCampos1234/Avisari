@@ -6,7 +6,7 @@ import Avatar03 from "@/public/images/avatar-03.jpg";
 import Avatar04 from "@/public/images/avatar-04.jpg";
 import Avatar05 from "@/public/images/avatar-05.jpg";
 import Avatar06 from "@/public/images/avatar-06.jpg";
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 type ChatBubbleProps = {
   type: 'student' | 'ai' | 'advisor' | 'system';
@@ -29,6 +29,33 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ type, children }) => {
 };
 
 export default function HeroHome() {
+  const [currentStep, setCurrentStep] = useState(0);
+  const [isAdvisorChat, setIsAdvisorChat] = useState(false);
+
+  const chatSteps = [
+    { type: 'student', message: "Hello, I need help with my course selection." },
+    { type: 'ai', message: "Of course! I'd be happy to help. What are your interests and current major?" },
+    { type: 'student', message: "I'm interested in computer science, but I'm not sure which courses to take next semester." },
+    { type: 'ai', message: "Based on your interests, I recommend considering courses in algorithms, data structures, and software engineering. However, for more personalized advice, I suggest speaking with an academic advisor." },
+    { type: 'system', message: "Connecting you with an advisor..." },
+  ];
+
+  const advisorChat = [
+    { type: 'advisor', message: "Hi there! I'm your academic advisor. I see you're interested in computer science courses. Let's discuss your academic goals and create a plan that aligns with your interests and degree requirements." },
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (currentStep < chatSteps.length - 1) {
+        setCurrentStep(prev => prev + 1);
+      } else if (currentStep === chatSteps.length - 1) {
+        setIsAdvisorChat(true);
+      }
+    }, 2000); // Adjust timing as needed
+
+    return () => clearInterval(timer);
+  }, [currentStep]);
+
   return (
     <section className="relative">
       <PageIllustration />
@@ -86,16 +113,25 @@ export default function HeroHome() {
             data-aos="zoom-y-out"
             data-aos-delay={600}
           >
-            <div className="relative aspect-video rounded-2xl bg-white p-6 shadow-xl">
-              <div className="flex flex-col h-full">
+            <div className="relative aspect-video rounded-2xl bg-white p-6 shadow-xl overflow-hidden">
+              <div className={`flex flex-col h-full transition-opacity duration-500 ${isAdvisorChat ? 'opacity-0' : 'opacity-100'}`}>
                 <div className="mb-4 text-gray-500 text-sm">Chat with AI Assistant</div>
                 <div className="flex-grow overflow-y-auto space-y-4">
-                  <ChatBubble type="student">Hello, I need help with my course selection.</ChatBubble>
-                  <ChatBubble type="ai">Of course! I'd be happy to help. What are your interests and current major?</ChatBubble>
-                  <ChatBubble type="student">I'm interested in computer science, but I'm not sure which courses to take next semester.</ChatBubble>
-                  <ChatBubble type="ai">Based on your interests, I recommend considering courses in algorithms, data structures, and software engineering. However, for more personalized advice, I suggest speaking with an academic advisor.</ChatBubble>
-                  <ChatBubble type="system">Connecting you with an advisor...</ChatBubble>
-                  <ChatBubble type="advisor">Hi there! I'm your academic advisor. I see you're interested in computer science courses. Let's discuss your academic goals and create a plan that aligns with your interests and degree requirements.</ChatBubble>
+                  {chatSteps.slice(0, currentStep + 1).map((step, index) => (
+                    <ChatBubble key={index} type={step.type as 'student' | 'ai' | 'system'}>
+                      {step.message}
+                    </ChatBubble>
+                  ))}
+                </div>
+              </div>
+              <div className={`absolute inset-0 flex flex-col h-full transition-opacity duration-500 ${isAdvisorChat ? 'opacity-100' : 'opacity-0'}`}>
+                <div className="mb-4 text-gray-500 text-sm">Chat with Academic Advisor</div>
+                <div className="flex-grow overflow-y-auto space-y-4">
+                  {advisorChat.map((step, index) => (
+                    <ChatBubble key={index} type={step.type as 'advisor'}>
+                      {step.message}
+                    </ChatBubble>
+                  ))}
                 </div>
               </div>
             </div>
