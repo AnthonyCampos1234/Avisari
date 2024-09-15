@@ -7,7 +7,7 @@ import "aos/dist/aos.css";
 
 import Header from "@/components/ui/header";
 import Footer from "@/components/ui/footer";
-import DashboardSidebar from "@/app/(default)/dashboard/sidebar/page";
+import Sidebar from "@/app/(default)/dashboard/sidebar/page";
 
 export default function DefaultLayout({
   children,
@@ -31,7 +31,7 @@ export default function DefaultLayout({
   if (isDashboardRoute) {
     return (
       <div className="flex h-screen bg-gray-100">
-        <DashboardSidebar
+        <Sidebar
           expanded={sidebarExpanded}
           setExpanded={setSidebarExpanded}
         />
