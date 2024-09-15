@@ -165,7 +165,7 @@ export default function SignIn() {
               '&:hover': { bgcolor: '#555' }
             }}
           >
-            Continue with your University
+            University Signin
           </Button>
           <Box sx={{ mt: 2, textAlign: 'center' }}>
             <Link href="/forgot-password" passHref>
