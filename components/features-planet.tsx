@@ -5,6 +5,7 @@ import PlanetTagImg01 from "@/public/images/planet-tag-01.png";
 import PlanetTagImg02 from "@/public/images/planet-tag-02.png";
 import PlanetTagImg03 from "@/public/images/planet-tag-03.png";
 import PlanetTagImg04 from "@/public/images/planet-tag-04.png";
+import Northeastern_Huskies from "@/public/images/Northeastern_Huskies.svg";
 
 export default function FeaturesPlanet() {
   return (
@@ -39,7 +40,7 @@ export default function FeaturesPlanet() {
                   <div>
                     <Image
                       className="absolute -left-28 top-16 z-10 animate-[float_4s_ease-in-out_infinite_both] opacity-80 transition-opacity duration-500"
-                      src={PlanetTagImg01}
+                      src={Northeastern_Huskies}
                       width={253}
                       height={56}
                       alt="Tag 01"
