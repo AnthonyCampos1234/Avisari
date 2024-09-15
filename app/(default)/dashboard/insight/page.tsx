@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Button, IconButton, TextField, List, ListItem, ListItemText } from '@mui/material';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import AddIcon from '@mui/icons-material/Add';
@@ -25,6 +25,7 @@ export default function Insight() {
     const [newCourse, setNewCourse] = useState({ code: '', name: '' });
     const [chatMessage, setChatMessage] = useState('');
     const [chatHistory, setChatHistory] = useState<string[]>([]);
+    const popoverRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         // Initialize empty schedule structure
@@ -57,9 +58,9 @@ export default function Insight() {
         setSchedule(data);
     };
 
-    const handlePopoverToggle = (popoverId: string) => {
-        setOpenPopover(openPopover === popoverId ? '' : popoverId);
-    };
+    const handlePopoverToggle = useCallback((popoverId: string) => {
+        setOpenPopover(prevState => prevState === popoverId ? '' : popoverId);
+    }, []);
 
     const handleAddCourse = () => {
         if (newCourse.code && newCourse.name) {
@@ -90,6 +91,16 @@ export default function Insight() {
     };
 
     const renderPopoverContent = () => {
+        const buttonStyle = {
+            backgroundColor: '#111827',
+            '&:hover': {
+                backgroundColor: '#374151',
+            },
+            borderRadius: '9999px',
+            textTransform: 'none',
+            color: 'white',
+        };
+
         switch (openPopover) {
             case 'add':
                 return (
@@ -109,7 +120,7 @@ export default function Insight() {
                             fullWidth
                             margin="normal"
                         />
-                        <Button onClick={handleAddCourse} variant="contained" color="primary" fullWidth>
+                        <Button onClick={handleAddCourse} variant="contained" fullWidth sx={buttonStyle}>
                             Add Course
                         </Button>
                     </div>
@@ -132,15 +143,29 @@ export default function Insight() {
                             fullWidth
                             margin="normal"
                         />
-                        <Button onClick={handleChatSubmit} variant="contained" color="primary" fullWidth>
+                        <Button onClick={handleChatSubmit} variant="contained" fullWidth sx={buttonStyle}>
                             Send
                         </Button>
                     </div>
                 );
             case 'progress':
-                return <div className="p-4 w-64"><h2 className="text-lg font-bold">Progress Tracking</h2></div>;
+                return (
+                    <div className="p-4 w-64">
+                        <h2 className="text-lg font-bold mb-2">Progress Tracking</h2>
+                        <Button variant="contained" fullWidth sx={buttonStyle}>
+                            View Progress
+                        </Button>
+                    </div>
+                );
             case 'share':
-                return <div className="p-4 w-64"><h2 className="text-lg font-bold">Export/Share</h2></div>;
+                return (
+                    <div className="p-4 w-64">
+                        <h2 className="text-lg font-bold mb-2">Export/Share</h2>
+                        <Button variant="contained" fullWidth sx={buttonStyle}>
+                            Share Schedule
+                        </Button>
+                    </div>
+                );
             default:
                 return null;
         }
@@ -168,6 +193,19 @@ export default function Insight() {
         }
     };
 
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (popoverRef.current && !popoverRef.current.contains(event.target as Node)) {
+                setOpenPopover('');
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
     return (
         <div className="p-6">
             <div className="bg-white rounded-lg shadow-lg overflow-hidden">
@@ -187,6 +225,7 @@ export default function Insight() {
                     <AnimatePresence>
                         {openPopover && (
                             <motion.div
+                                ref={popoverRef}
                                 initial="hidden"
                                 animate="visible"
                                 exit="exit"
