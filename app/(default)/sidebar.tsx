@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FiHome, FiBook, FiDollarSign, FiUser, FiLogOut } from "react-icons/fi";
 import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 type SidebarProps = {
     expanded: boolean;
@@ -12,6 +13,12 @@ type SidebarProps = {
 
 export default function Sidebar({ expanded, setExpanded }: SidebarProps) {
     const pathname = usePathname();
+    const router = useRouter();
+
+    const handleLogout = async () => {
+        await signOut({ redirect: false });
+        router.push('/');
+    };
 
     return (
         <div className={`fixed inset-y-0 left-0 z-30 transition-all duration-500 ease-in-out ${expanded ? "w-48" : "w-16"}`}>
@@ -57,7 +64,7 @@ export default function Sidebar({ expanded, setExpanded }: SidebarProps) {
                         href="/"
                         expanded={expanded}
                         active={false}
-                        onClick={() => signOut()}
+                        onClick={handleLogout}
                     />
                 </div>
             </div>
@@ -94,7 +101,7 @@ function SidebarLink({
         </>
     );
 
-    const className = `flex items-center ${expanded ? "w-full" : "w-10"
+    const className = `flex items-center ${expanded ? "w-[calc(100%-8px)] mx-1" : "w-10"
         } px-3 py-2 mb-2 text-gray-700 hover:bg-gray-200 rounded-full ${active ? "bg-black text-white" : ""
         }`;
 
