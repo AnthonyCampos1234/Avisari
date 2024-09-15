@@ -15,7 +15,7 @@ export default function Sidebar({ expanded, setExpanded }: SidebarProps) {
     return (
         <div className="p-4 flex items-center">
             <div
-                className={`bg-white/30 backdrop-blur-sm rounded-3xl shadow-lg transition-all duration-700 ease-in-out flex flex-col justify-center py-4 ${expanded ? "w-48" : "w-16"
+                className={`bg-white/70 backdrop-blur-sm rounded-3xl shadow-lg transition-all duration-700 ease-in-out flex flex-col justify-center py-4 ${expanded ? "w-48" : "w-16"
                     }`}
                 onMouseEnter={() => setExpanded(true)}
                 onMouseLeave={() => setExpanded(false)}
@@ -69,11 +69,11 @@ function SidebarLink({
     return (
         <Link
             href={href}
-            className={`flex items-center px-3 py-2 mb-2 text-gray-700 hover:bg-gray-200/50 rounded-lg transition-colors duration-200 ${active ? "bg-black/70 text-white" : ""
+            className={`flex items-center justify-center px-3 py-2 mb-2 text-gray-700 hover:bg-gray-200 rounded-lg transition-colors duration-200 ${active ? "bg-black text-white" : ""
                 }`}
         >
-            <span className="w-8 h-8 flex items-center justify-center text-lg">{icon}</span>
-            {expanded && <span className="ml-3 text-sm overflow-hidden whitespace-nowrap">{title}</span>}
+            <span className="text-lg">{icon}</span>
+            {expanded && <span className="ml-3 text-sm">{title}</span>}
         </Link>
     );
 }
