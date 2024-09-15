@@ -80,7 +80,7 @@ export default function Footer({ border = false }: { border?: boolean }) {
               </li>
               <li>
                 <Link
-                  className="text-gray-500 transition hover:text-gray-900"
+                  className="text-gray-600 transition hover:text-gray-900"
                   href="#0"
                 >
                   Diversity & Inclusion
