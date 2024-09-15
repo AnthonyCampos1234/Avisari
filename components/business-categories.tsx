@@ -2,8 +2,6 @@ import Image from "next/image";
 import Canvas_Bug_Color_RGB from "@/public/images/Canvas_Bug_Color_RGB.svg";
 import Instructure_Bug_Color_RGB from "@/public/images/Instructure_Bug_Color_RGB.svg"
 import Google_Classroom from "@/public/images/Google_Classroom.svg";
-import Google_Calendar_Icon_2020 from "@/public/images/Google_Calendar_Icon_2020.svg";
-import CalendlyLogo from "@/public/images/calendly-logo.svg";
 
 export default function BusinessCategories() {
   return (
@@ -204,19 +202,6 @@ export default function BusinessCategories() {
                         width={23}
                         height={22}
                         alt="Instructure Logo"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="absolute translate-x-[136px]">
-                  <div className="animate-[breath_7s_ease-in-out_3.5s_infinite_both]">
-                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-lg shadow-black/[0.03] before:absolute before:inset-0 before:m-[8.334%] before:rounded-[inherit] before:border before:border-gray-700/5 before:bg-gray-200/60 before:[mask-image:linear-gradient(to_bottom,black,transparent)]">
-                      <Image
-                        className="relative"
-                        src={Google_Calendar_Icon_2020}
-                        width={22}
-                        height={22}
-                        alt="Google Calendar Logo"
                       />
                     </div>
                   </div>
