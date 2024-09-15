@@ -1,5 +1,5 @@
 import Image from "next/image";
-import LogoImage from "@/public/images/logo.svg";
+import LogoImage from "@/public/images/logo-01.svg";
 import Avatar01 from "@/public/images/avatar-01.jpg";
 import Avatar02 from "@/public/images/avatar-02.jpg";
 import Avatar03 from "@/public/images/avatar-03.jpg";
