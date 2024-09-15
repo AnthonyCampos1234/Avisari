@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FiHome, FiBook, FiDollarSign, FiUser } from "react-icons/fi";
@@ -7,7 +9,7 @@ type SidebarProps = {
     setExpanded: (expanded: boolean) => void;
 };
 
-export default function DashboardSidebar({ expanded, setExpanded }: SidebarProps) {
+export default function Sidebar({ expanded, setExpanded }: SidebarProps) {
     const pathname = usePathname();
 
     return (
