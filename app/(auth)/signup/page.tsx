@@ -7,7 +7,7 @@ import Link from "next/link";
 import { IconButton, Button, TextField, Container, Box, Typography } from '@mui/material';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import HelpIcon from '@mui/icons-material/Help';
-import GitHubIcon from '@mui/icons-material/GitHub';
+import SchoolIcon from '@mui/icons-material/School';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function SignUp() {
@@ -192,7 +192,7 @@ export default function SignUp() {
           <Button
             fullWidth
             variant="contained"
-            startIcon={<GitHubIcon />}
+            startIcon={<SchoolIcon />}
             sx={{
               mt: 1,
               mb: 2,
@@ -202,7 +202,7 @@ export default function SignUp() {
               '&:hover': { bgcolor: '#555' }
             }}
           >
-            Continue with GitHub
+            Continue with your University
           </Button>
           <Box sx={{ mt: 2, textAlign: 'center' }}>
             <Typography variant="body2" color="text.secondary">
