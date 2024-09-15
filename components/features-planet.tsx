@@ -38,28 +38,28 @@ export default function FeaturesPlanet() {
                   />
                   <div>
                     <Image
-                      className="absolute -left-20 top-16 z-10 animate-[float_4s_ease-in-out_infinite_both] opacity-90 transition-opacity duration-500"
+                      className="absolute -left-32 top-16 z-10 animate-[float_4s_ease-in-out_infinite_both] opacity-90 transition-opacity duration-500"
                       src={Northeastern_Huskies}
                       width={200}
                       height={44}
                       alt="Tag 01"
                     />
                     <Image
-                      className="absolute left-56 top-7 z-10 animate-[float_4s_ease-in-out_infinite_1s_both] opacity-70 transition-opacity duration-500"
+                      className="absolute left-52 top-8 z-10 animate-[float_4s_ease-in-out_infinite_1s_both] opacity-70 transition-opacity duration-500"
                       src={Boston_University_wordmark}
                       width={190}
                       height={44}
                       alt="Tag 02"
                     />
                     <Image
-                      className="absolute -left-10 bottom-24 z-10 animate-[float_4s_ease-in-out_infinite_2s_both] opacity-90 transition-opacity duration-500"
+                      className="absolute -left-38 bottom-24 z-10 animate-[float_4s_ease-in-out_infinite_2s_both] opacity-90 transition-opacity duration-500"
                       src={Harvard_University_logo}
                       width={190}
                       height={44}
                       alt="Tag 03"
                     />
                     <Image
-                      className="absolute bottom-32 left-64 z-10 animate-[float_4s_ease-in-out_infinite_3s_both] opacity-90 transition-opacity duration-500"
+                      className="absolute bottom-32 left-50 z-10 animate-[float_4s_ease-in-out_infinite_3s_both] opacity-90 transition-opacity duration-500"
                       src={MIT_logo}
                       width={170}
                       height={44}
