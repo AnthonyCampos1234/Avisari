@@ -169,89 +169,93 @@ export default function Insight() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100">
-            <div className="max-w-7xl mx-auto p-4">
-                <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-                    <div className="border-b border-gray-200 p-2 flex relative">
-                        <IconButton onClick={() => handlePopoverToggle('add')} className="rounded-full transition-all duration-300 hover:bg-gray-100">
-                            <AddIcon />
-                        </IconButton>
-                        <IconButton onClick={() => handlePopoverToggle('chat')} className="rounded-full transition-all duration-300 hover:bg-gray-100">
-                            <ChatIcon />
-                        </IconButton>
-                        <IconButton onClick={() => handlePopoverToggle('progress')} className="rounded-full transition-all duration-300 hover:bg-gray-100">
-                            <AssessmentIcon />
-                        </IconButton>
-                        <IconButton onClick={() => handlePopoverToggle('share')} className="rounded-full transition-all duration-300 hover:bg-gray-100">
-                            <ShareIcon />
-                        </IconButton>
-                        <AnimatePresence>
-                            {openPopover && (
-                                <motion.div
-                                    initial="hidden"
-                                    animate="visible"
-                                    exit="exit"
-                                    variants={popoverVariants}
-                                    className="absolute top-full left-0 mt-2 bg-white rounded-lg shadow-lg z-10"
-                                >
-                                    {renderPopoverContent()}
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                    </div>
-                    <div className="p-6">
-                        <h1 className="text-3xl font-bold text-gray-900 mb-6">Course Planner</h1>
-                        <div className="mb-6">
-                            <Button
-                                onClick={handleGenerateAISchedule}
-                                variant="contained"
-                                className="bg-gray-900 hover:bg-gray-700 text-white rounded-full"
+        <div className="p-6">
+            <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+                <div className="border-b border-gray-200 p-2 flex relative">
+                    <IconButton onClick={() => handlePopoverToggle('add')} className="rounded-full transition-all duration-300 hover:bg-gray-100">
+                        <AddIcon />
+                    </IconButton>
+                    <IconButton onClick={() => handlePopoverToggle('chat')} className="rounded-full transition-all duration-300 hover:bg-gray-100">
+                        <ChatIcon />
+                    </IconButton>
+                    <IconButton onClick={() => handlePopoverToggle('progress')} className="rounded-full transition-all duration-300 hover:bg-gray-100">
+                        <AssessmentIcon />
+                    </IconButton>
+                    <IconButton onClick={() => handlePopoverToggle('share')} className="rounded-full transition-all duration-300 hover:bg-gray-100">
+                        <ShareIcon />
+                    </IconButton>
+                    <AnimatePresence>
+                        {openPopover && (
+                            <motion.div
+                                initial="hidden"
+                                animate="visible"
+                                exit="exit"
+                                variants={popoverVariants}
+                                className="absolute top-full left-0 mt-2 bg-white rounded-lg shadow-lg z-20"
                             >
-                                Generate with AI
-                            </Button>
-                        </div>
-                        <DragDropContext onDragEnd={onDragEnd}>
-                            {schedule.map((year, yearIndex) => (
-                                <div key={yearIndex} className="mb-8">
-                                    <h2 className="text-2xl font-bold text-gray-800 mb-4">Year {year.year}</h2>
-                                    <div className="grid grid-cols-4 gap-4">
-                                        {year.semesters.map((semester, semesterIndex) => (
-                                            <Droppable droppableId={`year-${yearIndex}-semester-${semesterIndex}`} key={semesterIndex}>
-                                                {(provided) => (
-                                                    <div
-                                                        {...provided.droppableProps}
-                                                        ref={provided.innerRef}
-                                                        className="p-4 bg-gray-50 rounded-lg"
-                                                    >
-                                                        <h3 className="font-semibold text-lg text-gray-900 mb-3">{semester.name}</h3>
-                                                        {semester.courses.length > 0 ? (
-                                                            semester.courses.map((course: any, index: number) => (
-                                                                <Draggable key={course.id} draggableId={course.id} index={index}>
-                                                                    {(provided) => (
-                                                                        <div
-                                                                            ref={provided.innerRef}
-                                                                            {...provided.draggableProps}
-                                                                            {...provided.dragHandleProps}
-                                                                            className="bg-white p-3 mb-2 rounded-md shadow-sm border border-gray-200 transition-all hover:shadow-md"
-                                                                        >
-                                                                            <span className="font-medium">{course.code}:</span> {course.name}
-                                                                        </div>
-                                                                    )}
-                                                                </Draggable>
-                                                            ))
-                                                        ) : (
-                                                            <p className="text-gray-500 italic">No courses added yet</p>
-                                                        )}
-                                                        {provided.placeholder}
-                                                    </div>
-                                                )}
-                                            </Droppable>
-                                        ))}
-                                    </div>
-                                </div>
-                            ))}
-                        </DragDropContext>
+                                {renderPopoverContent()}
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
+                <div className="p-6">
+                    <h1 className="text-3xl font-bold text-gray-900 mb-6">Course Planner</h1>
+                    <div className="mb-6">
+                        <Button
+                            onClick={handleGenerateAISchedule}
+                            variant="contained"
+                            sx={{
+                                backgroundColor: '#111827',
+                                '&:hover': {
+                                    backgroundColor: '#374151',
+                                },
+                                borderRadius: '9999px',
+                            }}
+                        >
+                            Generate with AI
+                        </Button>
                     </div>
+                    <DragDropContext onDragEnd={onDragEnd}>
+                        {schedule.map((year, yearIndex) => (
+                            <div key={yearIndex} className="mb-8">
+                                <h2 className="text-2xl font-bold text-gray-800 mb-4">Year {year.year}</h2>
+                                <div className="grid grid-cols-4 gap-4">
+                                    {year.semesters.map((semester, semesterIndex) => (
+                                        <Droppable droppableId={`year-${yearIndex}-semester-${semesterIndex}`} key={semesterIndex}>
+                                            {(provided) => (
+                                                <div
+                                                    {...provided.droppableProps}
+                                                    ref={provided.innerRef}
+                                                    className="p-4 bg-gray-50 rounded-lg"
+                                                >
+                                                    <h3 className="font-semibold text-lg text-gray-900 mb-3">{semester.name}</h3>
+                                                    {semester.courses.length > 0 ? (
+                                                        semester.courses.map((course: any, index: number) => (
+                                                            <Draggable key={course.id} draggableId={course.id} index={index}>
+                                                                {(provided) => (
+                                                                    <div
+                                                                        ref={provided.innerRef}
+                                                                        {...provided.draggableProps}
+                                                                        {...provided.dragHandleProps}
+                                                                        className="bg-white p-3 mb-2 rounded-md shadow-sm border border-gray-200 transition-all hover:shadow-md"
+                                                                    >
+                                                                        <span className="font-medium">{course.code}:</span> {course.name}
+                                                                    </div>
+                                                                )}
+                                                            </Draggable>
+                                                        ))
+                                                    ) : (
+                                                        <p className="text-gray-500 italic">No courses added yet</p>
+                                                    )}
+                                                    {provided.placeholder}
+                                                </div>
+                                            )}
+                                        </Droppable>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </DragDropContext>
                 </div>
             </div>
         </div>

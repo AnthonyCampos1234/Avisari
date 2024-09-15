@@ -28,19 +28,15 @@ export default function DefaultLayout({
     });
   });
 
-  const isDashboardRoute = pathname?.startsWith("/dashboard");
-
   if (status === "authenticated") {
     return (
       <div className="flex h-screen bg-gray-100">
-        <div className="flex-shrink-0">
-          <Sidebar
-            expanded={sidebarExpanded}
-            setExpanded={setSidebarExpanded}
-          />
-        </div>
+        <Sidebar
+          expanded={sidebarExpanded}
+          setExpanded={setSidebarExpanded}
+        />
         <div className="flex-1 flex flex-col overflow-hidden">
-          <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 pl-20 pt-4">
+          <main className={`flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 transition-all duration-500 ease-in-out ${sidebarExpanded ? "ml-48" : "ml-16"}`}>
             {children}
           </main>
         </div>
