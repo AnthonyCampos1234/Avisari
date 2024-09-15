@@ -4,10 +4,6 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 
-export const metadata = {
-  title: "Home - Simple",
-  description: "Page description",
-};
 
 import Hero from "@/components/hero-home";
 import BusinessCategories from "@/components/business-categories";
