@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 export default function SignUp() {
   const [name, setName] = useState("");
@@ -24,7 +25,18 @@ export default function SignUp() {
     });
 
     if (response.ok) {
-      router.push("/signin");
+      // Sign in the user after successful sign-up
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        setError(result.error);
+      } else {
+        router.push("/dashboard"); // Redirect to dashboard after sign-up and sign-in
+      }
     } else {
       const data = await response.json();
       setError(data.error || "An error occurred during sign up");

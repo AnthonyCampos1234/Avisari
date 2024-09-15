@@ -24,7 +24,7 @@ export default function SignIn() {
     if (result?.error) {
       setError(result.error);
     } else {
-      router.push("/");
+      router.push("/dashboard"); // Change this line
     }
   };
 
