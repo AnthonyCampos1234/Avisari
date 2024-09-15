@@ -43,9 +43,9 @@ export default function Profile() {
     }
 
     return (
-        <div className="p-6 pt-24 bg-gray-50 min-h-screen"> {/* Added padding, background, and min-height */}
-            <div className="container mx-auto max-w-md">
-                <h1 className="mb-5 text-2xl font-bold">User Profile</h1>
+        <div className="p-6 pt-24 bg-gray-50 min-h-screen flex flex-col items-center">
+            <h1 className="mb-8 text-3xl font-bold text-center">User Profile</h1>
+            <div className="max-w-md w-full">
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
                         <label htmlFor="name" className="block text-sm font-medium text-gray-700">
@@ -78,7 +78,7 @@ export default function Profile() {
                         Update Profile
                     </button>
                 </form>
-                {message && <p className="mt-4 text-sm text-green-600">{message}</p>}
+                {message && <p className="mt-4 text-sm text-green-600 text-center">{message}</p>}
             </div>
         </div>
     );
