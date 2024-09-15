@@ -69,11 +69,13 @@ function SidebarLink({
     return (
         <Link
             href={href}
-            className={`flex items-center ${expanded ? "w-full justify-start" : "w-10 justify-center"
+            className={`flex items-center ${expanded ? "w-full" : "w-10"
                 } px-3 py-2 mb-2 text-gray-700 hover:bg-gray-200 rounded-full transition-all duration-300 ease-in-out ${active ? "bg-black text-white" : ""
                 }`}
         >
-            <span className="text-lg flex-shrink-0">{icon}</span>
+            <div className={`flex items-center justify-center ${expanded ? "w-10" : "w-full"}`}>
+                <span className="text-lg">{icon}</span>
+            </div>
             <span
                 className={`ml-3 text-sm overflow-hidden transition-all duration-300 ease-in-out ${expanded ? "w-auto opacity-100" : "w-0 opacity-0"
                     }`}
