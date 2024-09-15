@@ -4,9 +4,10 @@ import { useState, useRef } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { IconButton, Button, TextField } from '@mui/material';
+import { IconButton, Button, TextField, Container, Box, Typography } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
 import HelpIcon from '@mui/icons-material/Help';
+import GitHubIcon from '@mui/icons-material/GitHub';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function SignIn() {
@@ -61,13 +62,24 @@ export default function SignIn() {
   };
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen flex items-center justify-center">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-lg overflow-hidden">
-        <div className="border-b border-gray-200 p-2 flex relative">
-          <IconButton onClick={() => handlePopoverToggle('signin')} className="rounded-full transition-all duration-300 hover:bg-gray-100">
+    <Container component="main" maxWidth="sm">
+      <Box
+        sx={{
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          bgcolor: 'background.paper',
+          borderRadius: 2,
+          boxShadow: 3,
+          overflow: 'hidden',
+        }}
+      >
+        <Box sx={{ width: '100%', borderBottom: 1, borderColor: 'divider', p: 2, display: 'flex', justifyContent: 'flex-start' }}>
+          <IconButton onClick={() => handlePopoverToggle('signin')} sx={{ mr: 1 }}>
             <LoginIcon />
           </IconButton>
-          <IconButton onClick={() => handlePopoverToggle('help')} className="rounded-full transition-all duration-300 hover:bg-gray-100">
+          <IconButton onClick={() => handlePopoverToggle('help')}>
             <HelpIcon />
           </IconButton>
           <AnimatePresence>
@@ -78,80 +90,101 @@ export default function SignIn() {
                 animate="visible"
                 exit="exit"
                 variants={popoverVariants}
-                className="absolute top-full left-0 mt-2 bg-white rounded-lg shadow-lg z-20"
+                style={{
+                  position: 'absolute',
+                  top: '100%',
+                  left: 0,
+                  zIndex: 1,
+                  marginTop: '0.5rem',
+                  backgroundColor: 'white',
+                  borderRadius: '0.5rem',
+                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                }}
               >
                 <PopoverContent type={openPopover} />
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
-        <div className="p-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+        </Box>
+        <Box sx={{ mt: 3, mb: 2, px: 4, width: '100%' }}>
+          <Typography component="h1" variant="h4" align="center" gutterBottom>
+            Sign in to your account
+          </Typography>
+        </Box>
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1, width: '100%', px: 4, pb: 4 }}>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+            autoFocus
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          {error && (
+            <Typography color="error" variant="body2" sx={{ mt: 1 }}>
+              {error}
+            </Typography>
+          )}
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2, borderRadius: 28, py: 1.5, bgcolor: '#111827', '&:hover': { bgcolor: '#374151' } }}
           >
-            <h1 className="text-3xl font-bold text-gray-900 mb-6">Sign in to your account</h1>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <TextField
-                label="Email"
-                variant="outlined"
-                fullWidth
-                type="email"
-                placeholder="corybarker@email.com"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <TextField
-                label="Password"
-                variant="outlined"
-                fullWidth
-                type="password"
-                autoComplete="current-password"
-                placeholder="••••••••"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              {error && (
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="text-red-500 mt-2"
-                >
-                  {error}
-                </motion.p>
-              )}
-              <Button
-                type="submit"
-                variant="contained"
-                fullWidth
-                startIcon={<LoginIcon />}
+            Sign In
+          </Button>
+          <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 2, mb: 2 }}>
+            Or
+          </Typography>
+          <Button
+            fullWidth
+            variant="contained"
+            startIcon={<GitHubIcon />}
+            sx={{
+              mt: 1,
+              mb: 2,
+              borderRadius: 28,
+              py: 1.5,
+              bgcolor: '#24292e',
+              '&:hover': { bgcolor: '#555' }
+            }}
+          >
+            Continue with GitHub
+          </Button>
+          <Box sx={{ mt: 2, textAlign: 'center' }}>
+            <Link href="/forgot-password" passHref>
+              <Typography
+                component="a"
+                variant="body2"
                 sx={{
-                  backgroundColor: '#111827',
-                  '&:hover': {
-                    backgroundColor: '#374151',
-                  },
-                  borderRadius: '9999px',
-                  textTransform: 'none',
+                  color: 'text.secondary',
+                  textDecoration: 'none',
+                  '&:hover': { textDecoration: 'underline' }
                 }}
               >
-                Sign In
-              </Button>
-            </form>
-            <div className="mt-6 text-center">
-              <Link
-                className="text-sm text-gray-700 hover:text-gray-900 transition-colors duration-200"
-                href="/forgot-password"
-              >
                 Forgot password?
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-    </div>
+              </Typography>
+            </Link>
+          </Box>
+        </Box>
+      </Box>
+    </Container>
   );
 }
 
@@ -169,23 +202,23 @@ function PopoverContent({ type }: { type: string }) {
   switch (type) {
     case 'signin':
       return (
-        <div className="p-4 w-64">
-          <h2 className="text-lg font-bold mb-2">Sign In</h2>
-          <p className="mb-4">Enter your credentials to access your account.</p>
+        <Box sx={{ p: 2, width: 250 }}>
+          <Typography variant="h6" gutterBottom>Sign In</Typography>
+          <Typography variant="body2" paragraph>Enter your credentials to access your account.</Typography>
           <Button variant="contained" fullWidth sx={buttonStyle}>
             Learn More
           </Button>
-        </div>
+        </Box>
       );
     case 'help':
       return (
-        <div className="p-4 w-64">
-          <h2 className="text-lg font-bold mb-2">Need Help?</h2>
-          <p className="mb-4">Having trouble signing in? We're here to assist you.</p>
+        <Box sx={{ p: 2, width: 250 }}>
+          <Typography variant="h6" gutterBottom>Need Help?</Typography>
+          <Typography variant="body2" paragraph>Having trouble signing in? We're here to assist you.</Typography>
           <Button href="/support" variant="contained" fullWidth sx={buttonStyle}>
             Get Support
           </Button>
-        </div>
+        </Box>
       );
     default:
       return null;
