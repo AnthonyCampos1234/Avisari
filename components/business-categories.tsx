@@ -1,13 +1,6 @@
 import Image from "next/image";
 import Logo01 from "@/public/images/logo-01.svg";
-import Logo02 from "@/public/images/noun-student-black.svg";
-import Logo03 from "@/public/images/noun-women-black.svg";
-import Logo04 from "@/public/images/noun-student-blue.svg";
-import Logo05 from "@/public/images/noun-women-red.svg";
-import Logo06 from "@/public/images/noun-women-green.svg";
-import Logo07 from "@/public/images/noun-student-red.svg";
-import Logo08 from "@/public/images/noun-student-green.svg";
-import Logo09 from "@/public/images/noun-women-blue.svg";
+import { FaUserGraduate, FaChalkboardTeacher } from 'react-icons/fa';
 
 export default function BusinessCategories() {
   return (
@@ -196,104 +189,56 @@ export default function BusinessCategories() {
                 <div className="absolute -translate-x-[136px]">
                   <div className="animate-[breath_7s_ease-in-out_3s_infinite_both]">
                     <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-lg shadow-black/[0.03] before:absolute before:inset-0 before:m-[8.334%] before:rounded-[inherit] before:border before:border-gray-700/5 before:bg-gray-200/60 before:[mask-image:linear-gradient(to_bottom,black,transparent)]">
-                      <Image
-                        className="relative"
-                        src={Logo02}
-                        width={23}
-                        height={22}
-                        alt="Logo 02"
-                      />
+                      <FaUserGraduate className="relative text-2xl text-blue-500" />
                     </div>
                   </div>
                 </div>
                 <div className="absolute translate-x-[136px]">
                   <div className="animate-[breath_7s_ease-in-out_3.5s_infinite_both]">
                     <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-lg shadow-black/[0.03] before:absolute before:inset-0 before:m-[8.334%] before:rounded-[inherit] before:border before:border-gray-700/5 before:bg-gray-200/60 before:[mask-image:linear-gradient(to_bottom,black,transparent)]">
-                      <Image
-                        className="relative"
-                        src={Logo03}
-                        width={22}
-                        height={22}
-                        alt="Logo 03"
-                      />
+                      <FaChalkboardTeacher className="relative text-2xl text-green-500" />
                     </div>
                   </div>
                 </div>
                 <div className="absolute -translate-x-[216px] -translate-y-[82px]">
                   <div className="animate-[breath_6s_ease-in-out_3.5s_infinite_both]">
                     <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white shadow-lg shadow-black/[0.03] before:absolute before:inset-0 before:m-[8.334%] before:rounded-[inherit] before:border before:border-gray-700/5 before:bg-gray-200/60 before:[mask-image:linear-gradient(to_bottom,black,transparent)]">
-                      <Image
-                        className="relative"
-                        src={Logo04}
-                        width={24}
-                        height={22}
-                        alt="Logo 04"
-                      />
+                      <FaUserGraduate className="relative text-3xl text-red-500" />
                     </div>
                   </div>
                 </div>
                 <div className="absolute -translate-y-[82px] translate-x-[216px]">
                   <div className="animate-[breath_6s_ease-in-out_1.5s_infinite_both]">
                     <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white shadow-lg shadow-black/[0.03] before:absolute before:inset-0 before:m-[8.334%] before:rounded-[inherit] before:border before:border-gray-700/5 before:bg-gray-200/60 before:[mask-image:linear-gradient(to_bottom,black,transparent)]">
-                      <Image
-                        className="relative"
-                        src={Logo05}
-                        width={25}
-                        height={25}
-                        alt="Logo 05"
-                      />
+                      <FaChalkboardTeacher className="relative text-3xl text-purple-500" />
                     </div>
                   </div>
                 </div>
                 <div className="absolute translate-x-[216px] translate-y-[82px]">
                   <div className="animate-[breath_6s_ease-in-out_2s_infinite_both]">
                     <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white shadow-lg shadow-black/[0.03] before:absolute before:inset-0 before:m-[8.334%] before:rounded-[inherit] before:border before:border-gray-700/5 before:bg-gray-200/60 before:[mask-image:linear-gradient(to_bottom,black,transparent)]">
-                      <Image
-                        className="relative"
-                        src={Logo06}
-                        width={20}
-                        height={18}
-                        alt="Logo 06"
-                      />
+                      <FaUserGraduate className="relative text-3xl text-yellow-500" />
                     </div>
                   </div>
                 </div>
                 <div className="absolute -translate-x-[216px] translate-y-[82px]">
                   <div className="animate-[breath_6s_ease-in-out_2.5s_infinite_both]">
                     <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white shadow-lg shadow-black/[0.03] before:absolute before:inset-0 before:m-[8.334%] before:rounded-[inherit] before:border before:border-gray-700/5 before:bg-gray-200/60 before:[mask-image:linear-gradient(to_bottom,black,transparent)]">
-                      <Image
-                        className="relative"
-                        src={Logo07}
-                        width={25}
-                        height={25}
-                        alt="Logo 07"
-                      />
+                      <FaChalkboardTeacher className="relative text-3xl text-indigo-500" />
                     </div>
                   </div>
                 </div>
                 <div className="absolute -translate-x-[292px] opacity-40">
                   <div className="animate-[breath_6s_ease-in-out_2s_infinite_both]">
                     <div className="flex h-12 w-12 items-center justify-center rounded-full border border-gray-200/60 bg-white shadow-lg">
-                      <Image
-                        className="relative"
-                        src={Logo08}
-                        width={20}
-                        height={20}
-                        alt="Logo 08"
-                      />
+                      <FaUserGraduate className="relative text-xl text-gray-500" />
                     </div>
                   </div>
                 </div>
                 <div className="absolute translate-x-[292px] opacity-40">
                   <div className="animate-[breath_6s_ease-in-out_4s_infinite_both]">
                     <div className="flex h-12 w-12 items-center justify-center rounded-full border border-gray-200/60 bg-white shadow-lg">
-                      <Image
-                        className="relative"
-                        src={Logo09}
-                        width={21}
-                        height={13}
-                        alt="Logo 09"
-                      />
+                      <FaChalkboardTeacher className="relative text-xl text-gray-500" />
                     </div>
                   </div>
                 </div>
