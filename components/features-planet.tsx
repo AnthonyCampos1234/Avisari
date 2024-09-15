@@ -24,8 +24,8 @@ export default function FeaturesPlanet() {
                 <Image
                   className="rounded-full bg-gray-900"
                   src={PlanetImg}
-                  width={400}
-                  height={400}
+                  width={500}
+                  height={500}
                   alt="Planet"
                 />
                 <div className="pointer-events-none" aria-hidden="true">
@@ -38,7 +38,7 @@ export default function FeaturesPlanet() {
                   />
                   <div>
                     <Image
-                      className="absolute -left-28 top-16 z-10 animate-[float_4s_ease-in-out_infinite_both] opacity-90 transition-opacity duration-500"
+                      className="absolute -left-20 top-16 z-10 animate-[float_4s_ease-in-out_infinite_both] opacity-90 transition-opacity duration-500"
                       src={Northeastern_Huskies}
                       width={200}
                       height={44}
@@ -52,7 +52,7 @@ export default function FeaturesPlanet() {
                       alt="Tag 02"
                     />
                     <Image
-                      className="absolute -left-20 bottom-24 z-10 animate-[float_4s_ease-in-out_infinite_2s_both] opacity-65 transition-opacity duration-500"
+                      className="absolute -left-10 bottom-24 z-10 animate-[float_4s_ease-in-out_infinite_2s_both] opacity-90 transition-opacity duration-500"
                       src={Harvard_University_logo}
                       width={190}
                       height={44}
@@ -61,7 +61,7 @@ export default function FeaturesPlanet() {
                     <Image
                       className="absolute bottom-32 left-64 z-10 animate-[float_4s_ease-in-out_infinite_3s_both] opacity-90 transition-opacity duration-500"
                       src={MIT_logo}
-                      width={200}
+                      width={170}
                       height={44}
                       alt="Tag 04"
                     />
