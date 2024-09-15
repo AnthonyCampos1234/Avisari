@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FiHome, FiBook, FiDollarSign, FiUser, FiLogOut } from "react-icons/fi";
-import { signOut } from "next-auth/react";
+import { FiHome, FiBook, FiDollarSign, FiUser } from "react-icons/fi";
 
 type SidebarProps = {
     expanded: boolean;
@@ -49,14 +48,6 @@ export default function Sidebar({ expanded, setExpanded }: SidebarProps) {
                     expanded={expanded}
                     active={pathname === "/dashboard/profile"}
                 />
-                <SidebarLink
-                    icon={<FiLogOut />}
-                    title="Logout"
-                    href="#"
-                    expanded={expanded}
-                    active={false}
-                    onClick={() => signOut()}
-                />
             </div>
         </div>
     );
@@ -68,17 +59,20 @@ function SidebarLink({
     href,
     expanded,
     active,
-    onClick,
 }: {
     icon: React.ReactNode;
     title: string;
     href: string;
     expanded: boolean;
     active: boolean;
-    onClick?: () => void;
 }) {
-    const content = (
-        <>
+    return (
+        <Link
+            href={href}
+            className={`flex items-center ${expanded ? "w-full" : "w-10"
+                } px-3 py-2 mb-2 text-gray-700 hover:bg-gray-200 rounded-full ${active ? "bg-black text-white" : ""
+                }`}
+        >
             <div className={`flex items-center justify-center ${expanded ? "w-10" : "w-full"} transition-all duration-500 ease-in-out`}>
                 <span className="text-lg">{icon}</span>
             </div>
@@ -88,24 +82,6 @@ function SidebarLink({
             >
                 {title}
             </span>
-        </>
-    );
-
-    const className = `flex items-center ${expanded ? "w-full" : "w-10"
-        } px-3 py-2 mb-2 text-gray-700 hover:bg-gray-200 rounded-full ${active ? "bg-black text-white" : ""
-        }`;
-
-    if (onClick) {
-        return (
-            <button onClick={onClick} className={className}>
-                {content}
-            </button>
-        );
-    }
-
-    return (
-        <Link href={href} className={className}>
-            {content}
         </Link>
     );
 }
