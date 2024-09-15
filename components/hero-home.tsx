@@ -122,10 +122,10 @@ export default function HeroHome() {
             data-aos="zoom-y-out"
             data-aos-delay={600}
           >
-            <div className="relative aspect-video rounded-2xl bg-white p-6 shadow-xl overflow-hidden">
+            <div className="relative aspect-video rounded-2xl bg-white p-8 shadow-xl overflow-hidden">
               <div className={`absolute inset-0 flex flex-col h-full transition-opacity duration-1000 ${isAdvisorChat ? 'opacity-0' : 'opacity-100'}`}>
-                <div className="mb-4 text-gray-500 text-sm">Chat with AI Assistant</div>
-                <div className="flex-grow overflow-y-auto space-y-4">
+                <div className="mb-4 text-gray-500 text-sm font-medium ml-2">Chat with AI Assistant</div>
+                <div className="flex-grow overflow-y-auto space-y-4 pr-4">
                   {chatSteps.map((step, index) => (
                     <ChatBubble key={index} type={step.type as 'student' | 'ai' | 'system'} isVisible={index <= currentStep}>
                       {step.message}
@@ -134,8 +134,8 @@ export default function HeroHome() {
                 </div>
               </div>
               <div className={`absolute inset-0 flex flex-col h-full transition-opacity duration-1000 ${isAdvisorChat ? 'opacity-100' : 'opacity-0'}`}>
-                <div className="mb-4 text-gray-500 text-sm">Chat with Academic Advisor</div>
-                <div className="flex-grow overflow-y-auto space-y-4">
+                <div className="mb-4 text-gray-500 text-sm font-medium ml-2">Chat with Academic Advisor</div>
+                <div className="flex-grow overflow-y-auto space-y-4 pr-4">
                   {advisorChat.map((step, index) => (
                     <ChatBubble key={index} type={step.type as 'advisor' | 'student'} isVisible={index <= currentStep}>
                       {step.message}
