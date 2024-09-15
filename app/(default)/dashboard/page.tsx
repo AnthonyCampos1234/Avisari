@@ -18,7 +18,7 @@ export default function Dashboard() {
             {/* Sidebar */}
             <div className="p-4">
                 <div
-                    className={`bg-white rounded-3xl shadow-lg transition-all duration-300 ease-in-out h-[calc(100vh-2rem)] flex flex-col justify-between py-8 ${sidebarExpanded ? 'w-60' : 'w-20'}`}
+                    className={`bg-white/90 backdrop-blur-sm rounded-3xl shadow-lg transition-all duration-500 ease-in-out h-[calc(100vh-2rem)] flex flex-col justify-start py-4 ${sidebarExpanded ? 'w-48' : 'w-16'}`}
                     onMouseEnter={() => setSidebarExpanded(true)}
                     onMouseLeave={() => setSidebarExpanded(false)}
                 >
@@ -31,10 +31,10 @@ export default function Dashboard() {
 
             {/* Main content */}
             <div className="flex-1 flex flex-col overflow-hidden">
-                <header className="bg-white p-4 shadow z-10">
+                <header className="bg-white/90 backdrop-blur-sm p-4 shadow z-10">
                     <h1 className="text-2xl font-semibold">Welcome, {session?.user?.name}!</h1>
                 </header>
-                <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6 pt-20">
+                <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6 mt-16">
                     <div className="grid gap-6 md:grid-cols-2">
                         {/* Insight Section */}
                         <DashboardCard
@@ -60,9 +60,9 @@ export default function Dashboard() {
 
 function SidebarLink({ icon, title, href, expanded }: { icon: React.ReactNode; title: string; href: string; expanded: boolean }) {
     return (
-        <Link href={href} className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-200 rounded-lg">
+        <Link href={href} className="flex items-center px-3 py-2 my-1 text-gray-700 hover:bg-gray-200 rounded-lg transition-colors duration-200">
             <span className="text-lg">{icon}</span>
-            {expanded && <span className="ml-4">{title}</span>}
+            {expanded && <span className="ml-3 text-sm">{title}</span>}
         </Link>
     );
 }
