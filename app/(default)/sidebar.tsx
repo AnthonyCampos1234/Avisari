@@ -15,7 +15,7 @@ export default function Sidebar({ expanded, setExpanded }: SidebarProps) {
     return (
         <div className="p-4 flex items-center">
             <div
-                className={`bg-white/70 backdrop-blur-sm rounded-3xl shadow-lg transition-all duration-300 ease-in-out flex flex-col justify-center py-4 ${expanded ? "w-48" : "w-16"
+                className={`bg-white/70 backdrop-blur-sm rounded-3xl shadow-lg transition-all duration-300 ease-in-out flex flex-col items-center py-4 ${expanded ? "w-48" : "w-16"
                     }`}
                 onMouseEnter={() => setExpanded(true)}
                 onMouseLeave={() => setExpanded(false)}
@@ -69,12 +69,15 @@ function SidebarLink({
     return (
         <Link
             href={href}
-            className={`flex items-center ${expanded ? "justify-start" : "justify-center"} px-3 py-2 mb-2 text-gray-700 hover:bg-gray-200 rounded-full transition-all duration-300 ease-in-out ${active ? "bg-black text-white" : ""
+            className={`flex items-center ${expanded ? "w-full justify-start" : "w-10 justify-center"
+                } px-3 py-2 mb-2 text-gray-700 hover:bg-gray-200 rounded-full transition-all duration-300 ease-in-out ${active ? "bg-black text-white" : ""
                 }`}
         >
             <span className="text-lg flex-shrink-0">{icon}</span>
-            <span className={`ml-3 text-sm overflow-hidden transition-all duration-300 ease-in-out ${expanded ? "w-auto opacity-100" : "w-0 opacity-0"
-                }`}>
+            <span
+                className={`ml-3 text-sm overflow-hidden transition-all duration-300 ease-in-out ${expanded ? "w-auto opacity-100" : "w-0 opacity-0"
+                    }`}
+            >
                 {title}
             </span>
         </Link>
