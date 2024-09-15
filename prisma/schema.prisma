@@ -8,13 +8,13 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  name      String?
-  email     String   @unique
-  phone     String?
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id               String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Text
+  name             String?
+  email            String    @unique
+  phone            String?
+  password         String
+  createdAt        DateTime  @default(now()) @db.Timestamptz
+  updatedAt        DateTime  @updatedAt @db.Timestamptz
   resetToken       String?
-  resetTokenExpiry DateTime?
+  resetTokenExpiry DateTime? @db.Timestamptz
 }
