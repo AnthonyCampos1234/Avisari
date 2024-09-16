@@ -4,7 +4,7 @@ import { supabase } from "@/lib/supabase";
 
 export async function POST(req: Request) {
     try {
-        const { name, email, phone, password } = await req.json();
+        const { name, email, phone, password, userType } = await req.json();
         const hashedPassword = await bcrypt.hash(password, 10);
         const now = new Date().toISOString();
 
@@ -15,15 +15,23 @@ export async function POST(req: Request) {
                 email,
                 phone,
                 password: hashedPassword,
+                user_type: userType,
                 createdAt: now,
                 updatedAt: now,
             })
-            .select('id, name, email')
+            .select('id, name, email, user_type')
             .single();
 
         if (error) throw error;
 
-        return NextResponse.json({ user: { id: user.id, name: user.name, email: user.email } });
+        return NextResponse.json({
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                userType: user.user_type
+            }
+        });
     } catch (error: any) {
         console.error("Error in signup route:", error);
         return NextResponse.json({ error: error.message || "User creation failed" }, { status: 500 });
