@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Logo from "./logo";
+import Logo from "@/public/images/logo-01.svg";
 
 export default function Footer({ border = false }: { border?: boolean }) {
   return (
