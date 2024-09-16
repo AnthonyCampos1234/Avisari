@@ -1,6 +1,7 @@
+'use client'
+
 import Link from "next/link";
 import Image from "next/image";
-import Logo from "../../public/images/logo-01.svg";
 
 export default function Footer({ border = false }: { border?: boolean }) {
   return (
@@ -13,7 +14,7 @@ export default function Footer({ border = false }: { border?: boolean }) {
           {/* 1st block */}
           <div className="space-y-2 sm:col-span-12 lg:col-span-4">
             <div>
-              <Image src={Logo} alt="Avisari Logo" width={100} height={33} />
+              <Image src="/images/logo-01.svg" alt="Avisari Logo" width={100} height={33} />
             </div>
             <div className="text-sm text-gray-600">
               &copy; avisari.com - All rights reserved.
