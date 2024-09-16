@@ -12,7 +12,6 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-
   const isRegisterPage = pathname === '/register';
 
   return (
@@ -40,11 +39,16 @@ export default function AuthLayout({
         {/* Content */}
         <div className="w-full">
           <div className="mx-auto max-w-7xl px-4 sm:px-6">
-            <div className="pb-12 pt-32 md:pb-20 md:pt-40">
-              {/* Section header */}
-              <div className="pb-12 text-center md:pb-16">
+            <div className="pb-12 pt-24 md:pb-20 md:pt-32"> {/* Adjusted padding */}
+              {/* Auth form - Moved up */}
+              <div className="mx-auto w-full max-w-sm mb-12"> {/* Added margin-bottom */}
+                <div className="py-8 md:py-12">{children}</div>
+              </div>
+
+              {/* Section header - Moved down */}
+              <div className="text-center">
                 <h1
-                  className="mb-6 border-y text-5xl font-bold [border-image:linear-gradient(to_right,transparent,theme(colors.slate.300/.8),transparent)1] md:text-6xl"
+                  className="mb-6 border-y text-4xl font-bold [border-image:linear-gradient(to_right,transparent,theme(colors.slate.300/.8),transparent)1] md:text-5xl"
                   data-aos="zoom-y-out"
                   data-aos-delay={150}
                 >
@@ -52,7 +56,7 @@ export default function AuthLayout({
                 </h1>
                 <div className="mx-auto max-w-3xl">
                   <p
-                    className="mb-8 text-lg text-gray-700"
+                    className="mb-8 text-base text-gray-700"
                     data-aos="zoom-y-out"
                     data-aos-delay={300}
                   >
@@ -61,11 +65,6 @@ export default function AuthLayout({
                       : "Sign in to access your account and continue your journey with us."}
                   </p>
                 </div>
-              </div>
-
-              {/* Auth form */}
-              <div className="mx-auto w-full max-w-sm">
-                <div className="py-8 md:py-12">{children}</div>
               </div>
             </div>
           </div>
