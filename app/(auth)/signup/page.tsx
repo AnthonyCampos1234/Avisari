@@ -92,20 +92,18 @@ export default function SignUp() {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          bgcolor: 'background.paper',
-          borderRadius: 2,
-          boxShadow: 3,
-          overflow: 'hidden',
         }}
       >
+        {/* Chat Hero Section */}
         <Box
           sx={{
             width: '100%',
             bgcolor: '#f3f4f6',
             p: 4,
-            display: 'flex',
-            flexDirection: 'column',
-            minHeight: '200px', // Adjust as needed
+            borderRadius: 2,
+            boxShadow: 3,
+            mb: 4,
+            minHeight: '200px',
           }}
         >
           <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>
@@ -119,13 +117,15 @@ export default function SignUp() {
             ))}
           </Box>
         </Box>
+
+        {/* Sign Up Form Section */}
         <Box
           sx={{
             width: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
+            bgcolor: 'background.paper',
             p: 4,
+            borderRadius: 2,
+            boxShadow: 3,
           }}
         >
           <Typography component="h1" variant="h4" align="center" gutterBottom>
