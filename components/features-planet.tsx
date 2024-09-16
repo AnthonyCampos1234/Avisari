@@ -68,10 +68,10 @@ export default function FeaturesPlanet() {
 
 function FeatureCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
   return (
-    <article className="bg-gray-50 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-      <div className="mb-4 text-pastel-blue">{icon}</div>
-      <h3 className="mb-2 text-xl font-medium text-gray-800">{title}</h3>
-      <p className="text-[15px] text-gray-600">{description}</p>
+    <article className="bg-blue-50 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+      <div className="mb-4 text-blue-500">{icon}</div>
+      <h3 className="mb-2 text-xl font-medium text-blue-800">{title}</h3>
+      <p className="text-[15px] text-blue-600">{description}</p>
     </article>
   );
 }
