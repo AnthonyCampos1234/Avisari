@@ -8,11 +8,7 @@ import { Button, TextField, Box, Typography } from '@mui/material';
 import SchoolIcon from '@mui/icons-material/School';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CircularProgress from '@mui/material/CircularProgress';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
+import PersonIcon from '@mui/icons-material/Person';
 
 export default function SignUp() {
   const [name, setName] = useState("");
@@ -60,19 +56,49 @@ export default function SignUp() {
 
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
-      <FormControl component="fieldset" sx={{ mb: 2 }}>
-        <FormLabel component="legend">I am a:</FormLabel>
-        <RadioGroup
-          row
-          aria-label="user type"
-          name="user-type"
-          value={userType}
-          onChange={(e) => setUserType(e.target.value)}
+      <Typography variant="h6" sx={{ mb: 2, textAlign: 'center' }}>
+        I am a:
+      </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mb: 3 }}>
+        <Button
+          variant={userType === "student" ? "contained" : "outlined"}
+          onClick={() => setUserType("student")}
+          startIcon={<SchoolIcon />}
+          sx={{
+            width: '45%',
+            py: 2,
+            borderRadius: 4,
+            transition: 'all 0.3s',
+            transform: userType === "student" ? 'scale(1.05)' : 'scale(1)',
+            bgcolor: userType === "student" ? '#23bbe9' : 'transparent',
+            color: userType === "student" ? 'white' : '#23bbe9',
+            '&:hover': {
+              bgcolor: userType === "student" ? '#1c99bd' : 'rgba(35, 187, 233, 0.1)',
+            },
+          }}
         >
-          <FormControlLabel value="student" control={<Radio />} label="Student" />
-          <FormControlLabel value="advisor" control={<Radio />} label="Advisor" />
-        </RadioGroup>
-      </FormControl>
+          Student
+        </Button>
+        <Button
+          variant={userType === "advisor" ? "contained" : "outlined"}
+          onClick={() => setUserType("advisor")}
+          startIcon={<PersonIcon />}
+          sx={{
+            width: '45%',
+            py: 2,
+            borderRadius: 4,
+            transition: 'all 0.3s',
+            transform: userType === "advisor" ? 'scale(1.05)' : 'scale(1)',
+            bgcolor: userType === "advisor" ? '#23bbe9' : 'transparent',
+            color: userType === "advisor" ? 'white' : '#23bbe9',
+            '&:hover': {
+              bgcolor: userType === "advisor" ? '#1c99bd' : 'rgba(35, 187, 233, 0.1)',
+            },
+          }}
+        >
+          Advisor
+        </Button>
+      </Box>
 
       <TextField
         margin="normal"
