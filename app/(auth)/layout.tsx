@@ -11,9 +11,6 @@ export default function AuthLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
-  const isRegisterPage = pathname === '/register';
-
   return (
     <section className="relative">
       <PageIllustration />
@@ -43,23 +40,19 @@ export default function AuthLayout({
               {/* Section header */}
               <div className="text-center mb-8">
                 <h1
-                  className="mb-4 text-3xl font-bold md:text-4xl"
+                  className="mb-2 text-3xl font-bold md:text-4xl"
                   data-aos="zoom-y-out"
                   data-aos-delay={150}
                 >
-                  {isRegisterPage ? "Join Us Today" : "Welcome Back"}
+                  Nota Solutions
                 </h1>
-                <div className="mx-auto max-w-3xl">
-                  <p
-                    className="mb-4 text-sm text-gray-700"
-                    data-aos="zoom-y-out"
-                    data-aos-delay={300}
-                  >
-                    {isRegisterPage
-                      ? "Create an account to start your journey with us."
-                      : "Sign in to access your account and continue your journey with us."}
-                  </p>
-                </div>
+                <p
+                  className="text-sm text-gray-600 italic"
+                  data-aos="zoom-y-out"
+                  data-aos-delay={300}
+                >
+                  Simplifying complexity, one note at a time
+                </p>
               </div>
 
               {/* Auth form */}
