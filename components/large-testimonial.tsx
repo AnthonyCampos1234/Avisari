@@ -13,8 +13,8 @@ export default function LargeTestimonial() {
               <Image
                 className="rounded-full"
                 src={TestimonialImg}
-                width={48}
-                height={48}
+                width={47}
+                height={47}
                 alt="Large testimonial"
               />
             </div>
