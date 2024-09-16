@@ -22,7 +22,7 @@ export default function Header() {
                 height={50}
                 className="mr-2"
               />
-              <span className="text-lg font-semibold text-gray-800">Avisari Solutions</span>
+              <span className="text-lg font-semibold text-gray-800">Avisari</span>
             </Link>
           </div>
 
