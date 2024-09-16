@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -75,8 +75,8 @@ export default function SignIn() {
         sx={{
           marginTop: 8,
           display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'stretch',
+          flexDirection: 'column',
+          alignItems: 'center',
           bgcolor: 'background.paper',
           borderRadius: 2,
           boxShadow: 3,
@@ -85,7 +85,28 @@ export default function SignIn() {
       >
         <Box
           sx={{
-            flex: 1,
+            width: '100%',
+            bgcolor: '#f3f4f6',
+            p: 4,
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: '200px', // Adjust as needed
+          }}
+        >
+          <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>
+            Need help?
+          </Typography>
+          <Box sx={{ flexGrow: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
+            {chatSteps.map((step, index) => (
+              <ChatBubble key={index} type={step.type as 'user' | 'ai'} isVisible={index <= currentStep}>
+                {step.message}
+              </ChatBubble>
+            ))}
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            width: '100%',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
@@ -163,26 +184,6 @@ export default function SignIn() {
                 </Typography>
               </Link>
             </Box>
-          </Box>
-        </Box>
-        <Box
-          sx={{
-            flex: 1,
-            bgcolor: '#f3f4f6',
-            p: 4,
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
-          <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>
-            Need help?
-          </Typography>
-          <Box sx={{ flexGrow: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
-            {chatSteps.map((step, index) => (
-              <ChatBubble key={index} type={step.type as 'user' | 'ai'} isVisible={index <= currentStep}>
-                {step.message}
-              </ChatBubble>
-            ))}
           </Box>
         </Box>
       </Box>
