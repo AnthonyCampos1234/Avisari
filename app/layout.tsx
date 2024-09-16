@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: "Nota Solutions",
+  title: "Avisari",
 };
 
 export default function RootLayout({
