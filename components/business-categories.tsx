@@ -8,7 +8,7 @@ export default function BusinessCategories() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="pb-12 md:pb-20">
           {/* Added title */}
-          <h2 className="text-3xl font-bold text-center mb-8">Connecting Students With Advisors</h2>
+          <h2 className="text-3xl font-bold text-center mb-8">Connecting Students with Advisors</h2>
 
           {/* Tab panels */}
           <div className="relative flex h-[324px] items-center justify-center">
