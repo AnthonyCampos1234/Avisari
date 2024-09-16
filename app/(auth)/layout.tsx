@@ -50,25 +50,27 @@ export default function AuthLayout({
   );
 }
 
-// You can use these styled components in your sign-in and sign-up forms
-export function StyledInput({ icon, ...props }: React.InputHTMLAttributes<HTMLInputElement> & { icon: React.ReactNode }) {
+// New modern input component
+export function ModernInput({ icon, ...props }: React.InputHTMLAttributes<HTMLInputElement> & { icon: React.ReactNode }) {
   return (
-    <div className="relative rounded-full mb-4">
-      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+    <div className="relative mb-4">
+      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
         {icon}
       </div>
       <input
-        className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-full text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-black focus:border-black sm:text-sm"
+        className="block w-full pl-10 pr-3 py-2 border-b border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-black focus:ring-0 sm:text-sm transition-all duration-200"
         {...props}
       />
     </div>
   );
 }
 
-export function StyledButton({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+export function StyledButton({ children, disabled, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <button
-      className="w-full flex justify-center py-2 px-4 border border-transparent rounded-full shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+      className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black transition-all duration-200 ${disabled ? 'opacity-50 cursor-not-allowed' : ''
+        }`}
+      disabled={disabled}
       {...props}
     >
       {children}

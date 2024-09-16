@@ -4,17 +4,21 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { FiUser, FiMail, FiLock } from 'react-icons/fi';
-import AuthLayout, { StyledInput, StyledButton } from '../layout';
+import AuthLayout, { ModernInput, StyledButton } from '../layout';
 
 export default function SignUp() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
+    setError('');
+
     try {
       const response = await fetch('/api/auth/signup', {
         method: 'POST',
@@ -30,41 +34,45 @@ export default function SignUp() {
       }
     } catch (error) {
       setError('An unexpected error occurred');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <AuthLayout isSignUp>
       <form onSubmit={handleSubmit} className="space-y-6">
-        <StyledInput
-          icon={<FiUser className="text-gray-400" />}
+        <ModernInput
+          icon={<FiUser />}
           type="text"
           placeholder="Full name"
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
         />
-        <StyledInput
-          icon={<FiMail className="text-gray-400" />}
+        <ModernInput
+          icon={<FiMail />}
           type="email"
           placeholder="Email address"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <StyledInput
-          icon={<FiLock className="text-gray-400" />}
+        <ModernInput
+          icon={<FiLock />}
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        {error && <p className="text-red-500 text-sm">{error}</p>}
-        <StyledButton type="submit">Sign up</StyledButton>
+        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+        <StyledButton type="submit" disabled={isLoading}>
+          {isLoading ? 'Signing up...' : 'Sign up'}
+        </StyledButton>
       </form>
       <div className="mt-6 text-center">
-        <Link href="/signin" className="text-sm text-gray-600 hover:text-gray-900">
+        <Link href="/signin" className="text-sm text-gray-600 hover:text-gray-900 transition-colors duration-200">
           Already have an account? Sign in
         </Link>
       </div>
