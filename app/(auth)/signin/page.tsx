@@ -1,22 +1,54 @@
-"use client";
-
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { IconButton, Button, TextField, Container, Box, Typography } from '@mui/material';
-import LoginIcon from '@mui/icons-material/Login';
-import HelpIcon from '@mui/icons-material/Help';
+import { Button, TextField, Container, Box, Typography } from '@mui/material';
 import SchoolIcon from '@mui/icons-material/School';
-import { motion, AnimatePresence } from 'framer-motion';
+
+type ChatBubbleProps = {
+  type: 'user' | 'ai';
+  children: React.ReactNode;
+  isVisible: boolean;
+};
+
+const ChatBubble: React.FC<ChatBubbleProps> = ({ type, children, isVisible }) => {
+  const bubbleClasses = {
+    user: 'bg-blue-100 text-blue-800 ml-auto',
+    ai: 'bg-gray-100 text-gray-800',
+  };
+
+  return (
+    <div className={`rounded-lg p-3 max-w-[80%] ${bubbleClasses[type]} transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+      {children}
+    </div>
+  );
+};
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [openPopover, setOpenPopover] = useState('');
   const router = useRouter();
-  const popoverRef = useRef<HTMLDivElement>(null);
+  const [currentStep, setCurrentStep] = useState(0);
+
+  const chatSteps = [
+    { type: 'user', message: "Hi, I need to sign in to my account." },
+    { type: 'ai', message: "Of course! Please enter your email and password in the fields below. If you're a university student, you can also use the 'University Signin' button." },
+    { type: 'user', message: "What if I forgot my password?" },
+    { type: 'ai', message: "No problem! You can click on the 'Forgot password?' link below the sign-in form to reset your password." },
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (currentStep < chatSteps.length - 1) {
+        setCurrentStep(prev => prev + 1);
+      } else {
+        setCurrentStep(0);
+      }
+    }, 3000);
+
+    return () => clearInterval(timer);
+  }, [currentStep]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,161 +67,123 @@ export default function SignIn() {
     }
   };
 
-  const handlePopoverToggle = (popoverId: string) => {
-    setOpenPopover(prevState => prevState === popoverId ? '' : popoverId);
-  };
-
-  const popoverVariants = {
-    hidden: { opacity: 0, scale: 0.8, y: -20 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 20
-      }
-    },
-    exit: {
-      opacity: 0,
-      scale: 0.8,
-      y: -20,
-      transition: {
-        duration: 0.2
-      }
-    }
-  };
-
   return (
-    <Container component="main" maxWidth="sm">
+    <Container component="main" maxWidth="md">
       <Box
         sx={{
           marginTop: 8,
           display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
+          flexDirection: 'row',
+          alignItems: 'stretch',
           bgcolor: 'background.paper',
           borderRadius: 2,
           boxShadow: 3,
           overflow: 'hidden',
         }}
       >
-        <Box sx={{ mt: 3, mb: 2, px: 4, width: '100%' }}>
+        <Box
+          sx={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            p: 4,
+          }}
+        >
           <Typography component="h1" variant="h4" align="center" gutterBottom>
             Sign in to your account
           </Typography>
-        </Box>
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1, width: '100%', px: 4, pb: 4 }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {error && (
-            <Typography color="error" variant="body2" sx={{ mt: 1 }}>
-              {error}
-            </Typography>
-          )}
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2, borderRadius: 28, py: 1.5, bgcolor: '#111827', '&:hover': { bgcolor: '#374151' } }}
-          >
-            Sign In
-          </Button>
-          <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 2, mb: 2 }}>
-            Or
-          </Typography>
-          <Button
-            fullWidth
-            variant="contained"
-            startIcon={<SchoolIcon />}
-            sx={{
-              mt: 1,
-              mb: 2,
-              borderRadius: 28,
-              py: 1.5,
-              bgcolor: '#24292e',
-              '&:hover': { bgcolor: '#555' }
-            }}
-          >
-            University Signin
-          </Button>
-          <Box sx={{ mt: 2, textAlign: 'center' }}>
-            <Link href="/forgot-password" passHref>
-              <Typography
-                component="a"
-                variant="body2"
-                sx={{
-                  color: 'text.secondary',
-                  textDecoration: 'none',
-                  '&:hover': { textDecoration: 'underline' }
-                }}
-              >
-                Forgot password?
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            {error && (
+              <Typography color="error" variant="body2" sx={{ mt: 1 }}>
+                {error}
               </Typography>
-            </Link>
+            )}
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2, borderRadius: 28, py: 1.5, bgcolor: '#111827', '&:hover': { bgcolor: '#374151' } }}
+            >
+              Sign In
+            </Button>
+            <Button
+              fullWidth
+              variant="contained"
+              startIcon={<SchoolIcon />}
+              sx={{
+                mt: 1,
+                mb: 2,
+                borderRadius: 28,
+                py: 1.5,
+                bgcolor: '#24292e',
+                '&:hover': { bgcolor: '#555' }
+              }}
+            >
+              University Signin
+            </Button>
+            <Box sx={{ mt: 2, textAlign: 'center' }}>
+              <Link href="/forgot-password" passHref>
+                <Typography
+                  component="a"
+                  variant="body2"
+                  sx={{
+                    color: 'text.secondary',
+                    textDecoration: 'none',
+                    '&:hover': { textDecoration: 'underline' }
+                  }}
+                >
+                  Forgot password?
+                </Typography>
+              </Link>
+            </Box>
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            flex: 1,
+            bgcolor: '#f3f4f6',
+            p: 4,
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>
+            Need help?
+          </Typography>
+          <Box sx={{ flexGrow: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
+            {chatSteps.map((step, index) => (
+              <ChatBubble key={index} type={step.type as 'user' | 'ai'} isVisible={index <= currentStep}>
+                {step.message}
+              </ChatBubble>
+            ))}
           </Box>
         </Box>
       </Box>
     </Container>
   );
-}
-
-function PopoverContent({ type }: { type: string }) {
-  const buttonStyle = {
-    backgroundColor: '#111827',
-    '&:hover': {
-      backgroundColor: '#374151',
-    },
-    borderRadius: '9999px',
-    textTransform: 'none',
-    color: 'white',
-  };
-
-  switch (type) {
-    case 'signin':
-      return (
-        <Box sx={{ p: 2, width: 250 }}>
-          <Typography variant="h6" gutterBottom>Sign In</Typography>
-          <Typography variant="body2" paragraph>Enter your credentials to access your account.</Typography>
-          <Button variant="contained" fullWidth sx={buttonStyle}>
-            Learn More
-          </Button>
-        </Box>
-      );
-    case 'help':
-      return (
-        <Box sx={{ p: 2, width: 250 }}>
-          <Typography variant="h6" gutterBottom>Need Help?</Typography>
-          <Typography variant="body2" paragraph>Having trouble signing in? We're here to assist you.</Typography>
-          <Button href="/support" variant="contained" fullWidth sx={buttonStyle}>
-            Get Support
-          </Button>
-        </Box>
-      );
-    default:
-      return null;
-  }
 }
