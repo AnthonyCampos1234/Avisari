@@ -8,8 +8,14 @@ export default function LargeTestimonial() {
       <div className="mx-auto max-w-2xl px-4 sm:px-6">
         <div className="py-12 md:py-20">
           <div className="space-y-3 text-center">
-            <div className="relative inline-flex">
-              <NULogo />
+            <div className="relative inline-flex items-center">
+              <Image
+                src={NULogo}
+                width={60}
+                height={60}
+                alt="Northeastern University Logo"
+                className="mr-2"
+              />
               <Image
                 className="rounded-full"
                 src={TestimonialImg}
