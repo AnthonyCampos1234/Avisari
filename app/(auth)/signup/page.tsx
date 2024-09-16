@@ -8,15 +8,17 @@ import { Button, TextField, Container, Box, Typography } from '@mui/material';
 import SchoolIcon from '@mui/icons-material/School';
 
 type ChatBubbleProps = {
-  type: 'user' | 'ai';
+  type: 'student' | 'ai' | 'advisor' | 'system';
   children: React.ReactNode;
   isVisible: boolean;
 };
 
 const ChatBubble: React.FC<ChatBubbleProps> = ({ type, children, isVisible }) => {
   const bubbleClasses = {
-    user: 'bg-blue-100 text-blue-800 ml-auto',
+    student: 'bg-blue-100 text-blue-800 ml-auto',
     ai: 'bg-gray-100 text-gray-800',
+    advisor: 'bg-green-100 text-green-800',
+    system: 'bg-yellow-100 text-yellow-800 text-center italic',
   };
 
   return (
@@ -34,25 +36,39 @@ export default function SignUp() {
   const [error, setError] = useState("");
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(0);
+  const [isAdvisorChat, setIsAdvisorChat] = useState(false);
 
-  const chatSteps = [
-    { type: 'user', message: "Hi, I'd like to create a new account." },
-    { type: 'ai', message: "Great! Please fill out the registration form with your details. Make sure to use a strong password." },
-    { type: 'user', message: "Do I need to verify my email after signing up?" },
-    { type: 'ai', message: "Yes, we'll send a verification link to your email. Please check your inbox and click the link to activate your account." },
+  const chatSteps: { type: ChatBubbleProps['type']; message: string }[] = [
+    { type: 'student', message: "Hello, I need help with my course selection." },
+    { type: 'ai', message: "Of course! I'd be happy to help. What are your interests and current major?" },
+    { type: 'student', message: "I'm interested in computer science, but I'm not sure which courses to take next semester." },
+    { type: 'ai', message: "Based on your interests, I recommend considering courses in algorithms, data structures, and software engineering. However, for more personalized advice, I suggest speaking with an academic advisor." },
+    { type: 'system', message: "Connecting you with an advisor..." },
+  ];
+
+  const advisorChat: { type: ChatBubbleProps['type']; message: string }[] = [
+    { type: 'advisor', message: "Hi there! I'm your academic advisor. I see you're interested in computer science courses. Let's discuss your academic goals and create a plan that aligns with your interests and degree requirements." },
+    { type: 'student', message: "Thank you! I'd love to discuss my options for next semester." },
+    { type: 'advisor', message: "Great! Let's start by reviewing your current progress and then we can explore some course options that will help you meet your goals." },
   ];
 
   useEffect(() => {
     const timer = setInterval(() => {
-      if (currentStep < chatSteps.length - 1) {
+      if (!isAdvisorChat && currentStep < chatSteps.length - 1) {
+        setCurrentStep(prev => prev + 1);
+      } else if (!isAdvisorChat && currentStep === chatSteps.length - 1) {
+        setIsAdvisorChat(true);
+        setCurrentStep(0);
+      } else if (isAdvisorChat && currentStep < advisorChat.length - 1) {
         setCurrentStep(prev => prev + 1);
       } else {
+        setIsAdvisorChat(false);
         setCurrentStep(0);
       }
     }, 3000);
 
     return () => clearInterval(timer);
-  }, [currentStep]);
+  }, [currentStep, isAdvisorChat]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -98,24 +114,33 @@ export default function SignUp() {
         <Box
           sx={{
             width: '100%',
-            bgcolor: '#f3f4f6',
+            bgcolor: 'white',
             p: 4,
             borderRadius: 2,
             boxShadow: 3,
             mb: 4,
-            minHeight: '200px',
+            height: '300px',
+            overflow: 'hidden',
           }}
         >
-          <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>
-            Need help?
-          </Typography>
-          <Box sx={{ flexGrow: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
-            {chatSteps.map((step, index) => (
-              <ChatBubble key={index} type={step.type as 'user' | 'ai'} isVisible={index <= currentStep}>
-                {step.message}
-              </ChatBubble>
-            ))}
-          </Box>
+          <div className={`h-full transition-opacity duration-1000 ${isAdvisorChat ? 'opacity-0' : 'opacity-100'}`}>
+            <div className="h-full overflow-y-auto space-y-4">
+              {chatSteps.map((step, index) => (
+                <ChatBubble key={index} type={step.type} isVisible={index <= currentStep}>
+                  {step.message}
+                </ChatBubble>
+              ))}
+            </div>
+          </div>
+          <div className={`h-full transition-opacity duration-1000 ${isAdvisorChat ? 'opacity-100' : 'opacity-0'}`} style={{ marginTop: '-300px' }}>
+            <div className="h-full overflow-y-auto space-y-4">
+              {advisorChat.map((step, index) => (
+                <ChatBubble key={index} type={step.type} isVisible={index <= currentStep}>
+                  {step.message}
+                </ChatBubble>
+              ))}
+            </div>
+          </div>
         </Box>
 
         {/* Sign Up Form Section */}
