@@ -62,7 +62,7 @@ export default function SignIn() {
   };
 
   return (
-    <Container component="main" maxWidth="sm">
+    <Container component="main" maxWidth="md">
       <Box
         sx={{
           marginTop: 8,
@@ -73,14 +73,15 @@ export default function SignIn() {
           borderRadius: 2,
           boxShadow: 3,
           overflow: 'hidden',
+          width: '100%',
         }}
       >
-        <Box sx={{ mt: 3, mb: 2, px: 4, width: '100%' }}>
+        <Box sx={{ mt: 3, mb: 2, px: 6, width: '100%' }}>
           <Typography component="h1" variant="h4" align="center" gutterBottom>
             Sign in to your account
           </Typography>
         </Box>
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1, width: '100%', px: 4, pb: 4 }}>
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1, width: '100%', px: 6, pb: 4 }}>
           <TextField
             margin="normal"
             required
