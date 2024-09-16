@@ -1,3 +1,5 @@
+'use client';
+
 import SignIn from '@/components/signin-form'
 import Image from 'next/image'
 import AuthImage from '@/public/images/auth-bg.svg'
