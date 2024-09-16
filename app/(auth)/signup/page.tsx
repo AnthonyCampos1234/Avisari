@@ -8,6 +8,11 @@ import { Button, TextField, Box, Typography } from '@mui/material';
 import SchoolIcon from '@mui/icons-material/School';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CircularProgress from '@mui/material/CircularProgress';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 
 export default function SignUp() {
   const [name, setName] = useState("");
@@ -16,6 +21,7 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [userType, setUserType] = useState("student");
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -28,7 +34,7 @@ export default function SignUp() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ name, email, phone, password }),
+      body: JSON.stringify({ name, email, phone, password, userType }),
     });
 
     if (response.ok) {
@@ -54,6 +60,20 @@ export default function SignUp() {
 
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
+      <FormControl component="fieldset" sx={{ mb: 2 }}>
+        <FormLabel component="legend">I am a:</FormLabel>
+        <RadioGroup
+          row
+          aria-label="user type"
+          name="user-type"
+          value={userType}
+          onChange={(e) => setUserType(e.target.value)}
+        >
+          <FormControlLabel value="student" control={<Radio />} label="Student" />
+          <FormControlLabel value="advisor" control={<Radio />} label="Advisor" />
+        </RadioGroup>
+      </FormControl>
+
       <TextField
         margin="normal"
         required
