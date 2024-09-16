@@ -10,12 +10,12 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
-    const { name, email } = await req.json();
+    const { name, email, userType } = await req.json();
 
     try {
         const { data: updatedUser, error } = await supabase
             .from('User')
-            .update({ name, email })
+            .update({ name, email, user_type: userType })
             .eq('email', session.user?.email as string)
             .select()
             .single();
