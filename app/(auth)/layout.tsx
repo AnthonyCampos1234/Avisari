@@ -1,16 +1,75 @@
 import Image from "next/image";
 import Logo from "@/components/ui/logo";
 import AuthBg from "@/public/images/auth-bg.svg";
+import PageIllustration from "@/components/page-illustration";
+import React, { useState, useEffect } from 'react';
+
+type ChatBubbleProps = {
+  type: 'student' | 'ai' | 'advisor' | 'system';
+  children: React.ReactNode;
+  isVisible: boolean;
+};
+
+const ChatBubble: React.FC<ChatBubbleProps> = ({ type, children, isVisible }) => {
+  const bubbleClasses = {
+    student: 'bg-blue-100 text-blue-800 ml-auto',
+    ai: 'bg-gray-100 text-gray-800',
+    advisor: 'bg-green-100 text-green-800',
+    system: 'bg-yellow-100 text-yellow-800 text-center italic',
+  };
+
+  return (
+    <div className={`rounded-lg p-3 max-w-[80%] ${bubbleClasses[type]} transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+      {children}
+    </div>
+  );
+};
 
 export default function AuthLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const [currentStep, setCurrentStep] = useState(0);
+  const [isAdvisorChat, setIsAdvisorChat] = useState(false);
+
+  const chatSteps = [
+    { type: 'student', message: "Hello, I need help with my course selection." },
+    { type: 'ai', message: "Of course! I'd be happy to help. What are your interests and current major?" },
+    { type: 'student', message: "I'm interested in computer science, but I'm not sure which courses to take next semester." },
+    { type: 'ai', message: "Based on your interests, I recommend considering courses in algorithms, data structures, and software engineering. However, for more personalized advice, I suggest speaking with an academic advisor." },
+    { type: 'system', message: "Connecting you with an advisor..." },
+  ];
+
+  const advisorChat = [
+    { type: 'advisor', message: "Hi there! I'm your academic advisor. I see you're interested in computer science courses. Let's discuss your academic goals and create a plan that aligns with your interests and degree requirements." },
+    { type: 'student', message: "Thank you! I'd love to discuss my options for next semester." },
+    { type: 'advisor', message: "Great! Let's start by reviewing your current progress and then we can explore some course options that will help you meet your goals." },
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (!isAdvisorChat && currentStep < chatSteps.length - 1) {
+        setCurrentStep(prev => prev + 1);
+      } else if (!isAdvisorChat && currentStep === chatSteps.length - 1) {
+        setIsAdvisorChat(true);
+        setCurrentStep(0);
+      } else if (isAdvisorChat && currentStep < advisorChat.length - 1) {
+        setCurrentStep(prev => prev + 1);
+      } else {
+        setIsAdvisorChat(false);
+        setCurrentStep(0);
+      }
+    }, 3000); // Adjust timing as needed
+
+    return () => clearInterval(timer);
+  }, [currentStep, isAdvisorChat]);
+
   return (
-    <>
+    <section className="relative">
+      <PageIllustration />
       <header className="absolute z-30 w-full">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="flex h-16 items-center justify-between md:h-20">
             {/* Site branding */}
             <div className="mr-4 shrink-0">
@@ -30,68 +89,92 @@ export default function AuthLayout({
 
         {/* Content */}
         <div className="w-full">
-          <div className="flex h-full flex-col justify-center before:min-h-[4rem] before:flex-1 after:flex-1 md:before:min-h-[5rem]">
-            <div className="px-4 sm:px-6">
-              <div className="mx-auto w-full max-w-sm">
-                <div className="py-16 md:py-20">{children}</div>
+          <div className="mx-auto max-w-7xl px-4 sm:px-6">
+            <div className="pb-12 pt-32 md:pb-20 md:pt-40">
+              {/* Section header */}
+              <div className="pb-12 text-center md:pb-16">
+                <h1
+                  className="mb-6 border-y text-5xl font-bold [border-image:linear-gradient(to_right,transparent,theme(colors.slate.300/.8),transparent)1] md:text-6xl"
+                  data-aos="zoom-y-out"
+                  data-aos-delay={150}
+                >
+                  AI-Powered Solutions for <br className="max-lg:hidden" />
+                  Higher Education
+                </h1>
+                <div className="mx-auto max-w-3xl">
+                  <p
+                    className="mb-8 text-lg text-gray-700"
+                    data-aos="zoom-y-out"
+                    data-aos-delay={300}
+                  >
+                    Nota Solutions revolutionizes university operations with Insight for college advising and Savior for student financial services.
+                  </p>
+                  <div className="relative before:absolute before:inset-0 before:border-y before:[border-image:linear-gradient(to_right,transparent,theme(colors.slate.300/.8),transparent)1]">
+                    <div
+                      className="mx-auto max-w-xs sm:flex sm:max-w-none sm:justify-center"
+                      data-aos="zoom-y-out"
+                      data-aos-delay={450}
+                    >
+                      <a
+                        className="btn group mb-4 w-full bg-gradient-to-t from-black to-gray-800 bg-[length:100%_100%] bg-[bottom] text-white shadow hover:bg-[length:100%_150%] sm:mb-0 sm:w-auto"
+                        href="#0"
+                      >
+                        <span className="relative inline-flex items-center">
+                          Request Demo{" "}
+                          <span className="ml-1 tracking-normal text-gray-300 transition-transform group-hover:translate-x-0.5">
+                            -&gt;
+                          </span>
+                        </span>
+                      </a>
+                      <a
+                        className="btn w-full bg-white text-gray-800 shadow hover:bg-gray-50 sm:ml-4 sm:w-auto"
+                        href="#0"
+                      >
+                        Learn More
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Hero image */}
+              <div
+                className="mx-auto max-w-4xl"
+                data-aos="zoom-y-out"
+                data-aos-delay={600}
+              >
+                <div className="relative aspect-video rounded-2xl bg-white p-10 shadow-xl overflow-hidden">
+                  <div className={`absolute inset-0 flex flex-col h-full transition-opacity duration-1000 ${isAdvisorChat ? 'opacity-0' : 'opacity-100'}`}>
+                    <div className="mb-6 mt-4 text-gray-500 text-sm font-medium ml-4">Chat with AI Assistant</div>
+                    <div className="flex-grow overflow-y-auto space-y-4 px-4">
+                      {chatSteps.map((step, index) => (
+                        <ChatBubble key={index} type={step.type as 'student' | 'ai' | 'system'} isVisible={index <= currentStep}>
+                          {step.message}
+                        </ChatBubble>
+                      ))}
+                    </div>
+                  </div>
+                  <div className={`absolute inset-0 flex flex-col h-full transition-opacity duration-1000 ${isAdvisorChat ? 'opacity-100' : 'opacity-0'}`}>
+                    <div className="mb-6 mt-4 text-gray-500 text-sm font-medium ml-4">Chat with Academic Advisor</div>
+                    <div className="flex-grow overflow-y-auto space-y-4 px-4">
+                      {advisorChat.map((step, index) => (
+                        <ChatBubble key={index} type={step.type as 'advisor' | 'student'} isVisible={index <= currentStep}>
+                          {step.message}
+                        </ChatBubble>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Auth form */}
+              <div className="mx-auto w-full max-w-sm mt-12">
+                <div className="py-8 md:py-12">{children}</div>
               </div>
             </div>
           </div>
         </div>
-
-        <>
-          {/* Right side */}
-          <div className="relative my-6 mr-6 hidden w-[572px] shrink-0 overflow-hidden rounded-2xl lg:block">
-            {/* Background */}
-            <div
-              className="pointer-events-none absolute left-1/2 top-1/2 -z-10 -ml-24 -translate-x-1/2 -translate-y-1/2 bg-blue-50"
-              aria-hidden="true"
-            >
-              <Image
-                src={AuthBg}
-                className="max-w-none"
-                width={1285}
-                height={1684}
-                alt="Auth bg"
-              />
-            </div>
-            {/* Illustration */}
-            <div className="absolute left-32 top-1/2 w-[500px] -translate-y-1/2">
-              <div className="aspect-video w-full rounded-2xl bg-gray-900 px-5 py-3 shadow-xl transition duration-300">
-                <div className="relative mb-8 flex items-center justify-between before:block before:h-[9px] before:w-[41px] before:bg-[length:16px_9px] before:[background-image:radial-gradient(circle_at_4.5px_4.5px,_theme(colors.gray.600)_4.5px,_transparent_0)] after:w-[41px]">
-                  <span className="text-[13px] font-medium text-white">
-                    cruip.com
-                  </span>
-                </div>
-                <div className="font-mono text-sm text-gray-500 transition duration-300 [&_span]:opacity-0">
-                  <span className="animate-[code-1_10s_infinite] text-gray-200">
-                    npm login
-                  </span>{" "}
-                  <span className="animate-[code-2_10s_infinite]">
-                    --registry=https://npm.pkg.github.com
-                  </span>
-                  <br />
-                  <span className="animate-[code-3_10s_infinite]">
-                    --scope=@phanatic
-                  </span>{" "}
-                  <span className="animate-[code-4_10s_infinite]">
-                    Successfully logged-in.
-                  </span>
-                  <br />
-                  <br />
-                  <span className="animate-[code-5_10s_infinite] text-gray-200">
-                    npm publish
-                  </span>
-                  <br />
-                  <span className="animate-[code-6_10s_infinite]">
-                    Package published.
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </>
       </main>
-    </>
+    </section>
   );
 }
