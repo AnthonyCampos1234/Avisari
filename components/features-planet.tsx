@@ -12,7 +12,7 @@ export default function FeaturesPlanet() {
           {/* Section header */}
           <div className="mx-auto max-w-3xl pb-16 text-center md:pb-20">
             <h2 className="text-3xl font-bold text-gray-800 md:text-4xl">
-              Nota Solutions empowers universities to enhance student success
+              Avisari empowers universities to enhance student success
             </h2>
           </div>
           {/* Trusted by universities */}
