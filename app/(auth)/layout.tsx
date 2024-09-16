@@ -40,7 +40,7 @@ export default function AuthLayout({
         <div className="w-full">
           <div className="mx-auto max-w-7xl px-4 sm:px-6">
             <div className="pb-12 pt-24 md:pb-20 md:pt-32">
-              {/* Section header - Moved up */}
+              {/* Section header */}
               <div className="text-center mb-8">
                 <h1
                   className="mb-4 text-3xl font-bold md:text-4xl"
