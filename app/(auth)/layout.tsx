@@ -1,3 +1,4 @@
+import { usePathname } from 'next/navigation';
 import Image from "next/image";
 import Logo from "@/components/ui/logo";
 import AuthBg from "@/public/images/auth-bg.svg";
@@ -8,6 +9,10 @@ export default function AuthLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+
+  const isRegisterPage = pathname === '/register';
+
   return (
     <section className="relative">
       <PageIllustration />
@@ -41,7 +46,7 @@ export default function AuthLayout({
                   data-aos="zoom-y-out"
                   data-aos-delay={150}
                 >
-                  Welcome Back
+                  {isRegisterPage ? "Join Us Today" : "Welcome Back"}
                 </h1>
                 <div className="mx-auto max-w-3xl">
                   <p
@@ -49,7 +54,9 @@ export default function AuthLayout({
                     data-aos="zoom-y-out"
                     data-aos-delay={300}
                   >
-                    Sign in to access your account and continue your journey with us.
+                    {isRegisterPage
+                      ? "Create an account to start your journey with us."
+                      : "Sign in to access your account and continue your journey with us."}
                   </p>
                 </div>
               </div>
