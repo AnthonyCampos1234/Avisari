@@ -18,11 +18,11 @@ export default function Header() {
               <Image
                 src={Logo01}
                 alt="Logo"
-                width={40}
-                height={40}
+                width={50}
+                height={50}
                 className="mr-2"
               />
-              <span className="text-lg font-semibold text-gray-800">Your Site Name</span>
+              <span className="text-lg font-semibold text-gray-800">Avisari Solutions</span>
             </Link>
           </div>
 
