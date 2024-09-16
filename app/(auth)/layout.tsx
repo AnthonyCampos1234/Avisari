@@ -1,10 +1,9 @@
 "use client";
 
-import { usePathname } from 'next/navigation';
 import Image from "next/image";
-import Logo from "@/components/ui/logo";
-import AuthBg from "@/public/images/auth-bg.svg";
+import Logo from "@/public/images/logo-01.svg";
 import PageIllustration from "@/components/page-illustration";
+import { Box, Container, Paper, Typography } from '@mui/material';
 
 export default function AuthLayout({
   children,
@@ -12,57 +11,51 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <section className="relative">
+    <Box
+      sx={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        bgcolor: '#f0f4f8', // Light background color
+      }}
+    >
       <PageIllustration />
-      <header className="absolute z-30 w-full">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <div className="flex h-16 items-center justify-between md:h-20">
-            {/* Site branding */}
-            <div className="mr-4 shrink-0">
-              <Logo />
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <main className="relative flex grow">
-        <div
-          className="pointer-events-none absolute bottom-0 left-0 -translate-x-1/3"
-          aria-hidden="true"
+      <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
+        <Paper
+          elevation={6}
+          sx={{
+            my: { xs: 3, md: 6 },
+            p: { xs: 2, md: 3 },
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            borderRadius: 2,
+            position: 'relative',
+            overflow: 'hidden',
+          }}
         >
-          <div className="h-80 w-80 rounded-full bg-gradient-to-tr from-blue-500 opacity-70 blur-[160px]"></div>
-        </div>
-
-        {/* Content */}
-        <div className="w-full">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6">
-            <div className="pb-12 pt-24 md:pb-20 md:pt-32">
-              {/* Section header */}
-              <div className="text-center mb-8">
-                <h1
-                  className="mb-2 text-3xl font-bold md:text-4xl"
-                  data-aos="zoom-y-out"
-                  data-aos-delay={150}
-                >
-                  Nota Solutions
-                </h1>
-                <p
-                  className="text-sm text-gray-600 italic"
-                  data-aos="zoom-y-out"
-                  data-aos-delay={300}
-                >
-                  Simplifying complexity, one university at a time
-                </p>
-              </div>
-
-              {/* Auth form */}
-              <div className="mx-auto w-full max-w-sm">
-                <div className="py-6 md:py-8">{children}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
-    </section>
+          <Box
+            sx={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: '4px',
+              background: 'linear-gradient(to right, #4ffbb4, #f14771, #23bbe9)',
+            }}
+          />
+          <Box sx={{ my: 2 }}>
+            <Image src={Logo} alt="Avisari Solutions Logo" width={100} height={100} />
+          </Box>
+          <Typography component="h1" variant="h4" gutterBottom>
+            Avisari Solutions
+          </Typography>
+          <Typography variant="subtitle1" color="text.secondary" align="center" sx={{ mb: 3 }}>
+            Simplifying complexity, one university at a time
+          </Typography>
+          {children}
+        </Paper>
+      </Container>
+    </Box>
   );
 }

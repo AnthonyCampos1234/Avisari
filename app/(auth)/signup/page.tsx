@@ -1,14 +1,11 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
-import { IconButton, Button, TextField, Container, Box, Typography } from '@mui/material';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import HelpIcon from '@mui/icons-material/Help';
+import { Button, TextField, Box, Typography } from '@mui/material';
 import SchoolIcon from '@mui/icons-material/School';
-import { motion, AnimatePresence } from 'framer-motion';
 import CircularProgress from '@mui/material/CircularProgress';
 
 export default function SignUp() {
@@ -17,10 +14,8 @@ export default function SignUp() {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [openPopover, setOpenPopover] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const popoverRef = useRef<HTMLDivElement>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,222 +51,127 @@ export default function SignUp() {
     }
   };
 
-  const handlePopoverToggle = (popoverId: string) => {
-    setOpenPopover(prevState => prevState === popoverId ? '' : popoverId);
-  };
-
-  const popoverVariants = {
-    hidden: { opacity: 0, scale: 0.8, y: -20 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 20
-      }
-    },
-    exit: {
-      opacity: 0,
-      scale: 0.8,
-      y: -20,
-      transition: {
-        duration: 0.2
-      }
-    }
-  };
-
   return (
-    <Container component="main" maxWidth="md">
-      <Box
+    <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
+      <TextField
+        margin="normal"
+        required
+        fullWidth
+        id="name"
+        label="Full Name"
+        name="name"
+        autoComplete="name"
+        autoFocus
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <TextField
+        margin="normal"
+        required
+        fullWidth
+        id="email"
+        label="Email Address"
+        name="email"
+        autoComplete="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <TextField
+        margin="normal"
+        required
+        fullWidth
+        id="phone"
+        label="Phone Number"
+        name="phone"
+        autoComplete="tel"
+        value={phone}
+        onChange={(e) => setPhone(e.target.value)}
+      />
+      <TextField
+        margin="normal"
+        required
+        fullWidth
+        name="password"
+        label="Password"
+        type="password"
+        id="password"
+        autoComplete="new-password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      {error && (
+        <Typography color="error" variant="body2" sx={{ mt: 1 }}>
+          {error}
+        </Typography>
+      )}
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
+        disabled={isLoading}
         sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          bgcolor: 'background.paper',
+          mt: 3,
+          mb: 2,
           borderRadius: 2,
-          boxShadow: 3,
-          overflow: 'hidden',
-          width: '100%',
-          position: 'relative',
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            height: '4px',
-            background: 'linear-gradient(to right, #4ffbb4, #f14771, #23bbe9)',
-          },
+          py: 1.5,
+          bgcolor: '#4ffbb4',
+          '&:hover': { bgcolor: '#3dd092' },
         }}
       >
-        <Box sx={{ mt: 3, mb: 2, px: 6, width: '100%' }}>
-          <Typography component="h1" variant="h4" align="center" gutterBottom>
-            Create your account
-          </Typography>
-        </Box>
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1, width: '100%', px: 6, pb: 4 }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="name"
-            label="Full Name"
-            name="name"
-            autoComplete="name"
-            autoFocus
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="phone"
-            label="Phone Number"
-            name="phone"
-            autoComplete="tel"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="new-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {error && (
-            <Typography color="error" variant="body2" sx={{ mt: 1 }}>
-              {error}
+        {isLoading ? <CircularProgress size={24} color="inherit" /> : "Register"}
+      </Button>
+      <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 2, mb: 2 }}>
+        Or
+      </Typography>
+      <Button
+        fullWidth
+        variant="outlined"
+        startIcon={<SchoolIcon />}
+        sx={{
+          mt: 1,
+          mb: 2,
+          borderRadius: 2,
+          py: 1.5,
+          color: '#23bbe9',
+          borderColor: '#23bbe9',
+          '&:hover': { bgcolor: 'rgba(35, 187, 233, 0.04)' }
+        }}
+      >
+        University Signup
+      </Button>
+      <Box sx={{ mt: 2, textAlign: 'center' }}>
+        <Typography variant="body2" color="text.secondary">
+          By signing up, you agree to the{" "}
+          <Link href="#0" passHref>
+            <Typography
+              component="a"
+              variant="body2"
+              sx={{
+                color: '#23bbe9',
+                textDecoration: 'none',
+                '&:hover': { textDecoration: 'underline' }
+              }}
+            >
+              Terms of Service
             </Typography>
-          )}
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            disabled={isLoading}
-            sx={{
-              mt: 3,
-              mb: 2,
-              borderRadius: 28,
-              py: 1.5,
-              background: 'linear-gradient(45deg, #4ffbb4, #f14771, #23bbe9)',
-              '&:hover': { opacity: 0.9 },
-              transition: 'opacity 0.3s',
-            }}
-          >
-            {isLoading ? <CircularProgress size={24} color="inherit" /> : "Register"}
-          </Button>
-          <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 2, mb: 2 }}>
-            Or
-          </Typography>
-          <Button
-            fullWidth
-            variant="contained"
-            startIcon={<SchoolIcon />}
-            sx={{
-              mt: 1,
-              mb: 2,
-              borderRadius: 28,
-              py: 1.5,
-              bgcolor: '#24292e',
-              '&:hover': { bgcolor: '#555' }
-            }}
-          >
-            University Signup
-          </Button>
-          <Box sx={{ mt: 2, textAlign: 'center' }}>
-            <Typography variant="body2" color="text.secondary">
-              By signing up, you agree to the{" "}
-              <Link href="#0" passHref>
-                <Typography
-                  component="a"
-                  variant="body2"
-                  sx={{
-                    color: '#23bbe9',
-                    textDecoration: 'none',
-                    '&:hover': { textDecoration: 'underline' }
-                  }}
-                >
-                  Terms of Service
-                </Typography>
-              </Link>{" "}
-              and{" "}
-              <Link href="#0" passHref>
-                <Typography
-                  component="a"
-                  variant="body2"
-                  sx={{
-                    color: '#23bbe9',
-                    textDecoration: 'none',
-                    '&:hover': { textDecoration: 'underline' }
-                  }}
-                >
-                  Privacy Policy
-                </Typography>
-              </Link>
-              .
+          </Link>{" "}
+          and{" "}
+          <Link href="#0" passHref>
+            <Typography
+              component="a"
+              variant="body2"
+              sx={{
+                color: '#23bbe9',
+                textDecoration: 'none',
+                '&:hover': { textDecoration: 'underline' }
+              }}
+            >
+              Privacy Policy
             </Typography>
-          </Box>
-        </Box>
+          </Link>
+          .
+        </Typography>
       </Box>
-    </Container>
+    </Box>
   );
-}
-
-function PopoverContent({ type }: { type: string }) {
-  const buttonStyle = {
-    background: 'linear-gradient(45deg, #4ffbb4, #f14771, #23bbe9)',
-    '&:hover': {
-      opacity: 0.9,
-    },
-    borderRadius: '9999px',
-    textTransform: 'none',
-    color: 'white',
-    transition: 'opacity 0.3s',
-  };
-
-  switch (type) {
-    case 'signup':
-      return (
-        <Box sx={{ p: 2, width: 250 }}>
-          <Typography variant="h6" gutterBottom>Sign Up</Typography>
-          <Typography variant="body2" paragraph>Create your account to get started.</Typography>
-          <Button variant="contained" fullWidth sx={buttonStyle}>
-            Learn More
-          </Button>
-        </Box>
-      );
-    case 'help':
-      return (
-        <Box sx={{ p: 2, width: 250 }}>
-          <Typography variant="h6" gutterBottom>Need Help?</Typography>
-          <Typography variant="body2" paragraph>Having trouble signing up? We're here to assist you.</Typography>
-          <Button href="/support" variant="contained" fullWidth sx={buttonStyle}>
-            Get Support
-          </Button>
-        </Box>
-      );
-    default:
-      return null;
-  }
 }
