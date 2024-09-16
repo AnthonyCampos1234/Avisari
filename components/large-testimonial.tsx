@@ -31,13 +31,13 @@ export default function LargeTestimonial() {
             </div>
             <p className="text-2xl font-bold text-gray-900">
               “Nota Solutions has been a game changer for our students. It's now easier than ever to{" "}
-              <em className="italic text-gray-500">keep track of tasks</em>,
+              <em className="italic text-blue-500">keep track of tasks</em>,
               it's become my go-to tool for everything.”
             </p>
             <div className="text-sm font-medium text-gray-500">
               <span className="text-gray-700">Mary Sullivan</span>{" "}
               <span className="text-gray-400">/</span>{" "}
-              <a className="text-blue-500" href="#0">
+              <a className="text-red-500 hover:text-red-600" href="#0">
                 Advisor at Northeastern University
               </a>
             </div>
