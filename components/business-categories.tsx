@@ -174,7 +174,7 @@ export default function BusinessCategories() {
               <div className="animate-[breath_8s_ease-in-out_infinite_both]">
                 <div className="flex h-32 w-32 items-center justify-center rounded-full bg-white shadow-lg shadow-black/[0.03] before:absolute before:inset-0 before:m-[8.334%] before:rounded-[inherit] before:border before:border-gray-700/5 before:bg-gray-200/60 before:[mask-image:linear-gradient(to_bottom,black,transparent)]">
                   <Image
-                    className="relative w-24 h-24"
+                    className="relative w-full h-full object-contain"
                     src={Logo01}
                     width={928}
                     height={928}
