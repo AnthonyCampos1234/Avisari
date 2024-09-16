@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button, TextField, Box, Typography } from '@mui/material';
 import SchoolIcon from '@mui/icons-material/School';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CircularProgress from '@mui/material/CircularProgress';
 
 export default function SignIn() {
@@ -76,8 +77,8 @@ export default function SignIn() {
           mb: 2,
           borderRadius: 2,
           py: 1.5,
-          bgcolor: '#4ffbb4',
-          '&:hover': { bgcolor: '#3dd092' },
+          bgcolor: '#000000',
+          '&:hover': { bgcolor: '#333333' },
         }}
       >
         {isLoading ? <CircularProgress size={24} color="inherit" /> : "Sign In"}
@@ -101,7 +102,7 @@ export default function SignIn() {
       >
         University Signin
       </Button>
-      <Box sx={{ mt: 2, textAlign: 'center' }}>
+      <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Link href="/forgot-password" passHref>
           <Typography
             component="a"
@@ -114,6 +115,32 @@ export default function SignIn() {
           >
             Forgot password?
           </Typography>
+        </Link>
+        <Link href="/signup" passHref>
+          <Typography
+            component="a"
+            variant="body2"
+            sx={{
+              color: '#23bbe9',
+              textDecoration: 'none',
+              '&:hover': { textDecoration: 'underline' }
+            }}
+          >
+            Don't have an account? Sign Up
+          </Typography>
+        </Link>
+      </Box>
+      <Box sx={{ mt: 2, textAlign: 'center' }}>
+        <Link href="/" passHref>
+          <Button
+            startIcon={<ArrowBackIcon />}
+            sx={{
+              color: '#666',
+              '&:hover': { bgcolor: 'rgba(0, 0, 0, 0.04)' }
+            }}
+          >
+            Back to Home
+          </Button>
         </Link>
       </Box>
     </Box>
