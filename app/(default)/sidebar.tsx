@@ -7,6 +7,7 @@ import { FiHome, FiBook, FiDollarSign, FiUser, FiLogOut } from "react-icons/fi";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import CircularProgress from '@mui/material/CircularProgress';
+import Image from 'next/image';
 
 type SidebarProps = {
     expanded: boolean;
@@ -28,10 +29,13 @@ export default function Sidebar({ expanded, setExpanded }: SidebarProps) {
     return (
         <div className={`fixed inset-y-0 left-0 z-30 transition-all duration-500 ease-in-out ${expanded ? "w-48" : "w-16"}`}>
             <div
-                className="bg-white h-full rounded-r-3xl shadow-lg flex flex-col"
+                className="bg-gradient-to-b from-blue-500 to-blue-600 h-full rounded-r-3xl shadow-lg flex flex-col"
                 onMouseEnter={() => setExpanded(true)}
                 onMouseLeave={() => setExpanded(false)}
             >
+                <div className="flex items-center justify-center h-16 mb-4">
+                    <Image src="/images/logo-01.svg" alt="Logo" width={40} height={40} className="transition-all duration-500 ease-in-out" style={{ width: expanded ? '40px' : '32px' }} />
+                </div>
                 <div className="flex-grow flex flex-col items-center justify-start py-8">
                     <SidebarLink
                         icon={<FiHome />}
@@ -110,7 +114,7 @@ function SidebarLink({
     );
 
     const className = `flex items-center ${expanded ? "w-[calc(100%-8px)] mx-1" : "w-10"
-        } px-3 py-2 mb-2 text-gray-700 hover:bg-gray-200 rounded-full ${active ? "bg-black text-white" : ""
+        } px-3 py-2 mb-2 text-white hover:bg-blue-400 rounded-full ${active ? "bg-blue-700" : ""
         } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`;
 
     if (onClick) {
