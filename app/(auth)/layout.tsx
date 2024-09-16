@@ -51,7 +51,7 @@ export default function AuthLayout({
                   data-aos="zoom-y-out"
                   data-aos-delay={300}
                 >
-                  Simplifying complexity, one note at a time
+                  Simplifying complexity, one university at a time
                 </p>
               </div>
 

@@ -9,24 +9,29 @@ import LoginIcon from '@mui/icons-material/Login';
 import HelpIcon from '@mui/icons-material/Help';
 import SchoolIcon from '@mui/icons-material/School';
 import { motion, AnimatePresence } from 'framer-motion';
+import CircularProgress from '@mui/material/CircularProgress';
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [openPopover, setOpenPopover] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const popoverRef = useRef<HTMLDivElement>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
 
     const result = await signIn("credentials", {
       email,
       password,
       redirect: false,
     });
+
+    setIsLoading(false);
 
     if (result?.error) {
       setError(result.error);
@@ -115,9 +120,10 @@ export default function SignIn() {
             type="submit"
             fullWidth
             variant="contained"
+            disabled={isLoading}
             sx={{ mt: 3, mb: 2, borderRadius: 28, py: 1.5, bgcolor: '#111827', '&:hover': { bgcolor: '#374151' } }}
           >
-            Sign In
+            {isLoading ? <CircularProgress size={24} color="inherit" /> : "Sign In"}
           </Button>
           <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 2, mb: 2 }}>
             Or

@@ -9,6 +9,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import HelpIcon from '@mui/icons-material/Help';
 import SchoolIcon from '@mui/icons-material/School';
 import { motion, AnimatePresence } from 'framer-motion';
+import CircularProgress from '@mui/material/CircularProgress';
 
 export default function SignUp() {
   const [name, setName] = useState("");
@@ -17,12 +18,14 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [openPopover, setOpenPopover] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const popoverRef = useRef<HTMLDivElement>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
 
     const response = await fetch("/api/auth/signup", {
       method: "POST",
@@ -39,12 +42,15 @@ export default function SignUp() {
         redirect: false,
       });
 
+      setIsLoading(false);
+
       if (result?.error) {
         setError(result.error);
       } else {
         router.push("/dashboard");
       }
     } else {
+      setIsLoading(false);
       const data = await response.json();
       setError(data.error || "An error occurred during sign up");
     }
@@ -152,9 +158,10 @@ export default function SignUp() {
             type="submit"
             fullWidth
             variant="contained"
+            disabled={isLoading}
             sx={{ mt: 3, mb: 2, borderRadius: 28, py: 1.5, bgcolor: '#111827', '&:hover': { bgcolor: '#374151' } }}
           >
-            Register
+            {isLoading ? <CircularProgress size={24} color="inherit" /> : "Register"}
           </Button>
           <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 2, mb: 2 }}>
             Or
