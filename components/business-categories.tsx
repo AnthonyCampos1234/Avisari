@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Logo01 from "@/public/images/logo-01.svg";
+import Logo01 from "@/public/images/Avisari_Logo.jpg";
 import { FaUserGraduate, FaChalkboardTeacher } from 'react-icons/fa';
 
 export default function BusinessCategories() {
