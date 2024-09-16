@@ -1,10 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FiHome, FiBook, FiDollarSign, FiUser, FiLogOut } from "react-icons/fi";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import CircularProgress from '@mui/material/CircularProgress';
 
 type SidebarProps = {
     expanded: boolean;
@@ -14,9 +16,12 @@ type SidebarProps = {
 export default function Sidebar({ expanded, setExpanded }: SidebarProps) {
     const pathname = usePathname();
     const router = useRouter();
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
 
     const handleLogout = async () => {
+        setIsLoggingOut(true);
         await signOut({ redirect: false });
+        setIsLoggingOut(false);
         router.push('/');
     };
 
@@ -59,12 +64,13 @@ export default function Sidebar({ expanded, setExpanded }: SidebarProps) {
                 </div>
                 <div className="mb-8 flex justify-center w-full">
                     <SidebarLink
-                        icon={<FiLogOut />}
+                        icon={isLoggingOut ? <CircularProgress size={20} color="inherit" /> : <FiLogOut />}
                         title="Logout"
                         href="/"
                         expanded={expanded}
                         active={false}
                         onClick={handleLogout}
+                        disabled={isLoggingOut}
                     />
                 </div>
             </div>
@@ -79,6 +85,7 @@ function SidebarLink({
     expanded,
     active,
     onClick,
+    disabled,
 }: {
     icon: React.ReactNode;
     title: string;
@@ -86,6 +93,7 @@ function SidebarLink({
     expanded: boolean;
     active: boolean;
     onClick?: () => void;
+    disabled?: boolean;
 }) {
     const content = (
         <>
@@ -103,11 +111,11 @@ function SidebarLink({
 
     const className = `flex items-center ${expanded ? "w-[calc(100%-8px)] mx-1" : "w-10"
         } px-3 py-2 mb-2 text-gray-700 hover:bg-gray-200 rounded-full ${active ? "bg-black text-white" : ""
-        }`;
+        } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`;
 
     if (onClick) {
         return (
-            <button onClick={onClick} className={className}>
+            <button onClick={onClick} className={className} disabled={disabled}>
                 {content}
             </button>
         );
