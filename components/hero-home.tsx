@@ -73,7 +73,7 @@ export default function HeroHome() {
           {/* Section header */}
           <div className="pb-12 text-center md:pb-16">
             <h1
-              className="mb-6 border-y text-5xl font-bold [border-image:linear-gradient(to_right,transparent,theme(colors.blue.500/.8),transparent)1] md:text-6xl"
+              className="mb-6 border-y text-5xl font-bold [border-image:linear-gradient(to_right,transparent,theme(colors.slate.300/.8),transparent)1] md:text-6xl"
               data-aos="zoom-y-out"
               data-aos-delay={150}
             >
@@ -95,7 +95,7 @@ export default function HeroHome() {
                   data-aos-delay={450}
                 >
                   <a
-                    className="btn group mb-4 w-full bg-gradient-to-t from-blue-700 to-blue-500 bg-[length:100%_100%] bg-[bottom] text-white shadow hover:bg-[length:100%_150%] sm:mb-0 sm:w-auto"
+                    className="btn group mb-4 w-full bg-gradient-to-t from-black to-gray-800 bg-[length:100%_100%] bg-[bottom] text-white shadow hover:bg-[length:100%_150%] sm:mb-0 sm:w-auto"
                     href="#0"
                   >
                     <span className="relative inline-flex items-center">
@@ -106,7 +106,7 @@ export default function HeroHome() {
                     </span>
                   </a>
                   <a
-                    className="btn w-full bg-white text-blue-800 shadow hover:bg-gray-50 sm:ml-4 sm:w-auto"
+                    className="btn w-full bg-white text-gray-800 shadow hover:bg-gray-50 sm:ml-4 sm:w-auto"
                     href="#0"
                   >
                     Learn More
