@@ -176,8 +176,8 @@ export default function BusinessCategories() {
                   <Image
                     className="relative w-full h-full object-contain"
                     src={Logo01}
-                    width={250}
-                    height={200}
+                    width={300}
+                    height={250}
                     alt="Logo 01"
                   />
                 </div>
