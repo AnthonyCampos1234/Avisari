@@ -79,6 +79,16 @@ export default function SignIn() {
           boxShadow: 3,
           overflow: 'hidden',
           width: '100%',
+          position: 'relative',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '4px',
+            background: 'linear-gradient(to right, #4ffbb4, #f14771, #23bbe9)',
+          },
         }}
       >
         <Box sx={{ mt: 3, mb: 2, px: 6, width: '100%' }}>
@@ -121,7 +131,15 @@ export default function SignIn() {
             fullWidth
             variant="contained"
             disabled={isLoading}
-            sx={{ mt: 3, mb: 2, borderRadius: 28, py: 1.5, bgcolor: '#111827', '&:hover': { bgcolor: '#374151' } }}
+            sx={{
+              mt: 3,
+              mb: 2,
+              borderRadius: 28,
+              py: 1.5,
+              background: 'linear-gradient(45deg, #4ffbb4, #f14771, #23bbe9)',
+              '&:hover': { opacity: 0.9 },
+              transition: 'opacity 0.3s',
+            }}
           >
             {isLoading ? <CircularProgress size={24} color="inherit" /> : "Sign In"}
           </Button>
@@ -149,7 +167,7 @@ export default function SignIn() {
                 component="a"
                 variant="body2"
                 sx={{
-                  color: 'text.secondary',
+                  color: '#23bbe9',
                   textDecoration: 'none',
                   '&:hover': { textDecoration: 'underline' }
                 }}
@@ -166,13 +184,14 @@ export default function SignIn() {
 
 function PopoverContent({ type }: { type: string }) {
   const buttonStyle = {
-    backgroundColor: '#111827',
+    background: 'linear-gradient(45deg, #4ffbb4, #f14771, #23bbe9)',
     '&:hover': {
-      backgroundColor: '#374151',
+      opacity: 0.9,
     },
     borderRadius: '9999px',
     textTransform: 'none',
     color: 'white',
+    transition: 'opacity 0.3s',
   };
 
   switch (type) {
