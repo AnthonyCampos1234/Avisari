@@ -29,7 +29,7 @@ export default function Sidebar({ expanded, setExpanded }: SidebarProps) {
     return (
         <div className={`fixed inset-y-0 left-0 z-30 transition-all duration-500 ease-in-out ${expanded ? "w-48" : "w-16"}`}>
             <div
-                className="bg-gradient-to-b from-blue-500 to-blue-600 h-full rounded-r-3xl shadow-lg flex flex-col"
+                className="bg-white h-full rounded-r-3xl shadow-lg flex flex-col border-r border-gray-200"
                 onMouseEnter={() => setExpanded(true)}
                 onMouseLeave={() => setExpanded(false)}
             >
@@ -114,7 +114,7 @@ function SidebarLink({
     );
 
     const className = `flex items-center ${expanded ? "w-[calc(100%-8px)] mx-1" : "w-10"
-        } px-3 py-2 mb-2 text-white hover:bg-blue-400 rounded-full ${active ? "bg-blue-700" : ""
+        } px-3 py-2 mb-2 text-gray-700 hover:bg-gray-100 rounded-full ${active ? "bg-gray-200 text-blue-600" : ""
         } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`;
 
     if (onClick) {
