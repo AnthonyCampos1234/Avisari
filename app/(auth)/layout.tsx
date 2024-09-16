@@ -1,10 +1,9 @@
 "use client";
 
+import React, { useState, useEffect } from 'react';
 import Image from "next/image";
 import Logo from "@/components/ui/logo";
-import AuthBg from "@/public/images/auth-bg.svg";
 import PageIllustration from "@/components/page-illustration";
-import React, { useState, useEffect } from 'react';
 
 type ChatBubbleProps = {
   type: 'student' | 'ai' | 'advisor' | 'system';
@@ -62,7 +61,7 @@ export default function AuthLayout({
         setIsAdvisorChat(false);
         setCurrentStep(0);
       }
-    }, 3000); // Adjust timing as needed
+    }, 3000);
 
     return () => clearInterval(timer);
   }, [currentStep, isAdvisorChat]);
@@ -70,113 +69,59 @@ export default function AuthLayout({
   return (
     <section className="relative">
       <PageIllustration />
-      <header className="absolute z-30 w-full">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <div className="flex h-16 items-center justify-between md:h-20">
-            {/* Site branding */}
-            <div className="mr-4 shrink-0">
+      <div className="flex min-h-screen">
+        {/* Left side - Hero section and Sign in form */}
+        <div className="flex-1 flex flex-col">
+          <header className="py-4">
+            <div className="container mx-auto">
               <Logo />
             </div>
+          </header>
+
+          <div className="flex-grow flex flex-col justify-center px-4 sm:px-6">
+            <div className="pb-12 pt-32 md:pt-40 text-center">
+              <h1 className="text-5xl md:text-6xl font-extrabold mb-4">
+                AI-Powered Solutions for Higher Education
+              </h1>
+              <p className="text-xl text-gray-600 mb-8">
+                Nota Solutions revolutionizes university operations with Insight for college advising and Savior for student financial services.
+              </p>
+            </div>
+
+            {/* Sign in form */}
+            <div className="max-w-sm mx-auto w-full bg-white shadow-lg rounded-lg p-8">
+              <h2 className="text-2xl font-bold mb-6">Sign in to your account</h2>
+              {children}
+            </div>
           </div>
         </div>
-      </header>
 
-      <main className="relative flex grow">
-        <div
-          className="pointer-events-none absolute bottom-0 left-0 -translate-x-1/3"
-          aria-hidden="true"
-        >
-          <div className="h-80 w-80 rounded-full bg-gradient-to-tr from-blue-500 opacity-70 blur-[160px]"></div>
-        </div>
-
-        {/* Content */}
-        <div className="w-full">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6">
-            <div className="pb-12 pt-32 md:pb-20 md:pt-40">
-              {/* Section header */}
-              <div className="pb-12 text-center md:pb-16">
-                <h1
-                  className="mb-6 border-y text-5xl font-bold [border-image:linear-gradient(to_right,transparent,theme(colors.slate.300/.8),transparent)1] md:text-6xl"
-                  data-aos="zoom-y-out"
-                  data-aos-delay={150}
-                >
-                  AI-Powered Solutions for <br className="max-lg:hidden" />
-                  Higher Education
-                </h1>
-                <div className="mx-auto max-w-3xl">
-                  <p
-                    className="mb-8 text-lg text-gray-700"
-                    data-aos="zoom-y-out"
-                    data-aos-delay={300}
-                  >
-                    Nota Solutions revolutionizes university operations with Insight for college advising and Savior for student financial services.
-                  </p>
-                  <div className="relative before:absolute before:inset-0 before:border-y before:[border-image:linear-gradient(to_right,transparent,theme(colors.slate.300/.8),transparent)1]">
-                    <div
-                      className="mx-auto max-w-xs sm:flex sm:max-w-none sm:justify-center"
-                      data-aos="zoom-y-out"
-                      data-aos-delay={450}
-                    >
-                      <a
-                        className="btn group mb-4 w-full bg-gradient-to-t from-black to-gray-800 bg-[length:100%_100%] bg-[bottom] text-white shadow hover:bg-[length:100%_150%] sm:mb-0 sm:w-auto"
-                        href="#0"
-                      >
-                        <span className="relative inline-flex items-center">
-                          Request Demo{" "}
-                          <span className="ml-1 tracking-normal text-gray-300 transition-transform group-hover:translate-x-0.5">
-                            -&gt;
-                          </span>
-                        </span>
-                      </a>
-                      <a
-                        className="btn w-full bg-white text-gray-800 shadow hover:bg-gray-50 sm:ml-4 sm:w-auto"
-                        href="#0"
-                      >
-                        Learn More
-                      </a>
-                    </div>
-                  </div>
-                </div>
+        {/* Right side - Chat demonstration */}
+        <div className="hidden lg:flex flex-1 bg-blue-50 items-center justify-center p-8">
+          <div className="w-full max-w-2xl aspect-video bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div className={`h-full flex flex-col transition-opacity duration-1000 ${isAdvisorChat ? 'opacity-0' : 'opacity-100'}`}>
+              <div className="bg-gray-100 p-4 text-sm font-medium">Chat with AI Assistant</div>
+              <div className="flex-grow p-4 space-y-4 overflow-y-auto">
+                {chatSteps.map((step, index) => (
+                  <ChatBubble key={index} type={step.type as 'student' | 'ai' | 'system'} isVisible={index <= currentStep}>
+                    {step.message}
+                  </ChatBubble>
+                ))}
               </div>
-
-              {/* Hero image */}
-              <div
-                className="mx-auto max-w-4xl"
-                data-aos="zoom-y-out"
-                data-aos-delay={600}
-              >
-                <div className="relative aspect-video rounded-2xl bg-white p-10 shadow-xl overflow-hidden">
-                  <div className={`absolute inset-0 flex flex-col h-full transition-opacity duration-1000 ${isAdvisorChat ? 'opacity-0' : 'opacity-100'}`}>
-                    <div className="mb-6 mt-4 text-gray-500 text-sm font-medium ml-4">Chat with AI Assistant</div>
-                    <div className="flex-grow overflow-y-auto space-y-4 px-4">
-                      {chatSteps.map((step, index) => (
-                        <ChatBubble key={index} type={step.type as 'student' | 'ai' | 'system'} isVisible={index <= currentStep}>
-                          {step.message}
-                        </ChatBubble>
-                      ))}
-                    </div>
-                  </div>
-                  <div className={`absolute inset-0 flex flex-col h-full transition-opacity duration-1000 ${isAdvisorChat ? 'opacity-100' : 'opacity-0'}`}>
-                    <div className="mb-6 mt-4 text-gray-500 text-sm font-medium ml-4">Chat with Academic Advisor</div>
-                    <div className="flex-grow overflow-y-auto space-y-4 px-4">
-                      {advisorChat.map((step, index) => (
-                        <ChatBubble key={index} type={step.type as 'advisor' | 'student'} isVisible={index <= currentStep}>
-                          {step.message}
-                        </ChatBubble>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Auth form */}
-              <div className="mx-auto w-full max-w-sm mt-12">
-                <div className="py-8 md:py-12">{children}</div>
+            </div>
+            <div className={`absolute inset-0 h-full flex flex-col transition-opacity duration-1000 ${isAdvisorChat ? 'opacity-100' : 'opacity-0'}`}>
+              <div className="bg-gray-100 p-4 text-sm font-medium">Chat with Academic Advisor</div>
+              <div className="flex-grow p-4 space-y-4 overflow-y-auto">
+                {advisorChat.map((step, index) => (
+                  <ChatBubble key={index} type={step.type as 'advisor' | 'student'} isVisible={index <= currentStep}>
+                    {step.message}
+                  </ChatBubble>
+                ))}
               </div>
             </div>
           </div>
         </div>
-      </main>
+      </div>
     </section>
   );
 }
