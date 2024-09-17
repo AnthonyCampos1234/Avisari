@@ -95,19 +95,20 @@ export default function Insight() {
 
             let parsedSchedule;
             try {
-                parsedSchedule = JSON.parse(rawResponse);
+                const initialParse = JSON.parse(rawResponse);
+                if (Array.isArray(initialParse) && initialParse[0] && initialParse[0].schedule) {
+                    const scheduleJson = initialParse[0].schedule.match(/```json\n([\s\S]*?)\n```/)[1];
+                    parsedSchedule = JSON.parse(scheduleJson);
+                } else {
+                    throw new Error('Unexpected response structure');
+                }
             } catch (parseError) {
                 const errorMessage = parseError instanceof Error ? parseError.message : String(parseError);
                 throw new Error(`Failed to parse API response: ${errorMessage}, raw response: ${rawResponse}`);
             }
 
-            // Convert object to array if necessary
             if (!Array.isArray(parsedSchedule)) {
-                if (typeof parsedSchedule === 'object' && parsedSchedule !== null) {
-                    parsedSchedule = [parsedSchedule];
-                } else {
-                    throw new Error(`Invalid API response format. Received: ${typeof parsedSchedule}`);
-                }
+                throw new Error(`Invalid API response format. Received: ${typeof parsedSchedule}`);
             }
 
             const isValidStructure = parsedSchedule.every(year =>
