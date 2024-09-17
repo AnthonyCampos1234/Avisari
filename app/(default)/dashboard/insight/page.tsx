@@ -8,7 +8,6 @@ import ChatIcon from '@mui/icons-material/Chat';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import ShareIcon from '@mui/icons-material/Share';
 import { motion, AnimatePresence } from 'framer-motion';
-import { generateCourseSchedule } from '../../../ai/coursePlanner';
 
 type Course = {
     id: string;
@@ -81,7 +80,19 @@ export default function Insight() {
             });
             const userPreference = "Computer Science"; // This could be from user input
 
-            const generatedSchedule = await generateCourseSchedule(jsonData, userPreference);
+            const response = await fetch('/api/generate-schedule', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ jsonData, userPreference }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const generatedSchedule = await response.text();
             setDebugInfo(`Generated schedule: ${generatedSchedule}`);
 
             // Parse the generated schedule
@@ -98,7 +109,7 @@ export default function Insight() {
             )) {
                 setSchedule(parsedSchedule);
             } else {
-                throw new Error('Invalid schedule structure returned from AI');
+                throw new Error('Invalid schedule structure returned from API');
             }
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : String(err);
