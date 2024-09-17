@@ -72,13 +72,11 @@ export default function Insight() {
                         courses: [
                             { code: "CS101", name: "Introduction to Programming", credits: 4, compulsory: 1 },
                             { code: "CS201", name: "Data Structures", credits: 4, compulsory: 1 },
-                            // Add more courses as needed
                         ]
                     },
-                    // Add more departments as needed
                 ]
             });
-            const userPreference = "Computer Science"; // This could be from user input
+            const userPreference = "Computer Science";
 
             const response = await fetch('/api/generate-schedule', {
                 method: 'POST',
@@ -88,33 +86,46 @@ export default function Insight() {
                 body: JSON.stringify({ jsonData, userPreference }),
             });
 
+            const rawResponse = await response.text();
+            setDebugInfo(`Raw API response: ${rawResponse}`);
+
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                throw new Error(`HTTP error! status: ${response.status}, body: ${rawResponse}`);
             }
 
-            const generatedSchedule = await response.text();
-            setDebugInfo(`Generated schedule: ${generatedSchedule}`);
-            // Parse the generated schedule
-            const parsedSchedule = JSON.parse(generatedSchedule);
+            let parsedSchedule;
+            try {
+                parsedSchedule = JSON.parse(rawResponse);
+            } catch (parseError) {
+                const errorMessage = parseError instanceof Error ? parseError.message : String(parseError);
+                throw new Error(`Failed to parse API response: ${errorMessage}, raw response: ${rawResponse}`);
+            }
 
-            // Validate the parsed schedule structure
-            if (Array.isArray(parsedSchedule) && parsedSchedule.every(year =>
+            if (!Array.isArray(parsedSchedule)) {
+                throw new Error(`API response is not an array. Received: ${typeof parsedSchedule}`);
+            }
+
+            const isValidStructure = parsedSchedule.every(year =>
                 typeof year.year === 'number' &&
                 Array.isArray(year.semesters) &&
                 year.semesters.every((semester: Semester) =>
                     typeof semester.name === 'string' &&
                     Array.isArray(semester.courses)
                 )
-            )) {
-                setSchedule(parsedSchedule);
-            } else {
-                throw new Error('Invalid schedule structure returned from API');
+            );
+
+            if (!isValidStructure) {
+                throw new Error(`Invalid schedule structure. Received: ${JSON.stringify(parsedSchedule)}`);
             }
+
+            setSchedule(parsedSchedule);
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : String(err);
             setError(`Failed to generate schedule: ${errorMessage}`);
-            setDebugInfo(`Error details: ${JSON.stringify(err)}`);
+            setDebugInfo(`Error details: ${JSON.stringify({
+                message: err instanceof Error ? err.message : String(err),
+                stack: err instanceof Error ? err.stack : 'No stack trace available'
+            }, null, 2)}`);
         } finally {
             setLoading(false);
         }
