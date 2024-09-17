@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
-import { useAuth } from "@/hooks/useAuth";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { IconButton, Button } from '@mui/material';
 import AssessmentIcon from '@mui/icons-material/Assessment';
@@ -9,8 +9,8 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import PersonIcon from '@mui/icons-material/Person';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function Dashboard() {
-    const { session, status } = useAuth(true);
+export default function AdvisorDashboard() {
+    const { data: session, status } = useSession();
     const [openPopover, setOpenPopover] = useState('');
     const popoverRef = useRef<HTMLDivElement>(null);
 
@@ -68,26 +68,26 @@ export default function Dashboard() {
                             icon={<AssessmentIcon />}
                             content={
                                 <>
-                                    <p className="mb-2">Current GPA: 3.5</p>
-                                    <p className="mb-2">Credits completed: 60/120</p>
-                                    <p className="font-semibold">Next recommended course:</p>
-                                    <p>Advanced Algorithms</p>
+                                    <p className="mb-2">Students advised: 15</p>
+                                    <p className="mb-2">Pending approvals: 3</p>
+                                    <p className="font-semibold">Action needed:</p>
+                                    <p>Review course selections</p>
                                 </>
                             }
-                            linkHref="/dashboard/insight"
+                            linkHref="/advisor/insight"
                         />
                         <DashboardPreview
                             title="Savior"
                             icon={<AttachMoneyIcon />}
                             content={
                                 <>
-                                    <p className="mb-2">Tuition balance: $5,000</p>
-                                    <p className="mb-2">Scholarship opportunities: 3 new</p>
-                                    <p className="font-semibold">Tip:</p>
-                                    <p>Apply for Merit Scholarship by June 1st</p>
+                                    <p className="mb-2">Scholarship applications: 5</p>
+                                    <p className="mb-2">Financial aid requests: 2</p>
+                                    <p className="font-semibold">Upcoming deadline:</p>
+                                    <p>Review aid applications by June 1st</p>
                                 </>
                             }
-                            linkHref="/dashboard/savior"
+                            linkHref="/advisor/savior"
                         />
                         <DashboardPreview
                             title="Profile"
@@ -97,10 +97,10 @@ export default function Dashboard() {
                                     <p className="mb-2">Name: {session?.user?.name}</p>
                                     <p className="mb-2">Email: {session?.user?.email}</p>
                                     <p className="font-semibold">Action needed:</p>
-                                    <p>Update your contact information</p>
+                                    <p>Update office hours</p>
                                 </>
                             }
-                            linkHref="/dashboard/profile"
+                            linkHref="/advisor/profile"
                         />
                     </div>
                 </div>
