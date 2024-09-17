@@ -61,7 +61,7 @@ export default function Dashboard() {
         <div className="p-6 bg-gray-100 min-h-screen">
             <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
                 <div className="p-6">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-6">Welcome, {session?.user?.name}!</h1>
+                    <h1 className="text-3xl font-bold text-gray-900 mb-6">Welcome Student, {session?.user?.name}!</h1>
                     <div className="grid gap-6 md:grid-cols-3">
                         <DashboardPreview
                             title="Insight"
