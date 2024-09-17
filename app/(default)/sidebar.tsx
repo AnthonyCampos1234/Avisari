@@ -3,8 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FiHome, FiBook, FiDollarSign, FiUser, FiLogOut } from "react-icons/fi";
-import { signOut, useSession } from "next-auth/react";
+import { FiHome, FiBook, FiDollarSign, FiUser, FiLogOut, FiUsers, FiClipboard } from "react-icons/fi";
+import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import CircularProgress from '@mui/material/CircularProgress';
 import Image from 'next/image';
@@ -12,27 +12,32 @@ import Image from 'next/image';
 type SidebarProps = {
     expanded: boolean;
     setExpanded: (expanded: boolean) => void;
+    userType: 'student' | 'advisor';
 };
 
-export default function Sidebar({ expanded, setExpanded }: SidebarProps) {
+export default function Sidebar({ expanded, setExpanded, userType }: SidebarProps) {
     const pathname = usePathname();
     const router = useRouter();
     const [isLoggingOut, setIsLoggingOut] = useState(false);
-    const { data: session } = useSession();
-
-    const userType = session?.user?.userType;
 
     const handleLogout = async () => {
         setIsLoggingOut(true);
-        await signOut({
-            redirect: false,
-            callbackUrl: "/signin"  // Redirect to signin page after logout
-        });
+        await signOut({ redirect: false });
         setIsLoggingOut(false);
-        router.push('/signin');  // Force navigation to signin page
+        router.push('/');
     };
 
-    const getBaseUrl = () => userType === 'student' ? '/student' : '/advisor';
+    const sidebarLinks = userType === 'student' ? [
+        { icon: <FiHome />, title: "Home", href: "/student/dashboard" },
+        { icon: <FiBook />, title: "Insight", href: "/student/dashboard/insight" },
+        { icon: <FiDollarSign />, title: "Savior", href: "/student/dashboard/savior" },
+        { icon: <FiUser />, title: "Profile", href: "/student/dashboard/profile" },
+    ] : [
+        { icon: <FiHome />, title: "Home", href: "/advisor/dashboard" },
+        { icon: <FiUsers />, title: "Students", href: "/advisor/dashboard/students" },
+        { icon: <FiClipboard />, title: "Approvals", href: "/advisor/dashboard/approvals" },
+        { icon: <FiUser />, title: "Profile", href: "/advisor/dashboard/profile" },
+    ];
 
     return (
         <div className={`fixed inset-y-0 left-0 z-30 transition-all duration-500 ease-in-out ${expanded ? "w-48" : "w-16"}`}>
@@ -45,34 +50,16 @@ export default function Sidebar({ expanded, setExpanded }: SidebarProps) {
                     <Image src="/images/logo-01.svg" alt="Logo" width={40} height={40} className="transition-all duration-500 ease-in-out" style={{ width: expanded ? '40px' : '32px' }} />
                 </div>
                 <div className="flex-grow flex flex-col items-center justify-start py-8">
-                    <SidebarLink
-                        icon={<FiHome />}
-                        title="Home"
-                        href={`${getBaseUrl()}/dashboard`}
-                        expanded={expanded}
-                        active={pathname === `${getBaseUrl()}/dashboard`}
-                    />
-                    <SidebarLink
-                        icon={<FiBook />}
-                        title="Insight"
-                        href={`${getBaseUrl()}/dashboard/insight`}
-                        expanded={expanded}
-                        active={pathname.startsWith(`${getBaseUrl()}/dashboard/insight`)} // Updated to use pathname.startsWith
-                    />
-                    <SidebarLink
-                        icon={<FiDollarSign />}
-                        title="Savior"
-                        href={`${getBaseUrl()}/dashboard/savior`}
-                        expanded={expanded}
-                        active={pathname.startsWith(`${getBaseUrl()}/dashboard/savior`)} // Updated to use pathname.startsWith
-                    />
-                    <SidebarLink
-                        icon={<FiUser />}
-                        title="Profile"
-                        href={`${getBaseUrl()}/profile`}
-                        expanded={expanded}
-                        active={pathname === `${getBaseUrl()}/profile`}
-                    />
+                    {sidebarLinks.map((link) => (
+                        <SidebarLink
+                            key={link.href}
+                            icon={link.icon}
+                            title={link.title}
+                            href={link.href}
+                            expanded={expanded}
+                            active={pathname === link.href}
+                        />
+                    ))}
                 </div>
                 <div className="mb-8 flex justify-center w-full">
                     <SidebarLink
