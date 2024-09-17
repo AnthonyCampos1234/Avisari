@@ -39,9 +39,10 @@ export default function DefaultLayout({
 
   if (status === "authenticated") {
     const showHeader = !pathname.includes('/dashboard');
+    const userType = session?.user?.userType as 'student' | 'advisor';
     return (
       <div className="flex h-screen bg-gray-100">
-        <Sidebar expanded={sidebarExpanded} setExpanded={setSidebarExpanded} />
+        <Sidebar expanded={sidebarExpanded} setExpanded={setSidebarExpanded} userType={userType} />
         <div className="flex-1 flex flex-col overflow-hidden">
           {showHeader && <Header />}
           <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
