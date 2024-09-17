@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -8,13 +8,23 @@ import { Button, TextField, Box, Typography } from '@mui/material';
 import SchoolIcon from '@mui/icons-material/School';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CircularProgress from '@mui/material/CircularProgress';
+import { useSearchParams } from 'next/navigation';
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [userType, setUserType] = useState("");
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const type = searchParams.get('userType');
+    if (type === 'student' || type === 'advisor') {
+      setUserType(type);
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,6 +34,7 @@ export default function SignIn() {
     const result = await signIn("credentials", {
       email,
       password,
+      userType, // Include userType in the signIn call
       redirect: false,
     });
 
@@ -32,7 +43,14 @@ export default function SignIn() {
     if (result?.error) {
       setError(result.error);
     } else {
-      router.push("/dashboard");
+      // Redirect based on userType
+      if (userType === 'student') {
+        router.push("/student/dashboard");
+      } else if (userType === 'advisor') {
+        router.push("/advisor/dashboard");
+      } else {
+        router.push("/dashboard");
+      }
     }
   };
 
