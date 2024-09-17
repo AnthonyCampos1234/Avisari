@@ -45,14 +45,7 @@ export default function SignUp() {
       if (result?.error) {
         setError(result.error);
       } else {
-        // Redirect based on user type
-        if (userType === "student") {
-          router.push("/student/dashboard");
-        } else if (userType === "advisor") {
-          router.push("/advisor/dashboard");
-        } else {
-          setError("Unknown user type");
-        }
+        router.push("/dashboard");
       }
     } else {
       setIsLoading(false);
