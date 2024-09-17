@@ -9,14 +9,14 @@ export async function POST(request: Request) {
   try {
     const { jsonData, userPreference } = await request.json();
 
+    // Check if API key is set
     if (!process.env.ANTHROPIC_API_KEY) {
       throw new Error('ANTHROPIC_API_KEY is not set in environment variables');
     }
 
-    const completion = await anthropic.completions.create({
-      model: "claude-2.0",
-      max_tokens_to_sample: 1000,
-      prompt: `Human: Given the following course data: ${jsonData}
+    // Construct the prompt for the model
+    const prompt = `
+      Human: Given the following course data: ${jsonData}
       
       And considering the user's preference for ${userPreference}, generate a 4-year course schedule. 
       The schedule should be returned as a JSON array of years, where each year contains an array of semesters, 
@@ -38,13 +38,22 @@ export async function POST(request: Request) {
           ]
         },
         ...
-      ]`,
+      ]`;
+
+    // Call the Anthropic API to generate the schedule
+    const completion = await anthropic.completions.create({
+      model: 'claude-2.0',
+      max_tokens_to_sample: 1000,
+      prompt
     });
 
-    return NextResponse.json(completion.completion);
+    // Return the generated schedule as JSON
+    return NextResponse.json({ schedule: completion.completion });
   } catch (error) {
     console.error('Error generating schedule:', error);
     const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+
+    // Return a detailed error response
     return NextResponse.json({ error: `Failed to generate schedule: ${errorMessage}` }, { status: 500 });
   }
 }
