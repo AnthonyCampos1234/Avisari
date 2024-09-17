@@ -38,11 +38,12 @@ export default function DefaultLayout({
   }
 
   if (status === "authenticated") {
+    const showHeader = !pathname.includes('/dashboard');
     return (
       <div className="flex h-screen bg-gray-100">
         <Sidebar expanded={sidebarExpanded} setExpanded={setSidebarExpanded} />
         <div className="flex-1 flex flex-col overflow-hidden">
-          <Header />
+          {showHeader && <Header />}
           <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
             {children}
           </main>

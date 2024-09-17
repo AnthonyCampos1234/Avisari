@@ -24,9 +24,12 @@ export default function Sidebar({ expanded, setExpanded }: SidebarProps) {
 
     const handleLogout = async () => {
         setIsLoggingOut(true);
-        await signOut({ redirect: false });
+        await signOut({
+            redirect: false,
+            callbackUrl: "/signin"  // Redirect to signin page after logout
+        });
         setIsLoggingOut(false);
-        router.push('/');
+        router.push('/signin');  // Force navigation to signin page
     };
 
     const getBaseUrl = () => userType === 'student' ? '/student' : '/advisor';

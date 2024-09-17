@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { useState, useEffect } from "react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button, TextField, Box, Typography } from '@mui/material';
@@ -15,6 +15,14 @@ export default function SignIn() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { data: session, status } = useSession();
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      const userType = session?.user?.userType;
+      router.push(userType === 'student' ? '/student/dashboard' : '/advisor/dashboard');
+    }
+  }, [status, session, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,17 +40,7 @@ export default function SignIn() {
     if (result?.error) {
       setError(result.error);
     } else {
-      // Fetch the user data to determine the user type
-      const res = await fetch('/api/user');
-      const userData = await res.json();
-
-      if (userData.userType === 'student') {
-        router.push("/student/dashboard");
-      } else if (userData.userType === 'advisor') {
-        router.push("/advisor/dashboard");
-      } else {
-        setError("Unknown user type");
-      }
+      // The redirection will be handled by the useEffect hook
     }
   };
 
