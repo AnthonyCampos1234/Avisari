@@ -32,17 +32,7 @@ export default function SignIn() {
     if (result?.error) {
       setError(result.error);
     } else {
-      // Fetch the user data to determine the user type
-      const res = await fetch('/api/user');
-      const userData = await res.json();
-
-      if (userData.userType === 'student') {
-        router.push("/student/dashboard");
-      } else if (userData.userType === 'advisor') {
-        router.push("/advisor/dashboard");
-      } else {
-        setError("Unknown user type");
-      }
+      router.push("/dashboard");
     }
   };
 
