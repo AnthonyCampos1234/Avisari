@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FiHome, FiBook, FiDollarSign, FiUser, FiLogOut } from "react-icons/fi";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import CircularProgress from '@mui/material/CircularProgress';
 import Image from 'next/image';
@@ -18,6 +18,9 @@ export default function Sidebar({ expanded, setExpanded }: SidebarProps) {
     const pathname = usePathname();
     const router = useRouter();
     const [isLoggingOut, setIsLoggingOut] = useState(false);
+    const { data: session } = useSession();
+
+    const userType = session?.user?.userType;
 
     const handleLogout = async () => {
         setIsLoggingOut(true);
@@ -25,6 +28,8 @@ export default function Sidebar({ expanded, setExpanded }: SidebarProps) {
         setIsLoggingOut(false);
         router.push('/');
     };
+
+    const getBaseUrl = () => userType === 'student' ? '/student' : '/advisor';
 
     return (
         <div className={`fixed inset-y-0 left-0 z-30 transition-all duration-500 ease-in-out ${expanded ? "w-48" : "w-16"}`}>
@@ -40,30 +45,30 @@ export default function Sidebar({ expanded, setExpanded }: SidebarProps) {
                     <SidebarLink
                         icon={<FiHome />}
                         title="Home"
-                        href="/dashboard"
+                        href={`${getBaseUrl()}/dashboard`}
                         expanded={expanded}
-                        active={pathname === "/dashboard"}
+                        active={pathname === `${getBaseUrl()}/dashboard`}
                     />
                     <SidebarLink
                         icon={<FiBook />}
                         title="Insight"
-                        href="/dashboard/insight"
+                        href={`${getBaseUrl()}/insight`}
                         expanded={expanded}
-                        active={pathname === "/dashboard/insight"}
+                        active={pathname === `${getBaseUrl()}/insight`}
                     />
                     <SidebarLink
                         icon={<FiDollarSign />}
                         title="Savior"
-                        href="/dashboard/savior"
+                        href={`${getBaseUrl()}/savior`}
                         expanded={expanded}
-                        active={pathname === "/dashboard/savior"}
+                        active={pathname === `${getBaseUrl()}/savior`}
                     />
                     <SidebarLink
                         icon={<FiUser />}
                         title="Profile"
-                        href="/dashboard/profile"
+                        href={`${getBaseUrl()}/profile`}
                         expanded={expanded}
-                        active={pathname === "/dashboard/profile"}
+                        active={pathname === `${getBaseUrl()}/profile`}
                     />
                 </div>
                 <div className="mb-8 flex justify-center w-full">

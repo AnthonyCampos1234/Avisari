@@ -1,11 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useSession } from "next-auth/react";
-import Image from 'next/image';
 
 import Header from "@/components/ui/header";
 import Footer from "@/components/ui/footer";
@@ -17,6 +16,7 @@ export default function DefaultLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const { data: session, status } = useSession();
 
@@ -28,6 +28,19 @@ export default function DefaultLayout({
       easing: "ease-out-cubic",
     });
   });
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      const userType = session?.user?.userType;
+      const currentPath = pathname.split('/')[2]; // Get the second part of the path (e.g., 'dashboard', 'insight', 'savior')
+
+      if (userType === 'student' && !pathname.includes('/student')) {
+        router.push(`/student/${currentPath}`);
+      } else if (userType === 'advisor' && !pathname.includes('/advisor')) {
+        router.push(`/advisor/${currentPath}`);
+      }
+    }
+  }, [status, session, pathname, router]);
 
   if (status === "authenticated") {
     return (
