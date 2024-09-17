@@ -101,8 +101,13 @@ export default function Insight() {
                 throw new Error(`Failed to parse API response: ${errorMessage}, raw response: ${rawResponse}`);
             }
 
+            // Convert object to array if necessary
             if (!Array.isArray(parsedSchedule)) {
-                throw new Error(`API response is not an array. Received: ${typeof parsedSchedule}`);
+                if (typeof parsedSchedule === 'object' && parsedSchedule !== null) {
+                    parsedSchedule = [parsedSchedule];
+                } else {
+                    throw new Error(`Invalid API response format. Received: ${typeof parsedSchedule}`);
+                }
             }
 
             const isValidStructure = parsedSchedule.every(year =>
