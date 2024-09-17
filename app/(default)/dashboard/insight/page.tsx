@@ -97,9 +97,13 @@ export default function Insight() {
             try {
                 const initialParse = JSON.parse(rawResponse);
                 if (initialParse && initialParse.schedule) {
-                    // Remove the introductory text and parse the JSON directly
-                    const scheduleJson = initialParse.schedule.substring(initialParse.schedule.indexOf('['));
-                    parsedSchedule = JSON.parse(scheduleJson);
+                    // Extract the JSON string from the backticks
+                    const jsonMatch = initialParse.schedule.match(/```json\n([\s\S]*?)\n```/);
+                    if (jsonMatch && jsonMatch[1]) {
+                        parsedSchedule = JSON.parse(jsonMatch[1]);
+                    } else {
+                        throw new Error('Could not find valid JSON in the schedule');
+                    }
                 } else {
                     throw new Error('Unexpected response structure');
                 }
