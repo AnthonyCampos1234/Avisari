@@ -97,7 +97,8 @@ export default function Insight() {
             try {
                 const initialParse = JSON.parse(rawResponse);
                 if (initialParse && initialParse.schedule) {
-                    const scheduleJson = initialParse.schedule.match(/```json\n([\s\S]*?)\n```/)[1];
+                    // Remove the introductory text and parse the JSON directly
+                    const scheduleJson = initialParse.schedule.substring(initialParse.schedule.indexOf('['));
                     parsedSchedule = JSON.parse(scheduleJson);
                 } else {
                     throw new Error('Unexpected response structure');
