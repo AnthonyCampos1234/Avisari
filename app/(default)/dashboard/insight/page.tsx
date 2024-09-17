@@ -2,16 +2,24 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Button, IconButton, TextField, List, ListItem, ListItemText } from '@mui/material';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import AddIcon from '@mui/icons-material/Add';
 import ChatIcon from '@mui/icons-material/Chat';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import ShareIcon from '@mui/icons-material/Share';
 import { motion, AnimatePresence } from 'framer-motion';
+import { generateCourseSchedule } from '../../../ai/coursePlanner';
+
+type Course = {
+    id: string;
+    code: string;
+    name: string;
+    credits: number;
+};
 
 type Semester = {
     name: string;
-    courses: any[]; // Replace 'any' with a more specific type if available
+    courses: Course[];
 };
 
 type Year = {
@@ -26,6 +34,8 @@ export default function Insight() {
     const [chatMessage, setChatMessage] = useState('');
     const [chatHistory, setChatHistory] = useState<string[]>([]);
     const popoverRef = useRef<HTMLDivElement>(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         // Initialize empty schedule structure
@@ -46,16 +56,41 @@ export default function Insight() {
         return semesterNames[index];
     };
 
-    const onDragEnd = (result: any) => {
+    const onDragEnd = (result: DropResult) => {
         // Implement drag and drop logic here
     };
 
     const handleGenerateAISchedule = async () => {
-        // API call to get AI-generated schedule
-        // This is a placeholder and should be replaced with actual API call
-        const response = await fetch('/api/generate-schedule');
-        const data = await response.json();
-        setSchedule(data);
+        setLoading(true);
+        setError(null);
+        try {
+            // In a real application, you would get this data from user input or your database
+            const jsonData = JSON.stringify({
+                departments: [
+                    {
+                        name: "Computer Science",
+                        courses: [
+                            { code: "CS101", name: "Introduction to Programming", credits: 4, compulsory: 1 },
+                            { code: "CS201", name: "Data Structures", credits: 4, compulsory: 1 },
+                            // Add more courses as needed
+                        ]
+                    },
+                    // Add more departments as needed
+                ]
+            });
+            const userPreference = "Computer Science"; // This could be from user input
+
+            const generatedSchedule = await generateCourseSchedule(jsonData, userPreference);
+
+            // Parse the generated schedule and update the state
+            const parsedSchedule = JSON.parse(generatedSchedule);
+            setSchedule(parsedSchedule);
+        } catch (err) {
+            console.error('Failed to generate schedule:', err);
+            setError('Failed to generate schedule. Please try again.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handlePopoverToggle = useCallback((popoverId: string) => {
@@ -70,7 +105,8 @@ export default function Insight() {
             const firstSemester = firstYear.semesters[0];
             firstSemester.courses.push({
                 id: `course-${Date.now()}`, // Generate a unique ID
-                ...newCourse
+                ...newCourse,
+                credits: 0 // Add a default value for credits
             });
             setSchedule(updatedSchedule);
             setNewCourse({ code: '', name: '' });
@@ -243,6 +279,7 @@ export default function Insight() {
                         <Button
                             onClick={handleGenerateAISchedule}
                             variant="contained"
+                            disabled={loading}
                             sx={{
                                 backgroundColor: '#111827',
                                 '&:hover': {
@@ -251,8 +288,9 @@ export default function Insight() {
                                 borderRadius: '9999px',
                             }}
                         >
-                            Generate with AI
+                            {loading ? 'Generating...' : 'Generate with AI'}
                         </Button>
+                        {error && <p className="text-red-500 mt-2">{error}</p>}
                     </div>
                     <DragDropContext onDragEnd={onDragEnd}>
                         {schedule.map((year, yearIndex) => (
