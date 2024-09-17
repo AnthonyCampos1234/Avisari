@@ -16,7 +16,7 @@ export async function POST(request: Request) {
     const completion = await anthropic.completions.create({
       model: "claude-2.0",
       max_tokens_to_sample: 1000,
-      prompt: `Given the following course data: ${jsonData}
+      prompt: `Human: Given the following course data: ${jsonData}
       
       And considering the user's preference for ${userPreference}, generate a 4-year course schedule. 
       The schedule should be returned as a JSON array of years, where each year contains an array of semesters, 
