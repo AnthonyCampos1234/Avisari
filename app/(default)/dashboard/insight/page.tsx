@@ -36,6 +36,7 @@ export default function Insight() {
     const popoverRef = useRef<HTMLDivElement>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [debugInfo, setDebugInfo] = useState<string | null>(null);
 
     useEffect(() => {
         // Initialize empty schedule structure
@@ -63,6 +64,7 @@ export default function Insight() {
     const handleGenerateAISchedule = async () => {
         setLoading(true);
         setError(null);
+        setDebugInfo(null);
         try {
             const jsonData = JSON.stringify({
                 departments: [
@@ -80,6 +82,7 @@ export default function Insight() {
             const userPreference = "Computer Science"; // This could be from user input
 
             const generatedSchedule = await generateCourseSchedule(jsonData, userPreference);
+            setDebugInfo(`Generated schedule: ${generatedSchedule}`);
 
             // Parse the generated schedule
             const parsedSchedule = JSON.parse(generatedSchedule);
@@ -98,8 +101,9 @@ export default function Insight() {
                 throw new Error('Invalid schedule structure returned from AI');
             }
         } catch (err) {
-            console.error('Failed to generate schedule:', err);
-            setError('Failed to generate schedule. Please try again.');
+            const errorMessage = err instanceof Error ? err.message : String(err);
+            setError(`Failed to generate schedule: ${errorMessage}`);
+            setDebugInfo(`Error details: ${JSON.stringify(err)}`);
         } finally {
             setLoading(false);
         }
@@ -302,7 +306,17 @@ export default function Insight() {
                         >
                             {loading ? 'Generating...' : 'Generate with AI'}
                         </Button>
-                        {error && <p className="text-red-500 mt-2">{error}</p>}
+                        {error && (
+                            <div className="mt-2 p-2 bg-red-100 border border-red-400 text-red-700 rounded">
+                                <p>{error}</p>
+                                {debugInfo && (
+                                    <details>
+                                        <summary>Debug Info</summary>
+                                        <pre className="mt-2 whitespace-pre-wrap">{debugInfo}</pre>
+                                    </details>
+                                )}
+                            </div>
+                        )}
                     </div>
                     <DragDropContext onDragEnd={onDragEnd}>
                         {schedule.map((year, yearIndex) => (
