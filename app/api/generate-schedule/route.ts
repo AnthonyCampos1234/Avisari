@@ -14,7 +14,7 @@ export async function POST(request: Request) {
       throw new Error('ANTHROPIC_API_KEY is not set in environment variables');
     }
 
-    // Construct the prompt for the model, ensuring it starts with the required "\n\nHuman:" turn
+    // Construct the prompt for the model, ensuring it starts and ends with the required "Human:" and "Assistant:"
     const prompt = `
 \n\nHuman: Given the following course data: ${jsonData}
       
@@ -38,7 +38,9 @@ Please provide the schedule in the following format:
     ]
   },
   ...
-]`;
+]
+
+\n\nAssistant:`;
 
     // Call the Anthropic API to generate the schedule
     const completion = await anthropic.completions.create({
