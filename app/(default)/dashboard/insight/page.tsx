@@ -95,7 +95,6 @@ export default function Insight() {
 
             const generatedSchedule = await response.text();
             setDebugInfo(`Generated schedule: ${generatedSchedule}`);
-
             // Parse the generated schedule
             const parsedSchedule = JSON.parse(generatedSchedule);
 
