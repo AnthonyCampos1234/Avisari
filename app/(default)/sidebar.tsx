@@ -3,19 +3,19 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FiHome, FiBook, FiDollarSign, FiUser, FiLogOut, FiUsers, FiClipboard } from "react-icons/fi";
+import { FiHome, FiBook, FiDollarSign, FiUser, FiLogOut } from "react-icons/fi";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import CircularProgress from '@mui/material/CircularProgress';
 import Image from 'next/image';
 
+
 type SidebarProps = {
     expanded: boolean;
     setExpanded: (expanded: boolean) => void;
-    userType: 'student' | 'advisor';
 };
 
-export default function Sidebar({ expanded, setExpanded, userType }: SidebarProps) {
+export default function Sidebar({ expanded, setExpanded }: SidebarProps) {
     const pathname = usePathname();
     const router = useRouter();
     const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -26,18 +26,6 @@ export default function Sidebar({ expanded, setExpanded, userType }: SidebarProp
         setIsLoggingOut(false);
         router.push('/');
     };
-
-    const sidebarLinks = userType === 'student' ? [
-        { icon: <FiHome />, title: "Home", href: "/student/dashboard" },
-        { icon: <FiBook />, title: "Insight", href: "/student/dashboard/insight" },
-        { icon: <FiDollarSign />, title: "Savior", href: "/student/dashboard/savior" },
-        { icon: <FiUser />, title: "Profile", href: "/student/dashboard/profile" },
-    ] : [
-        { icon: <FiHome />, title: "Home", href: "/advisor/dashboard" },
-        { icon: <FiUsers />, title: "Students", href: "/advisor/dashboard/students" },
-        { icon: <FiClipboard />, title: "Approvals", href: "/advisor/dashboard/approvals" },
-        { icon: <FiUser />, title: "Profile", href: "/advisor/dashboard/profile" },
-    ];
 
     return (
         <div className={`fixed inset-y-0 left-0 z-30 transition-all duration-500 ease-in-out ${expanded ? "w-48" : "w-16"}`}>
@@ -50,16 +38,34 @@ export default function Sidebar({ expanded, setExpanded, userType }: SidebarProp
                     <Image src="/images/logo-01.svg" alt="Logo" width={40} height={40} className="transition-all duration-500 ease-in-out" style={{ width: expanded ? '40px' : '32px' }} />
                 </div>
                 <div className="flex-grow flex flex-col items-center justify-start py-8">
-                    {sidebarLinks.map((link) => (
-                        <SidebarLink
-                            key={link.href}
-                            icon={link.icon}
-                            title={link.title}
-                            href={link.href}
-                            expanded={expanded}
-                            active={pathname === link.href}
-                        />
-                    ))}
+                    <SidebarLink
+                        icon={<FiHome />}
+                        title="Home"
+                        href="/dashboard"
+                        expanded={expanded}
+                        active={pathname === "/dashboard"}
+                    />
+                    <SidebarLink
+                        icon={<FiBook />}
+                        title="Insight"
+                        href="/dashboard/insight"
+                        expanded={expanded}
+                        active={pathname === "/dashboard/insight"}
+                    />
+                    <SidebarLink
+                        icon={<FiDollarSign />}
+                        title="Savior"
+                        href="/dashboard/savior"
+                        expanded={expanded}
+                        active={pathname === "/dashboard/savior"}
+                    />
+                    <SidebarLink
+                        icon={<FiUser />}
+                        title="Profile"
+                        href="/dashboard/profile"
+                        expanded={expanded}
+                        active={pathname === "/dashboard/profile"}
+                    />
                 </div>
                 <div className="mb-8 flex justify-center w-full">
                     <SidebarLink
