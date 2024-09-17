@@ -55,16 +55,16 @@ export default function Sidebar({ expanded, setExpanded }: SidebarProps) {
                     <SidebarLink
                         icon={<FiBook />}
                         title="Insight"
-                        href={`${getBaseUrl()}/insight`}
+                        href={`${getBaseUrl()}/dashboard/insight`}
                         expanded={expanded}
-                        active={pathname === `${getBaseUrl()}/insight`}
+                        active={pathname.startsWith(`${getBaseUrl()}/dashboard/insight`)} // Updated to use pathname.startsWith
                     />
                     <SidebarLink
                         icon={<FiDollarSign />}
                         title="Savior"
-                        href={`${getBaseUrl()}/savior`}
+                        href={`${getBaseUrl()}/dashboard/savior`}
                         expanded={expanded}
-                        active={pathname === `${getBaseUrl()}/savior`}
+                        active={pathname.startsWith(`${getBaseUrl()}/dashboard/savior`)} // Updated to use pathname.startsWith
                     />
                     <SidebarLink
                         icon={<FiUser />}
