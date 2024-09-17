@@ -29,6 +29,7 @@ export async function generateCourseSchedule(jsonData: string, userPreference: s
         console.log('Presenting and refining schedule...');
         const finalSchedule = await controller.presentAndRefineSchedule(schedule);
 
+        console.log('Final schedule:', finalSchedule);
         return finalSchedule;
     } catch (error) {
         console.error('Error generating course schedule:', error);

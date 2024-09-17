@@ -64,7 +64,6 @@ export default function Insight() {
         setLoading(true);
         setError(null);
         try {
-            // In a real application, you would get this data from user input or your database
             const jsonData = JSON.stringify({
                 departments: [
                     {
@@ -82,9 +81,22 @@ export default function Insight() {
 
             const generatedSchedule = await generateCourseSchedule(jsonData, userPreference);
 
-            // Parse the generated schedule and update the state
+            // Parse the generated schedule
             const parsedSchedule = JSON.parse(generatedSchedule);
-            setSchedule(parsedSchedule);
+
+            // Validate the parsed schedule structure
+            if (Array.isArray(parsedSchedule) && parsedSchedule.every(year =>
+                typeof year.year === 'number' &&
+                Array.isArray(year.semesters) &&
+                year.semesters.every((semester: Semester) =>
+                    typeof semester.name === 'string' &&
+                    Array.isArray(semester.courses)
+                )
+            )) {
+                setSchedule(parsedSchedule);
+            } else {
+                throw new Error('Invalid schedule structure returned from AI');
+            }
         } catch (err) {
             console.error('Failed to generate schedule:', err);
             setError('Failed to generate schedule. Please try again.');
