@@ -34,7 +34,7 @@ export default function SignInComponent() {
         const result = await signIn("credentials", {
             email,
             password,
-            userType, // Include userType in the signIn call
+            userType,
             redirect: false,
         });
 
@@ -44,12 +44,15 @@ export default function SignInComponent() {
             setError(result.error);
         } else {
             // Redirect based on userType
-            if (userType === 'student') {
-                router.push("/student/dashboard");
-            } else if (userType === 'advisor') {
-                router.push("/advisor/dashboard");
-            } else {
-                router.push("/dashboard");
+            switch (userType) {
+                case 'student':
+                    router.push("/student/dashboard");
+                    break;
+                case 'advisor':
+                    router.push("/advisor/dashboard");
+                    break;
+                default:
+                    router.push("/dashboard");
             }
         }
     };
