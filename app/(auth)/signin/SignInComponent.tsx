@@ -10,25 +10,34 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useSearchParams } from 'next/navigation';
 import { MenuItem, Select, FormControl, InputLabel } from '@mui/material';
+import { useSession } from "next-auth/react";
 
 export default function SignInComponent() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    const [userType, setUserType] = useState("");
     const router = useRouter();
-    const searchParams = useSearchParams();
+    const { data: session, status } = useSession();
 
     useEffect(() => {
-        const type = searchParams.get('userType');
-        if (type === 'student' || type === 'advisor') {
-            setUserType(type);
-        } else {
-            // Set a default value or clear the userType if invalid
-            setUserType('');
+        if (status === "authenticated" && session?.user?.userType) {
+            redirectBasedOnUserType(session.user.userType);
         }
-    }, [searchParams]);
+    }, [status, session]);
+
+    const redirectBasedOnUserType = (userType: string) => {
+        switch (userType) {
+            case 'student':
+                router.push("/student/dashboard");
+                break;
+            case 'advisor':
+                router.push("/advisor/dashboard");
+                break;
+            default:
+                router.push("/dashboard");
+        }
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -38,27 +47,14 @@ export default function SignInComponent() {
         const result = await signIn("credentials", {
             email,
             password,
-            userType,
             redirect: false,
         });
 
-        setIsLoading(false);
-
         if (result?.error) {
             setError(result.error);
-        } else {
-            // Redirect based on userType
-            switch (userType) {
-                case 'student':
-                    router.push("/student/dashboard");
-                    break;
-                case 'advisor':
-                    router.push("/advisor/dashboard");
-                    break;
-                default:
-                    router.push("/dashboard");
-            }
+            setIsLoading(false);
         }
+        // No else block needed here, as the useEffect will handle redirection
     };
 
     return (
@@ -168,22 +164,6 @@ export default function SignInComponent() {
                     </Button>
                 </Link>
             </Box>
-            <FormControl fullWidth margin="normal">
-                <InputLabel id="user-type-label">User Type</InputLabel>
-                <Select
-                    labelId="user-type-label"
-                    id="user-type"
-                    value={userType}
-                    label="User Type"
-                    onChange={(e) => setUserType(e.target.value)}
-                >
-                    <MenuItem value="student">Student</MenuItem>
-                    <MenuItem value="advisor">Advisor</MenuItem>
-                </Select>
-            </FormControl>
-            <Typography variant="body2" sx={{ mt: 2 }}>
-                Current User Type: {userType || 'Not set'}
-            </Typography>
         </Box>
     );
 }
