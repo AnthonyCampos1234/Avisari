@@ -22,13 +22,17 @@ export default function AdvisorInsight() {
         try {
             const response = await fetch('/api/students?userType=student');
             if (!response.ok) {
-                throw new Error('Failed to fetch students');
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-            setStudents(data);
-            setLoading(false);
+            if (Array.isArray(data)) {
+                setStudents(data);
+            } else {
+                throw new Error('Invalid data format');
+            }
         } catch (err) {
-            setError('Error fetching students');
+            setError(`Error fetching students: ${err instanceof Error ? err.message : String(err)}`);
+        } finally {
             setLoading(false);
         }
     };
@@ -41,7 +45,7 @@ export default function AdvisorInsight() {
                     <CircularProgress />
                 ) : error ? (
                     <Typography color="error">{error}</Typography>
-                ) : (
+                ) : students.length > 0 ? (
                     <List>
                         {students.map((student) => (
                             <ListItem key={student.id} className="mb-2">
@@ -51,6 +55,8 @@ export default function AdvisorInsight() {
                             </ListItem>
                         ))}
                     </List>
+                ) : (
+                    <Typography>No students found.</Typography>
                 )}
             </Paper>
         </div>
