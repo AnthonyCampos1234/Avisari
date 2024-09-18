@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { List, ListItem, Typography, Paper, CircularProgress } from '@mui/material';
+import { Typography, Paper, CircularProgress, Card, CardContent, CardActionArea, Box } from '@mui/material';
 import Link from 'next/link';
+import { Person as PersonIcon } from '@mui/icons-material';
 
 type Student = {
     id: string;
@@ -46,15 +47,24 @@ export default function AdvisorInsight() {
                 ) : error ? (
                     <Typography color="error">{error}</Typography>
                 ) : students.length > 0 ? (
-                    <List>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
                         {students.map((student) => (
-                            <ListItem key={student.id} className="mb-2">
-                                <Link href={`/advisor/dashboard/insight/${student.id}`}>
-                                    <Typography>{student.name}</Typography>
+                            <Box key={student.id} sx={{ flexBasis: { xs: '100%', sm: '45%', md: '30%', lg: '22%' } }}>
+                                <Link href={`/advisor/dashboard/insight/${student.id}`} passHref>
+                                    <Card component="a" style={{ textDecoration: 'none', color: 'inherit' }}>
+                                        <CardActionArea>
+                                            <CardContent className="flex flex-col items-center">
+                                                <PersonIcon style={{ fontSize: 48, marginBottom: '8px' }} />
+                                                <Typography variant="h6" component="div" align="center">
+                                                    {student.name}
+                                                </Typography>
+                                            </CardContent>
+                                        </CardActionArea>
+                                    </Card>
                                 </Link>
-                            </ListItem>
+                            </Box>
                         ))}
-                    </List>
+                    </Box>
                 ) : (
                     <Typography>No students found.</Typography>
                 )}
