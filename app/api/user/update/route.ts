@@ -6,17 +6,17 @@ import { supabase } from "@/lib/supabase";
 export async function POST(req: Request) {
     const session = await getServerSession(authOptions);
 
-    if (!session) {
+    if (!session || !session.user) {
         return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
-    const { name, email, userType } = await req.json();
+    const { name, email } = await req.json();
 
     try {
         const { data: updatedUser, error } = await supabase
             .from('User')
-            .update({ name, email, user_type: userType })
-            .eq('email', session.user?.email as string)
+            .update({ name, email })
+            .eq('id', session.user.id)
             .select()
             .single();
 
