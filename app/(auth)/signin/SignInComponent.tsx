@@ -24,6 +24,9 @@ export default function SignInComponent() {
         const type = searchParams.get('userType');
         if (type === 'student' || type === 'advisor') {
             setUserType(type);
+        } else {
+            // Set a default value or clear the userType if invalid
+            setUserType('');
         }
     }, [searchParams]);
 
@@ -178,6 +181,9 @@ export default function SignInComponent() {
                     <MenuItem value="advisor">Advisor</MenuItem>
                 </Select>
             </FormControl>
+            <Typography variant="body2" sx={{ mt: 2 }}>
+                Current User Type: {userType || 'Not set'}
+            </Typography>
         </Box>
     );
 }
