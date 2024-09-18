@@ -9,6 +9,7 @@ import SchoolIcon from '@mui/icons-material/School';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useSearchParams } from 'next/navigation';
+import { MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 
 export default function SignInComponent() {
     const [email, setEmail] = useState("");
@@ -164,6 +165,19 @@ export default function SignInComponent() {
                     </Button>
                 </Link>
             </Box>
+            <FormControl fullWidth margin="normal">
+                <InputLabel id="user-type-label">User Type</InputLabel>
+                <Select
+                    labelId="user-type-label"
+                    id="user-type"
+                    value={userType}
+                    label="User Type"
+                    onChange={(e) => setUserType(e.target.value)}
+                >
+                    <MenuItem value="student">Student</MenuItem>
+                    <MenuItem value="advisor">Advisor</MenuItem>
+                </Select>
+            </FormControl>
         </Box>
     );
 }
