@@ -9,7 +9,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function Profile() {
+export default function AdvisorProfile() {
     const { data: session, status } = useSession();
     const router = useRouter();
     const [name, setName] = useState("");
@@ -17,6 +17,8 @@ export default function Profile() {
     const [message, setMessage] = useState("");
     const [openPopover, setOpenPopover] = useState('');
     const popoverRef = useRef<HTMLDivElement>(null);
+    const [department, setDepartment] = useState("");
+    const [officeHours, setOfficeHours] = useState("");
 
     useEffect(() => {
         if (status === "unauthenticated") {
@@ -46,7 +48,7 @@ export default function Profile() {
             const res = await fetch("/api/user/update", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name, email }),
+                body: JSON.stringify({ name, email, department, officeHours }),
             });
             if (res.ok) {
                 setMessage("Profile updated successfully!");
@@ -92,7 +94,7 @@ export default function Profile() {
         <div className="p-6 bg-gray-100 min-h-screen">
             <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
                 <div className="p-6">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-6">User Profile</h1>
+                    <h1 className="text-3xl font-bold text-gray-900 mb-6">Advisor Profile</h1>
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -112,6 +114,20 @@ export default function Profile() {
                                 fullWidth
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
+                            />
+                            <TextField
+                                label="Department"
+                                variant="outlined"
+                                fullWidth
+                                value={department}
+                                onChange={(e) => setDepartment(e.target.value)}
+                            />
+                            <TextField
+                                label="Office Hours"
+                                variant="outlined"
+                                fullWidth
+                                value={officeHours}
+                                onChange={(e) => setOfficeHours(e.target.value)}
                             />
                             <Button
                                 type="submit"
@@ -160,10 +176,10 @@ function PopoverContent({ type }: { type: string }) {
         case 'profile':
             return (
                 <div className="p-4 w-64">
-                    <h2 className="text-lg font-bold mb-2">Profile</h2>
-                    <p className="mb-4">View and manage your profile information.</p>
+                    <h2 className="text-lg font-bold mb-2">Advisor Profile</h2>
+                    <p className="mb-4">Update your information and view your schedule.</p>
                     <Button href="/dashboard/profile" variant="contained" fullWidth sx={buttonStyle}>
-                        Go to Profile
+                        View Profile
                     </Button>
                 </div>
             );

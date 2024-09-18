@@ -8,7 +8,7 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import ShareIcon from '@mui/icons-material/Share';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function Savior() {
+export default function FinancialAid() {
     const [openPopover, setOpenPopover] = useState('');
     const popoverRef = useRef<HTMLDivElement>(null);
 
@@ -83,7 +83,7 @@ export default function Savior() {
                     </AnimatePresence>
                 </div>
                 <div className="p-6">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-6">Savior</h1>
+                    <h1 className="text-3xl font-bold text-gray-900 mb-6">Financial Aid Management</h1>
                     <div className="mb-6">
                         <Button
                             variant="contained"
@@ -95,14 +95,25 @@ export default function Savior() {
                                 borderRadius: '9999px',
                             }}
                         >
-                            Generate with AI
+                            Add New Scholarship
                         </Button>
                     </div>
-                    <div className="relative p-8 bg-gray-50 rounded-lg">
-                        <div className="absolute inset-0 backdrop-blur-md rounded-lg"></div>
-                        <div className="relative z-10 flex flex-col items-center justify-center h-64">
-                            <h2 className="text-4xl font-bold text-gray-800 mb-4">Coming Soon</h2>
-                            <p className="text-xl text-gray-600">We're working on something exciting!</p>
+                    <div className="grid gap-6 md:grid-cols-2">
+                        <div className="bg-gray-50 rounded-lg p-6 shadow-md">
+                            <h2 className="text-xl font-semibold mb-4">Active Scholarships</h2>
+                            <ul className="list-disc pl-5">
+                                <li>Merit Scholarship - Due June 1st</li>
+                                <li>STEM Excellence Award - Due July 15th</li>
+                                <li>Community Service Grant - Due August 30th</li>
+                            </ul>
+                        </div>
+                        <div className="bg-gray-50 rounded-lg p-6 shadow-md">
+                            <h2 className="text-xl font-semibold mb-4">Recent Applications</h2>
+                            <ul className="list-disc pl-5">
+                                <li>John Doe - Merit Scholarship</li>
+                                <li>Jane Smith - STEM Excellence Award</li>
+                                <li>Mike Johnson - Community Service Grant</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
