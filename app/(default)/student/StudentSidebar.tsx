@@ -41,30 +41,30 @@ export default function Sidebar({ expanded, setExpanded }: SidebarProps) {
                     <SidebarLink
                         icon={<FiHome />}
                         title="Home"
-                        href="/dashboard/student"
+                        href="/student/dashboard"
                         expanded={expanded}
-                        active={pathname === "/dashboard/student"}
+                        active={pathname === "/student/dashboard"}
                     />
                     <SidebarLink
                         icon={<FiBook />}
                         title="Insight"
-                        href="/dashboard/student/insight"
+                        href="/student/dashboard/insight"
                         expanded={expanded}
-                        active={pathname === "/dashboard/student/insight"}
+                        active={pathname === "/student/dashboard/insight"}
                     />
                     <SidebarLink
                         icon={<FiDollarSign />}
                         title="Savior"
-                        href="/dashboard/student/savior"
+                        href="/student/dashboard/savior"
                         expanded={expanded}
-                        active={pathname === "/dashboard/student/savior"}
+                        active={pathname === "/student/dashboard/savior"}
                     />
                     <SidebarLink
                         icon={<FiUser />}
                         title="Profile"
-                        href="/dashboard/student/profile"
+                        href="/student/dashboard/profile"
                         expanded={expanded}
-                        active={pathname === "/dashboard/student/profile"}
+                        active={pathname === "/student/dashboard/profile"}
                     />
                 </div>
                 <div className="mb-8 flex justify-center w-full">
