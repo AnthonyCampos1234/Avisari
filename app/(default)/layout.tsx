@@ -5,11 +5,11 @@ import { usePathname } from "next/navigation";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useSession } from "next-auth/react";
-import Image from 'next/image';
 
 import Header from "@/components/ui/header";
 import Footer from "@/components/ui/footer";
-import Sidebar from "@/app/(default)/sidebar";
+import StudentSidebar from "./student/StudentSidebar";
+import AdvisorSidebar from "./advisor/AdvisorSidebar";
 
 export default function DefaultLayout({
   children,
@@ -30,6 +30,9 @@ export default function DefaultLayout({
   });
 
   if (status === "authenticated") {
+    const userType = session?.user?.userType;
+    const Sidebar = userType === "student" ? StudentSidebar : AdvisorSidebar;
+
     return (
       <div className="flex h-screen bg-gray-100">
         <Sidebar
