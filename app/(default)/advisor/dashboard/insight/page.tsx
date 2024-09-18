@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { Typography, Paper, CircularProgress, Card, CardContent, CardActionArea, Box } from '@mui/material';
+import { Typography, Paper, CircularProgress, Card, CardContent, Box, TextField, InputAdornment } from '@mui/material';
 import Link from 'next/link';
-import { Person as PersonIcon } from '@mui/icons-material';
+import { Person as PersonIcon, Search as SearchIcon } from '@mui/icons-material';
 
 type Student = {
     id: string;
@@ -12,12 +12,22 @@ type Student = {
 
 export default function AdvisorInsight() {
     const [students, setStudents] = useState<Student[]>([]);
+    const [filteredStudents, setFilteredStudents] = useState<Student[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         fetchStudents();
     }, []);
+
+    useEffect(() => {
+        setFilteredStudents(
+            students.filter(student =>
+                student.name.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+        );
+    }, [students, searchTerm]);
 
     const fetchStudents = async () => {
         try {
@@ -28,6 +38,7 @@ export default function AdvisorInsight() {
             const data = await response.json();
             if (Array.isArray(data)) {
                 setStudents(data);
+                setFilteredStudents(data);
             } else {
                 throw new Error('Invalid data format');
             }
@@ -40,29 +51,46 @@ export default function AdvisorInsight() {
 
     return (
         <div className="p-6">
-            <Paper className="p-6 mb-6">
+            <Paper elevation={3} className="p-6 mb-6">
                 <Typography variant="h4" className="mb-4">Student List</Typography>
+                <TextField
+                    fullWidth
+                    variant="outlined"
+                    placeholder="Search students..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="mb-4"
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <SearchIcon />
+                            </InputAdornment>
+                        ),
+                    }}
+                />
                 {loading ? (
                     <CircularProgress />
                 ) : error ? (
                     <Typography color="error">{error}</Typography>
-                ) : students.length > 0 ? (
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
-                        {students.map((student) => (
-                            <Box key={student.id} sx={{ flexBasis: { xs: '100%', sm: '45%', md: '30%', lg: '22%' } }}>
-                                <Link href={`/advisor/dashboard/insight/${student.id}`} passHref>
-                                    <Card component="a" style={{ textDecoration: 'none', color: 'inherit' }}>
-                                        <CardActionArea>
-                                            <CardContent className="flex flex-col items-center">
-                                                <PersonIcon style={{ fontSize: 48, marginBottom: '8px' }} />
-                                                <Typography variant="h6" component="div" align="center">
-                                                    {student.name}
-                                                </Typography>
-                                            </CardContent>
-                                        </CardActionArea>
-                                    </Card>
-                                </Link>
-                            </Box>
+                ) : filteredStudents.length > 0 ? (
+                    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: 3 }}>
+                        {filteredStudents.map((student) => (
+                            <Link key={student.id} href={`/advisor/dashboard/insight/${student.id}`} passHref style={{ textDecoration: 'none' }}>
+                                <Card elevation={2} sx={{
+                                    transition: '0.3s',
+                                    '&:hover': {
+                                        transform: 'translateY(-5px)',
+                                        boxShadow: '0 4px 20px 0 rgba(0,0,0,0.12)'
+                                    }
+                                }}>
+                                    <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '24px' }}>
+                                        <PersonIcon sx={{ fontSize: 60, color: 'primary.main', marginBottom: 2 }} />
+                                        <Typography variant="h6" component="div" align="center" sx={{ fontWeight: 'bold' }}>
+                                            {student.name}
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                            </Link>
                         ))}
                     </Box>
                 ) : (
