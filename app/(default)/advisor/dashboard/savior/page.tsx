@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Button, IconButton } from '@mui/material';
+import { Button, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import ChatIcon from '@mui/icons-material/Chat';
 import AssessmentIcon from '@mui/icons-material/Assessment';
@@ -51,6 +51,13 @@ export default function FinancialAid() {
         }
     };
 
+    // Mock data for students (in a real app, this would come from an API or database)
+    const students = [
+        { id: 1, name: "John Doe", chatSummary: "Discussed scholarship options and application process", appointment: "2023-06-15 10:00 AM" },
+        { id: 2, name: "Jane Smith", chatSummary: "Reviewed financial aid package and next steps", appointment: "2023-06-16 2:00 PM" },
+        { id: 3, name: "Mike Johnson", chatSummary: "Addressed questions about work-study programs", appointment: "2023-06-17 11:30 AM" },
+    ];
+
     return (
         <div className="p-6">
             <div className="bg-white rounded-lg shadow-lg overflow-hidden">
@@ -84,6 +91,30 @@ export default function FinancialAid() {
                 </div>
                 <div className="p-6">
                     <h1 className="text-3xl font-bold text-gray-900 mb-6">Financial Aid Management</h1>
+
+                    {/* Replace the existing grid with a table */}
+                    <TableContainer component={Paper} className="mb-6">
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Student Name</TableCell>
+                                    <TableCell>Chat Summary</TableCell>
+                                    <TableCell>Appointment</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {students.map((student) => (
+                                    <TableRow key={student.id}>
+                                        <TableCell>{student.name}</TableCell>
+                                        <TableCell>{student.chatSummary}</TableCell>
+                                        <TableCell>{student.appointment}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+
+                    {/* Keep the "Add New Scholarship" button */}
                     <div className="mb-6">
                         <Button
                             variant="contained"
@@ -97,24 +128,6 @@ export default function FinancialAid() {
                         >
                             Add New Scholarship
                         </Button>
-                    </div>
-                    <div className="grid gap-6 md:grid-cols-2">
-                        <div className="bg-gray-50 rounded-lg p-6 shadow-md">
-                            <h2 className="text-xl font-semibold mb-4">Active Scholarships</h2>
-                            <ul className="list-disc pl-5">
-                                <li>Merit Scholarship - Due June 1st</li>
-                                <li>STEM Excellence Award - Due July 15th</li>
-                                <li>Community Service Grant - Due August 30th</li>
-                            </ul>
-                        </div>
-                        <div className="bg-gray-50 rounded-lg p-6 shadow-md">
-                            <h2 className="text-xl font-semibold mb-4">Recent Applications</h2>
-                            <ul className="list-disc pl-5">
-                                <li>John Doe - Merit Scholarship</li>
-                                <li>Jane Smith - STEM Excellence Award</li>
-                                <li>Mike Johnson - Community Service Grant</li>
-                            </ul>
-                        </div>
                     </div>
                 </div>
             </div>

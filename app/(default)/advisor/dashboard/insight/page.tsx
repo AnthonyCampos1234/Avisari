@@ -28,6 +28,62 @@ type Student = {
     schedule: Year[];
 };
 
+// Mock data
+const mockStudents: Student[] = [
+    {
+        id: "1",
+        name: "John Doe",
+        email: "john.doe@example.com",
+        schedule: [
+            {
+                year: 1,
+                semesters: [
+                    {
+                        name: "Fall",
+                        courses: [
+                            { id: "CS101", code: "CS101", name: "Introduction to Programming", credits: 3 },
+                            { id: "MATH101", code: "MATH101", name: "Calculus I", credits: 4 },
+                        ]
+                    },
+                    {
+                        name: "Spring",
+                        courses: [
+                            { id: "CS102", code: "CS102", name: "Data Structures", credits: 3 },
+                            { id: "PHYS101", code: "PHYS101", name: "Physics I", credits: 4 },
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        id: "2",
+        name: "Jane Smith",
+        email: "jane.smith@example.com",
+        schedule: [
+            {
+                year: 1,
+                semesters: [
+                    {
+                        name: "Fall",
+                        courses: [
+                            { id: "BIO101", code: "BIO101", name: "Biology I", credits: 4 },
+                            { id: "CHEM101", code: "CHEM101", name: "Chemistry I", credits: 4 },
+                        ]
+                    },
+                    {
+                        name: "Spring",
+                        courses: [
+                            { id: "BIO102", code: "BIO102", name: "Biology II", credits: 4 },
+                            { id: "PSYCH101", code: "PSYCH101", name: "Introduction to Psychology", credits: 3 },
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+];
+
 export default function AdvisorInsight() {
     const [students, setStudents] = useState<Student[]>([]);
     const [loading, setLoading] = useState(true);
@@ -35,25 +91,12 @@ export default function AdvisorInsight() {
     const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
-        fetchStudents();
-    }, []);
-
-    const fetchStudents = async () => {
-        setLoading(true);
-        try {
-            const response = await fetch('/api/advisor/students');
-            if (!response.ok) {
-                throw new Error('Failed to fetch students');
-            }
-            const data = await response.json();
-            setStudents(data);
-        } catch (err) {
-            setError('Failed to load students. Please try again later.');
-            console.error(err);
-        } finally {
+        // Simulate API call with mock data
+        setTimeout(() => {
+            setStudents(mockStudents);
             setLoading(false);
-        }
-    };
+        }, 1000);
+    }, []);
 
     const filteredStudents = students.filter(student =>
         student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
