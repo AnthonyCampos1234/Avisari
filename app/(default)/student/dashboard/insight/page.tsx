@@ -44,6 +44,7 @@ export default function Insight() {
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState<Course[]>([]);
     const [selectedCourses, setSelectedCourses] = useState<Course[]>([]);
+    const [visibleError, setVisibleError] = useState<string | null>(null);
 
     useEffect(() => {
         if (session?.user?.email) {
@@ -56,6 +57,7 @@ export default function Insight() {
         if (!session?.user?.email) return;
 
         try {
+            setDebugInfo('Loading schedule...');
             const { data, error } = await supabase
                 .from('schedules')
                 .select('data')
@@ -63,17 +65,20 @@ export default function Insight() {
                 .single();
 
             if (error) throw error;
+
             if (data && data.data) {
                 setSchedule(data.data);
+                setDebugInfo('Schedule loaded successfully');
             } else {
-                // If no schedule exists, initialize with an empty structure
                 const initialSchedule = initializeEmptySchedule();
                 setSchedule(initialSchedule);
                 await saveSchedule(initialSchedule);
+                setDebugInfo('Initialized empty schedule');
             }
         } catch (error) {
-            console.error('Failed to load schedule:', error);
-            // Initialize with an empty schedule if there's an error
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            setVisibleError(`Failed to load schedule: ${errorMessage}`);
+            setDebugInfo(`Load error: ${errorMessage}`);
             const initialSchedule = initializeEmptySchedule();
             setSchedule(initialSchedule);
             await saveSchedule(initialSchedule);
@@ -81,10 +86,14 @@ export default function Insight() {
     };
 
     const saveSchedule = async (newSchedule: Year[]) => {
-        if (!session?.user?.email) return;
+        if (!session?.user?.email) {
+            setVisibleError('No user email found in session');
+            return;
+        }
 
         try {
-            const { error } = await supabase
+            setDebugInfo('Saving schedule...');
+            const { data, error } = await supabase
                 .from('schedules')
                 .upsert({
                     user_email: session.user.email,
@@ -94,9 +103,12 @@ export default function Insight() {
                 });
 
             if (error) throw error;
-            console.log('Schedule saved successfully');
+
+            setDebugInfo(`Schedule saved successfully: ${JSON.stringify(data)}`);
         } catch (error) {
-            console.error('Failed to save schedule:', error);
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            setVisibleError(`Failed to save schedule: ${errorMessage}`);
+            setDebugInfo(`Save error: ${errorMessage}`);
         }
     };
 
@@ -291,11 +303,36 @@ export default function Insight() {
         setSearchResults([]);
     };
 
+    const showCurrentSchedule = () => {
+        setDebugInfo(`Current schedule: ${JSON.stringify(schedule)}`);
+    };
+
     return (
         <div className="p-6">
             <div className="bg-white rounded-lg shadow-lg overflow-hidden">
                 <div className="p-6">
                     <h1 className="text-3xl font-bold text-gray-900 mb-6">Insight</h1>
+
+                    {visibleError && (
+                        <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                            {visibleError}
+                        </div>
+                    )}
+
+                    <div className="mb-4">
+                        <button
+                            onClick={showCurrentSchedule}
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        >
+                            Show Current Schedule
+                        </button>
+                    </div>
+
+                    {debugInfo && (
+                        <div className="mb-4 p-4 bg-gray-100 border border-gray-300 rounded">
+                            <pre>{debugInfo}</pre>
+                        </div>
+                    )}
 
                     <div className="mb-6">
                         <div className="flex items-center border rounded-lg overflow-hidden">
