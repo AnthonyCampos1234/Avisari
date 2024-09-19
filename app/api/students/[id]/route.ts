@@ -3,15 +3,14 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../auth/[...nextauth]/options";
 import { supabase } from "@/lib/supabase";
 
-export async function GET(req: Request) {
+export async function GET(req: Request, { params }: { params: { id: string } }) {
     const session = await getServerSession(authOptions);
 
     if (!session || !session.user || session.user.userType !== 'advisor') {
         return NextResponse.json({ error: "Not authorized" }, { status: 403 });
     }
 
-    const { searchParams } = new URL(req.url);
-    const studentId = searchParams.get('id');
+    const studentId = params.id;
 
     if (!studentId) {
         return NextResponse.json({ error: "Student ID is required" }, { status: 400 });
