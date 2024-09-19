@@ -9,6 +9,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
+import Image from 'next/image';
 
 type Course = {
     id: string;
@@ -392,7 +393,14 @@ export default function Insight() {
                                     borderRadius: '9999px',
                                 }}
                             >
-                                <SearchIcon sx={{ p: '10px', color: 'text.primary', fontSize: 24 }} />
+                                <div className="p-2">
+                                    <Image
+                                        src="/search-icon.svg"
+                                        alt="Search"
+                                        width={24}
+                                        height={24}
+                                    />
+                                </div>
                                 <input
                                     type="text"
                                     placeholder="Search for courses..."
