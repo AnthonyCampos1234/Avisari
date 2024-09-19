@@ -449,14 +449,24 @@ export default function Insight() {
                                         fixed bottom-8 right-8 p-4 
                                         bg-black text-white rounded-full shadow-lg 
                                         transition-all duration-300 ease-in-out
-                                        ${snapshot.isDraggingOver ? 'scale-110 bg-gray-800' : ''}
+                                        ${snapshot.isDraggingOver ? 'scale-150 bg-gray-800' : ''}
                                     `}
-                                    style={{ display: isDragging ? 'block' : 'none' }}
+                                    style={{
+                                        display: isDragging ? 'flex' : 'none',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        width: '60px',
+                                        height: '60px',
+                                    }}
                                 >
-                                    <DeleteOutlineIcon
-                                        fontSize="large"
-                                        className={`transition-transform duration-300 ${snapshot.isDraggingOver ? 'scale-125' : ''}`}
-                                    />
+                                    {snapshot.isDraggingOver ? (
+                                        <DeleteIcon
+                                            fontSize="large"
+                                            className="animate-pulse"
+                                        />
+                                    ) : (
+                                        <DeleteOutlineIcon fontSize="large" />
+                                    )}
                                     {provided.placeholder}
                                 </div>
                             )}
