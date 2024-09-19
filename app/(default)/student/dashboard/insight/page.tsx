@@ -50,6 +50,7 @@ export default function Insight() {
     const [isDeleting, setIsDeleting] = useState(false);
     const deleteTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const [refreshing, setRefreshing] = useState(false);
+    const [debugInfo, setDebugInfo] = useState<string>('');
 
     useEffect(() => {
         if (session?.user?.email) {
@@ -60,7 +61,7 @@ export default function Insight() {
 
     const loadSchedule = async () => {
         if (!session?.user?.email) {
-            console.error('No user email available');
+            setDebugInfo('No user email available');
             return;
         }
 
@@ -68,24 +69,30 @@ export default function Insight() {
         try {
             const { data, error } = await supabase
                 .from('students')
-                .select('schedule')
+                .select('*')
                 .eq('email', session.user.email)
                 .single();
 
             if (error) {
-                console.error('Supabase error:', error);
+                setDebugInfo(`Supabase error: ${error.message}`);
                 throw error;
             }
 
             if (!data) {
-                console.error('No data returned for email:', session.user.email);
+                setDebugInfo(`No data returned for email: ${session.user.email}`);
                 setSchedule(initializeEmptySchedule());
             } else {
-                console.log('Fetched schedule data:', data.schedule);
-                setSchedule(data.schedule || initializeEmptySchedule());
+                setDebugInfo(`Fetched student data: ${JSON.stringify(data)}`);
+                if (data.schedule && Array.isArray(data.schedule) && data.schedule.length > 0) {
+                    setSchedule(data.schedule);
+                    setDebugInfo(prevInfo => `${prevInfo}\nSchedule set from data`);
+                } else {
+                    setDebugInfo(prevInfo => `${prevInfo}\nSchedule is empty or invalid, initializing empty schedule`);
+                    setSchedule(initializeEmptySchedule());
+                }
             }
         } catch (error) {
-            console.error('Load error:', error);
+            setDebugInfo(`Load error: ${error instanceof Error ? error.message : String(error)}`);
             setSchedule(initializeEmptySchedule());
         } finally {
             setLoading(false);
@@ -405,6 +412,12 @@ export default function Insight() {
                             </Button>
                         </div>
 
+                        {/* Debug Information */}
+                        <Paper elevation={3} className="p-4 mb-4 bg-gray-100">
+                            <Typography variant="h6">Debug Information:</Typography>
+                            <pre className="whitespace-pre-wrap">{debugInfo}</pre>
+                        </Paper>
+
                         <div className="mb-6">
                             <Paper
                                 elevation={0}
@@ -515,21 +528,21 @@ export default function Insight() {
                                 {loading ? 'Generating...' : 'Generate with AI'}
                             </Button>
                         </div>
-                        {schedule.map((year, yearIndex) => (
-                            <div key={yearIndex} className="mb-8">
-                                <h2 className="text-2xl font-bold text-gray-800 mb-4">Year {year.year}</h2>
-                                <div className="grid grid-cols-4 gap-4">
-                                    {year.semesters.map((semester, semesterIndex) => (
-                                        <Droppable droppableId={`${yearIndex}-${semesterIndex}`} key={semesterIndex}>
-                                            {(provided) => (
-                                                <div
-                                                    {...provided.droppableProps}
-                                                    ref={provided.innerRef}
-                                                    className="p-4 bg-gray-50 rounded-lg"
-                                                >
-                                                    <h3 className="font-semibold text-lg text-gray-900 mb-3">{semester.name}</h3>
-                                                    {semester.courses.length > 0 ? (
-                                                        semester.courses.map((course: Course, index: number) => (
+                        {schedule.length > 0 ? (
+                            schedule.map((year, yearIndex) => (
+                                <div key={yearIndex} className="mb-8">
+                                    <h2 className="text-2xl font-bold text-gray-800 mb-4">Year {year.year}</h2>
+                                    <div className="grid grid-cols-4 gap-4">
+                                        {year.semesters.map((semester, semesterIndex) => (
+                                            <Droppable droppableId={`${yearIndex}-${semesterIndex}`} key={semesterIndex}>
+                                                {(provided) => (
+                                                    <div
+                                                        {...provided.droppableProps}
+                                                        ref={provided.innerRef}
+                                                        className="p-4 bg-gray-50 rounded-lg"
+                                                    >
+                                                        <h3 className="font-semibold text-lg text-gray-900 mb-3">{semester.name}</h3>
+                                                        {semester.courses.map((course, index) => (
                                                             <Draggable key={course.id} draggableId={course.id} index={index}>
                                                                 {(provided) => (
                                                                     <div
@@ -542,18 +555,18 @@ export default function Insight() {
                                                                     </div>
                                                                 )}
                                                             </Draggable>
-                                                        ))
-                                                    ) : (
-                                                        <p className="text-gray-500 italic">No courses added yet</p>
-                                                    )}
-                                                    {provided.placeholder}
-                                                </div>
-                                            )}
-                                        </Droppable>
-                                    ))}
+                                                        ))}
+                                                        {provided.placeholder}
+                                                    </div>
+                                                )}
+                                            </Droppable>
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))
+                        ) : (
+                            <Typography>No schedule data available.</Typography>
+                        )}
                     </div>
                 </div>
             </DragDropContext>
