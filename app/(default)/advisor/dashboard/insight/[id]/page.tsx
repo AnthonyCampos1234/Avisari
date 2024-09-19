@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { Typography, Paper, CircularProgress } from '@mui/material';
+import { Typography, Paper, CircularProgress, Box } from '@mui/material';
 import { useParams } from 'next/navigation';
 
 type Course = {
@@ -72,8 +72,12 @@ export default function StudentDetails() {
         <div className="p-6">
             <Paper className="p-6 mb-6">
                 <Typography variant="h4" className="mb-4">Student Details</Typography>
-                <Typography variant="h6">{student.name}</Typography>
-                <Typography>{student.email}</Typography>
+                <Box mb={4}>
+                    <Typography variant="h6" className="mb-2">Name</Typography>
+                    <Typography variant="body1" className="mb-2">{student.name}</Typography>
+                    <Typography variant="h6" className="mb-2">Email</Typography>
+                    <Typography variant="body1">{student.email}</Typography>
+                </Box>
                 <Typography variant="h6" className="mt-4">Schedule</Typography>
                 {student.schedule.map((year, yearIndex) => (
                     <div key={yearIndex} className="mb-8">
