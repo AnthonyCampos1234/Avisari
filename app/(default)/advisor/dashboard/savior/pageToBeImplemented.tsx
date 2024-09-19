@@ -1,14 +1,14 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Button, IconButton } from '@mui/material';
+import { Button, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import ChatIcon from '@mui/icons-material/Chat';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import ShareIcon from '@mui/icons-material/Share';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function Savior() {
+export default function FinancialAid() {
     const [openPopover, setOpenPopover] = useState('');
     const popoverRef = useRef<HTMLDivElement>(null);
 
@@ -51,6 +51,13 @@ export default function Savior() {
         }
     };
 
+    // Mock data for students (in a real app, this would come from an API or database)
+    const students = [
+        { id: 1, name: "John Doe", chatSummary: "Discussed scholarship options and application process", appointment: "2023-06-15 10:00 AM" },
+        { id: 2, name: "Jane Smith", chatSummary: "Reviewed financial aid package and next steps", appointment: "2023-06-16 2:00 PM" },
+        { id: 3, name: "Mike Johnson", chatSummary: "Addressed questions about work-study programs", appointment: "2023-06-17 11:30 AM" },
+    ];
+
     return (
         <div className="p-6">
             <div className="bg-white rounded-lg shadow-lg overflow-hidden">
@@ -83,7 +90,31 @@ export default function Savior() {
                     </AnimatePresence>
                 </div>
                 <div className="p-6">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-6">Savior</h1>
+                    <h1 className="text-3xl font-bold text-gray-900 mb-6">Financial Aid Management</h1>
+
+                    {/* Replace the existing grid with a table */}
+                    <TableContainer component={Paper} className="mb-6">
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Student Name</TableCell>
+                                    <TableCell>Chat Summary</TableCell>
+                                    <TableCell>Appointment</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {students.map((student) => (
+                                    <TableRow key={student.id}>
+                                        <TableCell>{student.name}</TableCell>
+                                        <TableCell>{student.chatSummary}</TableCell>
+                                        <TableCell>{student.appointment}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+
+                    {/* Keep the "Add New Scholarship" button */}
                     <div className="mb-6">
                         <Button
                             variant="contained"
@@ -95,15 +126,8 @@ export default function Savior() {
                                 borderRadius: '9999px',
                             }}
                         >
-                            Generate with AI
+                            Add New Scholarship
                         </Button>
-                    </div>
-                    <div className="relative p-8 bg-gray-50 rounded-lg">
-                        <div className="absolute inset-0 backdrop-blur-md rounded-lg"></div>
-                        <div className="relative z-10 flex flex-col items-center justify-center h-64">
-                            <h2 className="text-4xl font-bold text-gray-800 mb-4">Coming Soon</h2>
-                            <p className="text-xl text-gray-600">We're working on something exciting!</p>
-                        </div>
                     </div>
                 </div>
             </div>
