@@ -302,8 +302,8 @@ export default function Insight() {
     };
 
     return (
-        <div className="p-6 relative min-h-screen">
-            <div className="bg-white rounded-lg shadow-lg overflow-hidden mb-20">
+        <div className="p-6 relative">
+            <div className="bg-white rounded-lg shadow-lg overflow-hidden">
                 <div className="p-6">
                     <h1 className="text-3xl font-bold text-gray-900 mb-6">Insight</h1>
 
@@ -448,7 +448,7 @@ export default function Insight() {
                                     <div
                                         ref={provided.innerRef}
                                         {...provided.droppableProps}
-                                        className={`fixed bottom-8 right-8 p-4 rounded-2xl shadow-lg transition-all duration-200 ${snapshot.isDraggingOver ? 'bg-gray-800 scale-110' : 'bg-gray-700'
+                                        className={`fixed bottom-8 left-1/2 transform -translate-x-1/2 p-4 rounded-2xl shadow-lg transition-all duration-200 ${snapshot.isDraggingOver ? 'bg-gray-800 scale-110' : 'bg-gray-700'
                                             }`}
                                         style={{
                                             width: '80px',
@@ -456,7 +456,6 @@ export default function Insight() {
                                             display: 'flex',
                                             justifyContent: 'center',
                                             alignItems: 'center',
-                                            zIndex: 1000,
                                         }}
                                     >
                                         <DeleteIcon sx={{ fontSize: 36 }} className="text-white" />
