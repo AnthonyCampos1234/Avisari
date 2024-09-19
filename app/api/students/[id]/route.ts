@@ -26,7 +26,7 @@ export async function GET(req: Request) {
 
         if (studentError) {
             console.error("Error fetching student:", studentError);
-            throw studentError;
+            return NextResponse.json({ error: studentError.message }, { status: 500 });
         }
 
         const { data: schedule, error: scheduleError } = await supabase
@@ -37,7 +37,7 @@ export async function GET(req: Request) {
 
         if (scheduleError) {
             console.error("Error fetching schedule:", scheduleError);
-            throw scheduleError;
+            return NextResponse.json({ error: scheduleError.message }, { status: 500 });
         }
 
         return NextResponse.json({ ...student, schedule: schedule.data });
