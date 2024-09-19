@@ -13,6 +13,7 @@ import { supabase } from '@/lib/supabase';
 import SearchIcon from '@mui/icons-material/Search';
 
 type Course = {
+    id: string;
     code: string;
     title: string;
     credits: number;
@@ -71,13 +72,23 @@ export default function Insight() {
                 .single();
 
             if (error) throw error;
-            if (data) setSchedule(data.data);
+            if (data) {
+                setSchedule(data.data);
+            } else {
+                // If no schedule exists, initialize with an empty structure
+                const initialSchedule = initializeEmptySchedule();
+                setSchedule(initialSchedule);
+                saveSchedule(initialSchedule);
+            }
         } catch (error) {
             console.error('Failed to load schedule:', error);
+            // Initialize with an empty schedule if there's an error
+            const initialSchedule = initializeEmptySchedule();
+            setSchedule(initialSchedule);
         }
     };
 
-    const saveSchedule = async (newSchedule: any[]) => {
+    const saveSchedule = async (newSchedule: Year[]) => {
         if (!session?.user?.email) return;
 
         try {
@@ -96,19 +107,17 @@ export default function Insight() {
         }
     };
 
-    useEffect(() => {
-        // Initialize empty schedule structure
+    const initializeEmptySchedule = (): Year[] => {
         const years = 4;
         const semestersPerYear = 4;
-        const newSchedule = Array.from({ length: years }, (_, yearIndex) => ({
+        return Array.from({ length: years }, (_, yearIndex) => ({
             year: yearIndex + 1,
             semesters: Array.from({ length: semestersPerYear }, (_, semesterIndex) => ({
                 name: getSemesterName(semesterIndex),
                 courses: []
             }))
         }));
-        setSchedule(newSchedule);
-    }, []);
+    };
 
     const getSemesterName = (index: number) => {
         const semesterNames = ['Fall', 'Spring', 'Summer 1', 'Summer 2'];
@@ -131,14 +140,14 @@ export default function Insight() {
         const newSchedule = JSON.parse(JSON.stringify(schedule));
 
         // Parse the source and destination IDs
-        const [sourceYear, sourceSemester] = source.droppableId.split('-');
-        const [destYear, destSemester] = destination.droppableId.split('-');
+        const [sourceYear, sourceSemester] = source.droppableId.split('-').map(Number);
+        const [destYear, destSemester] = destination.droppableId.split('-').map(Number);
 
         // Remove the course from the source
-        const [movedCourse] = newSchedule[parseInt(sourceYear)].semesters[parseInt(sourceSemester)].courses.splice(source.index, 1);
+        const [movedCourse] = newSchedule[sourceYear].semesters[sourceSemester].courses.splice(source.index, 1);
 
         // Add the course to the destination
-        newSchedule[parseInt(destYear)].semesters[parseInt(destSemester)].courses.splice(destination.index, 0, movedCourse);
+        newSchedule[destYear].semesters[destSemester].courses.splice(destination.index, 0, movedCourse);
 
         // Update the state and save to the database
         setSchedule(newSchedule);
@@ -236,6 +245,7 @@ export default function Insight() {
         const firstYear = newSchedule[0];
         const firstSemester = firstYear.semesters[0];
         firstSemester.courses.push({
+            id: `${course.code}-${Date.now()}`,
             code: course.code,
             title: course.title,
             credits: course.credits,
@@ -564,7 +574,7 @@ export default function Insight() {
                                 <h2 className="text-2xl font-bold text-gray-800 mb-4">Year {year.year}</h2>
                                 <div className="grid grid-cols-4 gap-4">
                                     {year.semesters.map((semester, semesterIndex) => (
-                                        <Droppable droppableId={`year-${yearIndex}-semester-${semesterIndex}`} key={semesterIndex}>
+                                        <Droppable droppableId={`${yearIndex}-${semesterIndex}`} key={semesterIndex}>
                                             {(provided) => (
                                                 <div
                                                     {...provided.droppableProps}
@@ -573,7 +583,7 @@ export default function Insight() {
                                                 >
                                                     <h3 className="font-semibold text-lg text-gray-900 mb-3">{semester.name}</h3>
                                                     {semester.courses.length > 0 ? (
-                                                        semester.courses.map((course: any, index: number) => (
+                                                        semester.courses.map((course: Course, index: number) => (
                                                             <Draggable key={course.id} draggableId={course.id} index={index}>
                                                                 {(provided) => (
                                                                     <div
