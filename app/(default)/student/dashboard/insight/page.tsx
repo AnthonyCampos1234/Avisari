@@ -315,7 +315,7 @@ export default function Insight() {
                             ref={provided.innerRef}
                             {...provided.droppableProps}
                             className={`
-                                absolute top-4 right-4 p-4 
+                                absolute top-4 left-1/2 transform -translate-x-1/2 p-4 
                                 bg-black text-white rounded-full shadow-lg 
                                 transition-all duration-300 ease-in-out
                                 ${snapshot.isDraggingOver ? 'bg-gray-800' : ''}
