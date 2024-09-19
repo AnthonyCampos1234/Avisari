@@ -130,15 +130,10 @@ export default function StudentDetails() {
         const [sourceYear, sourceSemester] = source.droppableId.split('-').map(Number);
 
         if (!destination || destination.droppableId === 'trash') {
-            // The item was dropped on the trash or outside any droppable
+            // If the item is dropped in the trash, remove it from the source
             newSchedule[sourceYear].semesters[sourceSemester].courses.splice(source.index, 1);
             setSchedule(newSchedule);
             saveSchedule(newSchedule);
-
-            // Trigger delete animation
-            setIsDeleting(true);
-            if (deleteTimeoutRef.current) clearTimeout(deleteTimeoutRef.current);
-            deleteTimeoutRef.current = setTimeout(() => setIsDeleting(false), 300);
             return;
         }
 
@@ -254,113 +249,110 @@ export default function StudentDetails() {
     if (!student) return <Typography>No student found</Typography>;
 
     return (
-        <div className="p-6">
-            <Paper className="p-6 mb-6">
+        <div className="p-6 relative">
+            <Box mb={4}>
                 <Typography variant="h4" className="mb-4">Student Details</Typography>
-                <Box mb={4}>
-                    <Typography variant="h6" className="mb-2">Name</Typography>
-                    <Typography variant="body1" className="mb-2">{student.name}</Typography>
-                    <Typography variant="h6" className="mb-2">Email</Typography>
-                    <Typography variant="body1">{student.email}</Typography>
-                </Box>
-                <Typography variant="h6" className="mt-4">Schedule</Typography>
-                <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
-                    {schedule.map((year, yearIndex) => (
-                        <div key={yearIndex} className="mb-8">
-                            <h2 className="text-2xl font-bold text-gray-800 mb-4">Year {year.year}</h2>
-                            <div className="grid grid-cols-4 gap-4">
-                                {year.semesters.map((semester, semesterIndex) => (
-                                    <Droppable droppableId={`${yearIndex}-${semesterIndex}`} key={semesterIndex}>
-                                        {(provided) => (
-                                            <div
-                                                {...provided.droppableProps}
-                                                ref={provided.innerRef}
-                                                className="p-4 bg-gray-50 rounded-lg"
-                                            >
-                                                <h3 className="font-semibold text-lg text-gray-900 mb-3">{semester.name}</h3>
-                                                {semester.courses.length > 0 ? (
-                                                    semester.courses.map((course: Course, index: number) => (
-                                                        <Draggable key={course.id} draggableId={course.id} index={index}>
-                                                            {(provided) => (
-                                                                <div
-                                                                    ref={provided.innerRef}
-                                                                    {...provided.draggableProps}
-                                                                    {...provided.dragHandleProps}
-                                                                    className="bg-white p-3 mb-2 rounded-md shadow-sm border border-gray-200 transition-all hover:shadow-md"
-                                                                >
-                                                                    <span className="font-medium">{course.code}:</span> {course.title}
-                                                                </div>
-                                                            )}
-                                                        </Draggable>
-                                                    ))
-                                                ) : (
-                                                    <p className="text-gray-500 italic">No courses added yet</p>
-                                                )}
-                                                {provided.placeholder}
-                                            </div>
-                                        )}
-                                    </Droppable>
-                                ))}
-                            </div>
+                <Typography variant="h6" className="mb-2">Name</Typography>
+                <Typography variant="body1" className="mb-2">{student.name}</Typography>
+                <Typography variant="h6" className="mb-2">Email</Typography>
+                <Typography variant="body1">{student.email}</Typography>
+            </Box>
+            <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
+                {schedule.map((year, yearIndex) => (
+                    <div key={yearIndex} className="mb-8">
+                        <h2 className="text-2xl font-bold text-gray-800 mb-4">Year {year.year}</h2>
+                        <div className="grid grid-cols-4 gap-4">
+                            {year.semesters.map((semester, semesterIndex) => (
+                                <Droppable droppableId={`${yearIndex}-${semesterIndex}`} key={semesterIndex}>
+                                    {(provided) => (
+                                        <div
+                                            {...provided.droppableProps}
+                                            ref={provided.innerRef}
+                                            className="p-4 bg-gray-50 rounded-lg"
+                                        >
+                                            <h3 className="font-semibold text-lg text-gray-900 mb-3">{semester.name}</h3>
+                                            {semester.courses.length > 0 ? (
+                                                semester.courses.map((course: Course, index: number) => (
+                                                    <Draggable key={course.id} draggableId={course.id} index={index}>
+                                                        {(provided) => (
+                                                            <div
+                                                                ref={provided.innerRef}
+                                                                {...provided.draggableProps}
+                                                                {...provided.dragHandleProps}
+                                                                className="bg-white p-3 mb-2 rounded-md shadow-sm border border-gray-200 transition-all hover:shadow-md"
+                                                            >
+                                                                <span className="font-medium">{course.code}:</span> {course.title}
+                                                            </div>
+                                                        )}
+                                                    </Draggable>
+                                                ))
+                                            ) : (
+                                                <p className="text-gray-500 italic">No courses added yet</p>
+                                            )}
+                                            {provided.placeholder}
+                                        </div>
+                                    )}
+                                </Droppable>
+                            ))}
+                        </div>
+                    </div>
+                ))}
+            </DragDropContext>
+            <div className="mb-6">
+                <Button
+                    onClick={addSelectedCourses}
+                    variant="contained"
+                    disabled={selectedCourses.length === 0}
+                    sx={{
+                        backgroundColor: '#111827',
+                        '&:hover': {
+                            backgroundColor: '#374151',
+                        },
+                        borderRadius: '9999px',
+                    }}
+                >
+                    Add Selected Courses
+                </Button>
+            </div>
+            <div className="mb-6">
+                <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => handleSearch(e.target.value)}
+                    placeholder="Search for courses"
+                    className="p-2 border border-gray-300 rounded-lg w-full"
+                />
+                <div className="mt-4">
+                    {searchResults.map((course) => (
+                        <div
+                            key={course.code}
+                            className={`
+                                flex items-center justify-between p-2 rounded-lg transition-colors cursor-pointer
+                                ${isCourseInSchedule(course)
+                                    ? 'bg-gray-100 cursor-not-allowed'
+                                    : selectedCourses.some(c => c.code === course.code)
+                                        ? 'bg-gray-200 hover:bg-gray-300'
+                                        : 'hover:bg-gray-50'
+                                }
+                            `}
+                            onClick={() => !isCourseInSchedule(course) && toggleCourseSelection(course)}
+                        >
+                            <span>{course.code}: {course.title}</span>
+                            <Chip
+                                label={isCourseInSchedule(course) ? "In Schedule" : selectedCourses.some(c => c.code === course.code) ? "Selected" : "Select"}
+                                color={isCourseInSchedule(course) ? "default" : selectedCourses.some(c => c.code === course.code) ? "primary" : "default"}
+                                sx={{
+                                    borderRadius: '9999px',
+                                    '& .MuiChip-label': { px: 2 },
+                                    bgcolor: isCourseInSchedule(course) ? '#e0e0e0' : selectedCourses.some(c => c.code === course.code) ? '#111827' : 'transparent',
+                                    color: isCourseInSchedule(course) ? '#757575' : selectedCourses.some(c => c.code === course.code) ? 'white' : 'inherit',
+                                    pointerEvents: 'none',
+                                }}
+                            />
                         </div>
                     ))}
-                </DragDropContext>
-                <div className="mb-6">
-                    <Button
-                        onClick={addSelectedCourses}
-                        variant="contained"
-                        disabled={selectedCourses.length === 0}
-                        sx={{
-                            backgroundColor: '#111827',
-                            '&:hover': {
-                                backgroundColor: '#374151',
-                            },
-                            borderRadius: '9999px',
-                        }}
-                    >
-                        Add Selected Courses
-                    </Button>
                 </div>
-                <div className="mb-6">
-                    <input
-                        type="text"
-                        value={searchQuery}
-                        onChange={(e) => handleSearch(e.target.value)}
-                        placeholder="Search for courses"
-                        className="p-2 border border-gray-300 rounded-lg w-full"
-                    />
-                    <div className="mt-4">
-                        {searchResults.map((course) => (
-                            <div
-                                key={course.code}
-                                className={`
-                                    flex items-center justify-between p-2 rounded-lg transition-colors cursor-pointer
-                                    ${isCourseInSchedule(course)
-                                        ? 'bg-gray-100 cursor-not-allowed'
-                                        : selectedCourses.some(c => c.code === course.code)
-                                            ? 'bg-gray-200 hover:bg-gray-300'
-                                            : 'hover:bg-gray-50'
-                                    }
-                                `}
-                                onClick={() => !isCourseInSchedule(course) && toggleCourseSelection(course)}
-                            >
-                                <span>{course.code}: {course.title}</span>
-                                <Chip
-                                    label={isCourseInSchedule(course) ? "In Schedule" : selectedCourses.some(c => c.code === course.code) ? "Selected" : "Select"}
-                                    color={isCourseInSchedule(course) ? "default" : selectedCourses.some(c => c.code === course.code) ? "primary" : "default"}
-                                    sx={{
-                                        borderRadius: '9999px',
-                                        '& .MuiChip-label': { px: 2 },
-                                        bgcolor: isCourseInSchedule(course) ? '#e0e0e0' : selectedCourses.some(c => c.code === course.code) ? '#111827' : 'transparent',
-                                        color: isCourseInSchedule(course) ? '#757575' : selectedCourses.some(c => c.code === course.code) ? 'white' : 'inherit',
-                                        pointerEvents: 'none',
-                                    }}
-                                />
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </Paper>
+            </div>
         </div>
     );
 }
