@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
-import { Button, Chip, IconButton, Paper, Zoom } from '@mui/material';
+import { Button, Chip, IconButton, Paper } from '@mui/material';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import { useSession } from 'next-auth/react';
 import { supabase } from '@/lib/supabase';
@@ -43,7 +43,6 @@ export default function Insight() {
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState<Course[]>([]);
     const [selectedCourses, setSelectedCourses] = useState<Course[]>([]);
-    const [isDragging, setIsDragging] = useState(false);
 
     useEffect(() => {
         if (session?.user?.email) {
@@ -115,24 +114,19 @@ export default function Insight() {
         return semesterNames[index];
     };
 
-    const onDragStart = () => {
-        setIsDragging(true);
-    };
-
     const onDragEnd = (result: DropResult) => {
-        setIsDragging(false);
         const { source, destination } = result;
 
         if (!destination) {
-            return;
-        }
-
-        if (destination.droppableId === 'trash') {
-            const newSchedule = [...schedule];
-            const [sourceYear, sourceSemester] = source.droppableId.split('-').map(Number);
-            newSchedule[sourceYear].semesters[sourceSemester].courses.splice(source.index, 1);
-            setSchedule(newSchedule);
-            saveSchedule(newSchedule);
+            // The item was dropped outside the list
+            if (result.reason === 'DROP') {
+                // The item was dropped on the trash can
+                const newSchedule = [...schedule];
+                const [sourceYear, sourceSemester] = source.droppableId.split('-').map(Number);
+                newSchedule[sourceYear].semesters[sourceSemester].courses.splice(source.index, 1);
+                setSchedule(newSchedule);
+                saveSchedule(newSchedule);
+            }
             return;
         }
 
@@ -302,7 +296,7 @@ export default function Insight() {
     };
 
     return (
-        <div className="p-6 relative">
+        <div className="p-6">
             <div className="bg-white rounded-lg shadow-lg overflow-hidden">
                 <div className="p-6">
                     <h1 className="text-3xl font-bold text-gray-900 mb-6">Insight</h1>
@@ -402,7 +396,7 @@ export default function Insight() {
                             {loading ? 'Generating...' : 'Generate with AI'}
                         </Button>
                     </div>
-                    <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
+                    <DragDropContext onDragEnd={onDragEnd}>
                         {schedule.map((year, yearIndex) => (
                             <div key={yearIndex} className="mb-8">
                                 <h2 className="text-2xl font-bold text-gray-800 mb-4">Year {year.year}</h2>
@@ -443,18 +437,15 @@ export default function Insight() {
                             </div>
                         ))}
                         <Droppable droppableId="trash">
-                            {(provided, snapshot) => (
-                                <Zoom in={isDragging}>
-                                    <div
-                                        ref={provided.innerRef}
-                                        {...provided.droppableProps}
-                                        className={`fixed bottom-8 left-1/2 transform -translate-x-1/2 p-4 rounded-full shadow-lg transition-all duration-200 ${snapshot.isDraggingOver ? 'bg-red-600 scale-110' : 'bg-red-500'
-                                            }`}
-                                    >
-                                        <DeleteIcon fontSize="large" className="text-white" />
-                                        {provided.placeholder}
-                                    </div>
-                                </Zoom>
+                            {(provided) => (
+                                <div
+                                    ref={provided.innerRef}
+                                    {...provided.droppableProps}
+                                    className="fixed bottom-4 right-4 p-4 bg-red-500 text-white rounded-full shadow-lg"
+                                >
+                                    <DeleteIcon fontSize="large" />
+                                    {provided.placeholder}
+                                </div>
                             )}
                         </Droppable>
                     </DragDropContext>
