@@ -44,7 +44,6 @@ export default function Insight() {
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState<Course[]>([]);
     const [selectedCourses, setSelectedCourses] = useState<Course[]>([]);
-    const [isItemDropped, setIsItemDropped] = useState(false);
 
     useEffect(() => {
         if (session?.user?.email) {
@@ -52,13 +51,6 @@ export default function Insight() {
             loadAvailableCourses();
         }
     }, [session]);
-
-    useEffect(() => {
-        if (isItemDropped) {
-            const timer = setTimeout(() => setIsItemDropped(false), 300);
-            return () => clearTimeout(timer);
-        }
-    }, [isItemDropped]);
 
     const loadSchedule = async () => {
         if (!session?.user?.email) return;
@@ -137,7 +129,6 @@ export default function Insight() {
             newSchedule[sourceYear].semesters[sourceSemester].courses.splice(source.index, 1);
             setSchedule(newSchedule);
             saveSchedule(newSchedule);
-            setIsItemDropped(true);
             return;
         }
 
@@ -450,14 +441,15 @@ export default function Insight() {
                                     {...provided.droppableProps}
                                     className={`
                                         fixed bottom-8 right-8 p-4 
-                                        bg-red-500 text-white rounded-full shadow-lg 
+                                        bg-black text-white rounded-full shadow-lg 
                                         transition-all duration-300 ease-in-out
-                                        ${snapshot.isDraggingOver ? 'scale-110 bg-red-600' : 'hover:scale-105'}
-                                        ${isItemDropped ? 'animate-swallow' : ''}
+                                        ${snapshot.isDraggingOver ? 'scale-110 bg-gray-800' : ''}
+                                        ${snapshot.draggingFromThisWith ? 'hidden' : ''}
                                     `}
+                                    style={{ display: snapshot.isDraggingOver || snapshot.draggingFromThisWith ? 'block' : 'none' }}
                                 >
-                                    {snapshot.isDraggingOver || isItemDropped ? (
-                                        <DeleteIcon fontSize="large" className={isItemDropped ? '' : 'animate-bounce'} />
+                                    {snapshot.isDraggingOver ? (
+                                        <DeleteIcon fontSize="large" />
                                     ) : (
                                         <DeleteOutlineIcon fontSize="large" />
                                     )}
