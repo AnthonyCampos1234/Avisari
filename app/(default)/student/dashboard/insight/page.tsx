@@ -63,19 +63,20 @@ export default function Insight() {
                 .single();
 
             if (error) throw error;
-            if (data) {
+            if (data && data.data) {
                 setSchedule(data.data);
             } else {
                 // If no schedule exists, initialize with an empty structure
                 const initialSchedule = initializeEmptySchedule();
                 setSchedule(initialSchedule);
-                saveSchedule(initialSchedule);
+                await saveSchedule(initialSchedule);
             }
         } catch (error) {
             console.error('Failed to load schedule:', error);
             // Initialize with an empty schedule if there's an error
             const initialSchedule = initializeEmptySchedule();
             setSchedule(initialSchedule);
+            await saveSchedule(initialSchedule);
         }
     };
 
@@ -93,6 +94,7 @@ export default function Insight() {
                 });
 
             if (error) throw error;
+            console.log('Schedule saved successfully');
         } catch (error) {
             console.error('Failed to save schedule:', error);
         }
