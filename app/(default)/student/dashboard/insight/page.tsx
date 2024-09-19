@@ -456,24 +456,24 @@ export default function Insight() {
                                         fixed bottom-8 right-8 p-4 
                                         bg-black text-white rounded-full shadow-lg 
                                         transition-all duration-300 ease-in-out
-                                        ${snapshot.isDraggingOver ? 'scale-150 bg-gray-800' : ''}
+                                        ${snapshot.isDraggingOver ? 'bg-gray-800' : ''}
+                                        ${isDeleting ? 'animate-wiggle' : ''}
                                     `}
                                     style={{
                                         display: isDragging ? 'flex' : 'none',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        width: '60px',
-                                        height: '60px',
-                                        animation: isDeleting ? 'wiggle 0.3s ease-in-out' : 'none',
+                                        width: '80px',
+                                        height: '80px',
                                     }}
                                 >
                                     {snapshot.isDraggingOver ? (
                                         <DeleteIcon
-                                            fontSize="large"
+                                            sx={{ fontSize: 40 }}
                                             className="animate-pulse"
                                         />
                                     ) : (
-                                        <DeleteOutlineIcon fontSize="large" />
+                                        <DeleteOutlineIcon sx={{ fontSize: 40 }} />
                                     )}
                                     {provided.placeholder}
                                 </div>
@@ -484,8 +484,11 @@ export default function Insight() {
             </div>
             <style jsx global>{`
                 @keyframes wiggle {
-                    0%, 100% { transform: rotate(-3deg); }
-                    50% { transform: rotate(3deg); }
+                    0%, 100% { transform: rotate(-10deg); }
+                    50% { transform: rotate(10deg); }
+                }
+                .animate-wiggle {
+                    animation: wiggle 0.3s ease-in-out;
                 }
             `}</style>
         </div>
