@@ -296,24 +296,34 @@ export default function Insight() {
 
     const addSelectedCourses = () => {
         const newSchedule = [...schedule];
-        const firstYear = newSchedule[0];
-        const firstSemester = firstYear.semesters[0];
         const coursesToAdd = selectedCourses.filter(course => !isCourseInSchedule(course));
 
-        // Check if adding these courses would exceed the 5 course limit
-        if (firstSemester.courses.length + coursesToAdd.length > 5) {
-            // If it would, only add courses up to the limit
-            const availableSlots = 5 - firstSemester.courses.length;
-            firstSemester.courses.push(...coursesToAdd.slice(0, availableSlots).map(course => ({
+        let currentYearIndex = 0;
+        let currentSemesterIndex = 0;
+
+        while (coursesToAdd.length > 0) {
+            const currentYear = newSchedule[currentYearIndex];
+            const currentSemester = currentYear.semesters[currentSemesterIndex];
+
+            const availableSlots = 5 - currentSemester.courses.length;
+            const coursesToAddToThisSemester = coursesToAdd.splice(0, availableSlots);
+
+            currentSemester.courses.push(...coursesToAddToThisSemester.map(course => ({
                 ...course,
                 id: `${course.code}-${Date.now()}`
             })));
-            // You might want to show a message to the user here about not all courses being added
-        } else {
-            firstSemester.courses.push(...coursesToAdd.map(course => ({
-                ...course,
-                id: `${course.code}-${Date.now()}`
-            })));
+
+            // Move to the next semester
+            currentSemesterIndex++;
+            if (currentSemesterIndex >= currentYear.semesters.length) {
+                currentSemesterIndex = 0;
+                currentYearIndex++;
+
+                // If we've run out of years, we need to stop
+                if (currentYearIndex >= newSchedule.length) {
+                    break;
+                }
+            }
         }
 
         setSchedule(newSchedule);
@@ -321,6 +331,11 @@ export default function Insight() {
         setSelectedCourses([]);
         setSearchQuery('');
         setSearchResults([]);
+
+        // If we couldn't add all courses, inform the user
+        if (coursesToAdd.length > 0) {
+            alert(`Could not add ${coursesToAdd.length} course(s) due to lack of space in the schedule.`);
+        }
     };
 
     return (
