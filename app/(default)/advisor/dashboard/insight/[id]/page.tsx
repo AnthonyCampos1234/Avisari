@@ -250,13 +250,6 @@ export default function StudentDetails() {
 
     return (
         <div className="p-6 relative">
-            <Box mb={4}>
-                <Typography variant="h4" className="mb-4">Student Details</Typography>
-                <Typography variant="h6" className="mb-2">Name</Typography>
-                <Typography variant="body1" className="mb-2">{student.name}</Typography>
-                <Typography variant="h6" className="mb-2">Email</Typography>
-                <Typography variant="body1">{student.email}</Typography>
-            </Box>
             <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
                 <Droppable droppableId="trash">
                     {(provided, snapshot) => (
@@ -294,7 +287,13 @@ export default function StudentDetails() {
 
                 <div className="bg-white rounded-lg shadow-lg overflow-hidden">
                     <div className="p-6">
-                        <h1 className="text-3xl font-bold text-gray-900 mb-6">Student Schedule</h1>
+                        <div className="flex justify-between items-start mb-6">
+                            <h1 className="text-3xl font-bold text-gray-900">Student Schedule</h1>
+                            <div className="text-right">
+                                <Typography variant="h6" className="mb-2">Name: {student.name}</Typography>
+                                <Typography variant="body1">Email: {student.email}</Typography>
+                            </div>
+                        </div>
 
                         <div className="mb-6">
                             <Paper
