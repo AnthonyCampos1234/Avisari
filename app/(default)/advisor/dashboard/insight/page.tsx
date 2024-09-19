@@ -75,7 +75,7 @@ export default function AdvisorInsight() {
                 ) : error ? (
                     <Typography color="error">{error}</Typography>
                 ) : filteredStudents.length > 0 ? (
-                    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: 3 }}>
+                    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: 3, marginTop: 4 }}>
                         {filteredStudents.map((student) => (
                             <Link key={student.id} href={`/advisor/dashboard/insight/${student.id}`} passHref style={{ textDecoration: 'none' }}>
                                 <Card elevation={2} sx={{
