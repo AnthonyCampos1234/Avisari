@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
-import { Button, Chip, IconButton, Paper, Tooltip } from '@mui/material';
+import { Button, Chip, IconButton, Paper } from '@mui/material';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import { useSession } from 'next-auth/react';
 import { supabase } from '@/lib/supabase';
@@ -301,31 +301,6 @@ export default function Insight() {
                 <div className="p-6">
                     <h1 className="text-3xl font-bold text-gray-900 mb-6">Insight</h1>
 
-                    {/* Trash can positioned in the top-right corner */}
-                    <Droppable droppableId="trash">
-                        {(provided, snapshot) => (
-                            <Tooltip title="Drag courses here to delete" placement="left">
-                                <div
-                                    ref={provided.innerRef}
-                                    {...provided.droppableProps}
-                                    className={`fixed top-4 right-4 p-4 rounded-full shadow-lg transition-all duration-200 ${snapshot.isDraggingOver ? 'bg-gray-800 scale-110' : 'bg-gray-700'
-                                        }`}
-                                    style={{
-                                        width: '60px',
-                                        height: '60px',
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        zIndex: 1000,
-                                    }}
-                                >
-                                    <DeleteIcon sx={{ fontSize: 28 }} className="text-white" />
-                                    {provided.placeholder}
-                                </div>
-                            </Tooltip>
-                        )}
-                    </Droppable>
-
                     <div className="mb-6">
                         <Paper
                             elevation={0}
@@ -459,6 +434,29 @@ export default function Insight() {
                                         </Droppable>
                                     ))}
                                 </div>
+                                {yearIndex === 0 && (
+                                    <Droppable droppableId="trash">
+                                        {(provided, snapshot) => (
+                                            <div
+                                                ref={provided.innerRef}
+                                                {...provided.droppableProps}
+                                                className={`mt-4 p-4 rounded-2xl shadow-lg transition-all duration-200 ${snapshot.isDraggingOver ? 'bg-gray-800 scale-105' : 'bg-gray-700'
+                                                    }`}
+                                                style={{
+                                                    width: '80px',
+                                                    height: '80px',
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    marginLeft: 'auto',
+                                                }}
+                                            >
+                                                <DeleteIcon sx={{ fontSize: 36 }} className="text-white" />
+                                                {provided.placeholder}
+                                            </div>
+                                        )}
+                                    </Droppable>
+                                )}
                             </div>
                         ))}
                     </DragDropContext>
