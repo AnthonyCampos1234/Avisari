@@ -418,19 +418,34 @@ export default function Insight() {
                             {searchResults.length > 0 && (
                                 <Paper elevation={3} sx={{ mt: 2, p: 2, borderRadius: '16px' }}>
                                     <h3 className="font-semibold mb-2">Search Results:</h3>
+                                    {selectedCourses.length > 0 && (
+                                        <Button
+                                            onClick={addSelectedCourses}
+                                            variant="contained"
+                                            fullWidth
+                                            sx={{
+                                                backgroundColor: '#111827',
+                                                '&:hover': { backgroundColor: '#374151' },
+                                                borderRadius: '9999px',
+                                                mb: 2
+                                            }}
+                                        >
+                                            Add Selected Courses
+                                        </Button>
+                                    )}
                                     <div className="space-y-2">
                                         {searchResults.map((course) => (
                                             <div
                                                 key={course.code}
                                                 className={`
-                        flex items-center justify-between p-2 rounded-lg transition-colors cursor-pointer
-                        ${isCourseInSchedule(course)
+                                                    flex items-center justify-between p-2 rounded-lg transition-colors cursor-pointer
+                                                    ${isCourseInSchedule(course)
                                                         ? 'bg-gray-100 cursor-not-allowed'
                                                         : selectedCourses.some(c => c.code === course.code)
                                                             ? 'bg-gray-200 hover:bg-gray-300'
                                                             : 'hover:bg-gray-50'
                                                     }
-                    `}
+                                                `}
                                                 onClick={() => !isCourseInSchedule(course) && toggleCourseSelection(course)}
                                             >
                                                 <span>{course.code}: {course.title}</span>
@@ -448,21 +463,6 @@ export default function Insight() {
                                             </div>
                                         ))}
                                     </div>
-                                    {selectedCourses.length > 0 && (
-                                        <Button
-                                            onClick={addSelectedCourses}
-                                            variant="contained"
-                                            fullWidth
-                                            sx={{
-                                                backgroundColor: '#111827',
-                                                '&:hover': { backgroundColor: '#374151' },
-                                                borderRadius: '9999px',
-                                                mt: 2
-                                            }}
-                                        >
-                                            Add Selected Courses
-                                        </Button>
-                                    )}
                                 </Paper>
                             )}
                         </div>
