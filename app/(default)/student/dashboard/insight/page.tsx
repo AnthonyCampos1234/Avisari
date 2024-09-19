@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Button, Chip, IconButton, Paper } from '@mui/material';
+import { Button, Chip, IconButton, Paper, CircularProgress, Typography } from '@mui/material';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import { useSession } from 'next-auth/react';
 import { supabase } from '@/lib/supabase';
@@ -41,7 +41,7 @@ type Year = {
 export default function Insight() {
     const { data: session } = useSession();
     const [schedule, setSchedule] = useState<Year[]>([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [availableCourses, setAvailableCourses] = useState<Department[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState<Course[]>([]);
@@ -61,6 +61,7 @@ export default function Insight() {
     const loadSchedule = async () => {
         if (!session?.user?.email) return;
 
+        setLoading(true);
         try {
             const { data, error } = await supabase
                 .from('students')
@@ -70,9 +71,15 @@ export default function Insight() {
 
             if (error) throw error;
 
-            setSchedule(data.schedule);
+            if (data.schedule) {
+                setSchedule(data.schedule);
+            } else {
+                setSchedule(initializeEmptySchedule());
+            }
         } catch (error) {
             console.error('Load error:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -335,6 +342,8 @@ export default function Insight() {
         await loadSchedule();
         setRefreshing(false);
     };
+
+    if (loading) return <CircularProgress />;
 
     return (
         <div className="p-6 relative">
