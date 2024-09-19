@@ -1,16 +1,12 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { Button, IconButton, TextField, List, ListItem, ListItemText } from '@mui/material';
+import { useState, useEffect, useCallback } from 'react';
+import { Button } from '@mui/material';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
-import AddIcon from '@mui/icons-material/Add';
-import ChatIcon from '@mui/icons-material/Chat';
-import AssessmentIcon from '@mui/icons-material/Assessment';
-import ShareIcon from '@mui/icons-material/Share';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useSession } from 'next-auth/react';
 import { supabase } from '@/lib/supabase';
 import SearchIcon from '@mui/icons-material/Search';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 type Course = {
     id: string;
@@ -41,11 +37,6 @@ type Year = {
 export default function Insight() {
     const { data: session } = useSession();
     const [schedule, setSchedule] = useState<Year[]>([]);
-    const [openPopover, setOpenPopover] = useState('');
-    const [newCourse, setNewCourse] = useState<Partial<Course>>({ code: '', title: '', credits: 0, description: '' });
-    const [chatMessage, setChatMessage] = useState('');
-    const [chatHistory, setChatHistory] = useState<string[]>([]);
-    const popoverRef = useRef<HTMLDivElement>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [debugInfo, setDebugInfo] = useState<string | null>(null);
@@ -127,8 +118,18 @@ export default function Insight() {
     const onDragEnd = (result: DropResult) => {
         const { source, destination } = result;
 
-        // If there's no destination, we don't need to do anything
-        if (!destination) return;
+        if (!destination) {
+            // The item was dropped outside the list
+            if (result.reason === 'DROP') {
+                // The item was dropped on the trash can
+                const newSchedule = [...schedule];
+                const [sourceYear, sourceSemester] = source.droppableId.split('-').map(Number);
+                newSchedule[sourceYear].semesters[sourceSemester].courses.splice(source.index, 1);
+                setSchedule(newSchedule);
+                saveSchedule(newSchedule);
+            }
+            return;
+        }
 
         // If the item is dropped in the same place, we don't need to do anything
         if (
@@ -236,183 +237,6 @@ export default function Insight() {
         }
     };
 
-    const handlePopoverToggle = useCallback((popoverId: string) => {
-        setOpenPopover(prevState => prevState === popoverId ? '' : popoverId);
-    }, []);
-
-    const handleAddCourse = (course: Course) => {
-        const newSchedule = [...schedule];
-        const firstYear = newSchedule[0];
-        const firstSemester = firstYear.semesters[0];
-        firstSemester.courses.push({
-            id: `${course.code}-${Date.now()}`,
-            code: course.code,
-            title: course.title,
-            credits: course.credits,
-            description: course.description,
-            prerequisites: course.prerequisites,
-            corequisites: course.corequisites,
-            attributes: course.attributes
-        });
-        setSchedule(newSchedule);
-        saveSchedule(newSchedule);
-    };
-
-    const handleChatSubmit = () => {
-        if (chatMessage.trim()) {
-            setChatHistory(prev => [...prev, `You: ${chatMessage}`]);
-            // Here you would typically send the message to an AI service and get a response
-            // For now, we'll just echo a simple response
-            setTimeout(() => {
-                setChatHistory(prev => [...prev, `AI: Thanks for your message about "${chatMessage}". How can I assist you further?`]);
-            }, 1000);
-            setChatMessage('');
-        }
-    };
-
-    const renderPopoverContent = () => {
-        const buttonStyle = {
-            backgroundColor: '#111827',
-            '&:hover': {
-                backgroundColor: '#374151',
-            },
-            borderRadius: '9999px',
-            textTransform: 'none',
-            color: 'white',
-        };
-
-        switch (openPopover) {
-            case 'add':
-                return (
-                    <div className="p-4 w-64">
-                        <h2 className="text-lg font-bold mb-2">Add Course</h2>
-                        <TextField
-                            label="Course Code"
-                            value={newCourse.code}
-                            onChange={(e) => setNewCourse({ ...newCourse, code: e.target.value })}
-                            fullWidth
-                            margin="normal"
-                        />
-                        <TextField
-                            label="Course Title"
-                            value={newCourse.title}
-                            onChange={(e) => setNewCourse({ ...newCourse, title: e.target.value })}
-                            fullWidth
-                            margin="normal"
-                        />
-                        <TextField
-                            label="Credits"
-                            type="number"
-                            value={newCourse.credits}
-                            onChange={(e) => setNewCourse({ ...newCourse, credits: Number(e.target.value) })}
-                            fullWidth
-                            margin="normal"
-                        />
-                        <TextField
-                            label="Description"
-                            value={newCourse.description}
-                            onChange={(e) => setNewCourse({ ...newCourse, description: e.target.value })}
-                            fullWidth
-                            margin="normal"
-                            multiline
-                            rows={3}
-                        />
-                        <Button
-                            onClick={() => {
-                                if (newCourse.code && newCourse.title && newCourse.credits && newCourse.description) {
-                                    handleAddCourse(newCourse as Course);
-                                    setNewCourse({ code: '', title: '', credits: 0, description: '' });
-                                }
-                            }}
-                            variant="contained"
-                            fullWidth
-                            sx={buttonStyle}
-                        >
-                            Add Course
-                        </Button>
-                    </div>
-                );
-            case 'chat':
-                return (
-                    <div className="p-4 w-64">
-                        <h2 className="text-lg font-bold mb-2">AI Assistant</h2>
-                        <List className="h-40 overflow-y-auto mb-2">
-                            {chatHistory.map((msg, index) => (
-                                <ListItem key={index}>
-                                    <ListItemText primary={msg} />
-                                </ListItem>
-                            ))}
-                        </List>
-                        <TextField
-                            label="Message"
-                            value={chatMessage}
-                            onChange={(e) => setChatMessage(e.target.value)}
-                            fullWidth
-                            margin="normal"
-                        />
-                        <Button onClick={handleChatSubmit} variant="contained" fullWidth sx={buttonStyle}>
-                            Send
-                        </Button>
-                    </div>
-                );
-            case 'progress':
-                return (
-                    <div className="p-4 w-64">
-                        <h2 className="text-lg font-bold mb-2">Progress Tracking</h2>
-                        <Button variant="contained" fullWidth sx={buttonStyle}>
-                            View Progress
-                        </Button>
-                    </div>
-                );
-            case 'share':
-                return (
-                    <div className="p-4 w-64">
-                        <h2 className="text-lg font-bold mb-2">Export/Share</h2>
-                        <Button variant="contained" fullWidth sx={buttonStyle}>
-                            Share Schedule
-                        </Button>
-                    </div>
-                );
-            default:
-                return null;
-        }
-    };
-
-    const popoverVariants = {
-        hidden: { opacity: 0, scale: 0.8, y: -20 },
-        visible: {
-            opacity: 1,
-            scale: 1,
-            y: 0,
-            transition: {
-                type: "spring",
-                stiffness: 300,
-                damping: 20
-            }
-        },
-        exit: {
-            opacity: 0,
-            scale: 0.8,
-            y: -20,
-            transition: {
-                duration: 0.2
-            }
-        }
-    };
-
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (popoverRef.current && !popoverRef.current.contains(event.target as Node)) {
-                setOpenPopover('');
-            }
-        };
-
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
-
     const loadAvailableCourses = async () => {
         try {
             const response = await fetch('/courses.json');
@@ -454,7 +278,10 @@ export default function Insight() {
         const newSchedule = [...schedule];
         const firstYear = newSchedule[0];
         const firstSemester = firstYear.semesters[0];
-        firstSemester.courses.push(...selectedCourses);
+        firstSemester.courses.push(...selectedCourses.map(course => ({
+            ...course,
+            id: `${course.code}-${Date.now()}`
+        })));
         setSchedule(newSchedule);
         saveSchedule(newSchedule);
         setSelectedCourses([]);
@@ -465,38 +292,9 @@ export default function Insight() {
     return (
         <div className="p-6">
             <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-                <div className="border-b border-gray-200 p-2 flex relative">
-                    <IconButton onClick={() => handlePopoverToggle('add')} className="rounded-full transition-all duration-300 hover:bg-gray-100">
-                        <AddIcon />
-                    </IconButton>
-                    <IconButton onClick={() => handlePopoverToggle('chat')} className="rounded-full transition-all duration-300 hover:bg-gray-100">
-                        <ChatIcon />
-                    </IconButton>
-                    <IconButton onClick={() => handlePopoverToggle('progress')} className="rounded-full transition-all duration-300 hover:bg-gray-100">
-                        <AssessmentIcon />
-                    </IconButton>
-                    <IconButton onClick={() => handlePopoverToggle('share')} className="rounded-full transition-all duration-300 hover:bg-gray-100">
-                        <ShareIcon />
-                    </IconButton>
-                    <AnimatePresence>
-                        {openPopover && (
-                            <motion.div
-                                ref={popoverRef}
-                                initial="hidden"
-                                animate="visible"
-                                exit="exit"
-                                variants={popoverVariants}
-                                className="absolute top-full left-0 mt-2 bg-white rounded-lg shadow-lg z-20"
-                            >
-                                {renderPopoverContent()}
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                </div>
                 <div className="p-6">
                     <h1 className="text-3xl font-bold text-gray-900 mb-6">Insight</h1>
 
-                    {/* Add search functionality */}
                     <div className="mb-6">
                         <div className="flex items-center border rounded-lg overflow-hidden">
                             <SearchIcon className="ml-3 text-gray-400" />
@@ -608,21 +406,19 @@ export default function Insight() {
                                 </div>
                             </div>
                         ))}
+                        <Droppable droppableId="trash">
+                            {(provided) => (
+                                <div
+                                    ref={provided.innerRef}
+                                    {...provided.droppableProps}
+                                    className="fixed bottom-4 right-4 p-4 bg-red-500 text-white rounded-full shadow-lg"
+                                >
+                                    <DeleteIcon fontSize="large" />
+                                    {provided.placeholder}
+                                </div>
+                            )}
+                        </Droppable>
                     </DragDropContext>
-                    <h2 className="text-lg font-bold mb-2">Available Courses</h2>
-                    {availableCourses.map((department) => (
-                        <div key={department.name}>
-                            <h3 className="text-md font-semibold">{department.name}</h3>
-                            <ul>
-                                {department.courses.map((course) => (
-                                    <li key={course.code}>
-                                        {course.code}: {course.title} - {course.credits} credits
-                                        <button onClick={() => handleAddCourse(course)}>Add to Schedule</button>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    ))}
                 </div>
             </div>
         </div>
