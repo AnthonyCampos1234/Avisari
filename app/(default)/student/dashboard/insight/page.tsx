@@ -453,7 +453,10 @@ export default function Insight() {
                                     `}
                                     style={{ display: isDragging ? 'block' : 'none' }}
                                 >
-                                    <DeleteOutlineIcon fontSize="large" />
+                                    <DeleteOutlineIcon
+                                        fontSize="large"
+                                        className={`transition-transform duration-300 ${snapshot.isDraggingOver ? 'scale-125' : ''}`}
+                                    />
                                     {provided.placeholder}
                                 </div>
                             )}
