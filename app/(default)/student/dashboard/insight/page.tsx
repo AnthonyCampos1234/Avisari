@@ -10,7 +10,7 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
 import Image from 'next/image';
-import { RealtimeChannel } from '@supabase/supabase-js';
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 type Course = {
     id: string;
@@ -49,21 +49,13 @@ export default function Insight() {
     const [isDragging, setIsDragging] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const deleteTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-    const [supabaseChannel, setSupabaseChannel] = useState<RealtimeChannel | null>(null);
+    const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
         if (session?.user?.email) {
             loadSchedule();
             loadAvailableCourses();
-            const channel = subscribeToScheduleChanges();
-            setSupabaseChannel(channel);
         }
-
-        return () => {
-            if (supabaseChannel) {
-                supabaseChannel.unsubscribe();
-            }
-        };
     }, [session]);
 
     const loadSchedule = async () => {
@@ -95,31 +87,10 @@ export default function Insight() {
 
             if (error) throw error;
 
-            // The update will be automatically pushed to all subscribers
+            setSchedule(newSchedule);
         } catch (error) {
             console.error('Save error:', error);
         }
-    };
-
-    const subscribeToScheduleChanges = () => {
-        if (!session?.user?.email) return null;
-
-        const channel = supabase.channel('custom-all-channel')
-            .on(
-                'postgres_changes',
-                {
-                    event: 'UPDATE',
-                    schema: 'public',
-                    table: 'students',
-                    filter: `email=eq.${session.user.email}`,
-                },
-                (payload) => {
-                    setSchedule(payload.new.schedule);
-                }
-            )
-            .subscribe();
-
-        return channel;
     };
 
     const initializeEmptySchedule = (): Year[] => {
@@ -359,6 +330,12 @@ export default function Insight() {
         }
     };
 
+    const handleRefresh = async () => {
+        setRefreshing(true);
+        await loadSchedule();
+        setRefreshing(false);
+    };
+
     return (
         <div className="p-6 relative">
             <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
@@ -398,7 +375,17 @@ export default function Insight() {
 
                 <div className="bg-white rounded-lg shadow-lg overflow-hidden">
                     <div className="p-6">
-                        <h1 className="text-3xl font-bold text-gray-900 mb-6">Insight</h1>
+                        <div className="flex justify-between items-center mb-6">
+                            <h1 className="text-3xl font-bold text-gray-900">Insight</h1>
+                            <Button
+                                variant="outlined"
+                                startIcon={<RefreshIcon />}
+                                onClick={handleRefresh}
+                                disabled={refreshing}
+                            >
+                                {refreshing ? 'Refreshing...' : 'Refresh Schedule'}
+                            </Button>
+                        </div>
 
                         <div className="mb-6">
                             <Paper
