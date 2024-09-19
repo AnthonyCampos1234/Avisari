@@ -117,16 +117,17 @@ export default function Insight() {
     const onDragEnd = (result: DropResult) => {
         const { source, destination } = result;
 
+        // Create a copy of the current schedule
+        const newSchedule = JSON.parse(JSON.stringify(schedule));
+
+        // Parse the source IDs
+        const [sourceYear, sourceSemester] = source.droppableId.split('-').map(Number);
+
         if (!destination) {
-            // The item was dropped outside the list
-            if (result.reason === 'DROP') {
-                // The item was dropped on the trash can
-                const newSchedule = [...schedule];
-                const [sourceYear, sourceSemester] = source.droppableId.split('-').map(Number);
-                newSchedule[sourceYear].semesters[sourceSemester].courses.splice(source.index, 1);
-                setSchedule(newSchedule);
-                saveSchedule(newSchedule);
-            }
+            // The item was dropped outside the list or on the trash
+            newSchedule[sourceYear].semesters[sourceSemester].courses.splice(source.index, 1);
+            setSchedule(newSchedule);
+            saveSchedule(newSchedule);
             return;
         }
 
@@ -136,11 +137,7 @@ export default function Insight() {
             source.index === destination.index
         ) return;
 
-        // Create a copy of the current schedule
-        const newSchedule = JSON.parse(JSON.stringify(schedule));
-
-        // Parse the source and destination IDs
-        const [sourceYear, sourceSemester] = source.droppableId.split('-').map(Number);
+        // Parse the destination IDs
         const [destYear, destSemester] = destination.droppableId.split('-').map(Number);
 
         // Remove the course from the source
@@ -437,11 +434,12 @@ export default function Insight() {
                             </div>
                         ))}
                         <Droppable droppableId="trash">
-                            {(provided) => (
+                            {(provided, snapshot) => (
                                 <div
                                     ref={provided.innerRef}
                                     {...provided.droppableProps}
-                                    className="fixed bottom-4 right-4 p-4 bg-red-500 text-white rounded-full shadow-lg"
+                                    className={`fixed bottom-4 right-4 p-4 bg-red-500 text-white rounded-full shadow-lg transition-all ${snapshot.isDraggingOver ? 'scale-110' : ''
+                                        }`}
                                 >
                                     <DeleteIcon fontSize="large" />
                                     {provided.placeholder}
