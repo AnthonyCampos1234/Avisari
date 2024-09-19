@@ -6,6 +6,7 @@ import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautif
 import { useSession } from 'next-auth/react';
 import { supabase } from '@/lib/supabase';
 import SearchIcon from '@mui/icons-material/Search';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -438,10 +439,18 @@ export default function Insight() {
                                 <div
                                     ref={provided.innerRef}
                                     {...provided.droppableProps}
-                                    className={`fixed bottom-4 right-4 p-4 bg-red-500 text-white rounded-full shadow-lg transition-all ${snapshot.isDraggingOver ? 'scale-110' : ''
-                                        }`}
+                                    className={`
+                                        fixed bottom-8 right-8 p-4 
+                                        bg-red-500 text-white rounded-full shadow-lg 
+                                        transition-all duration-300 ease-in-out
+                                        ${snapshot.isDraggingOver ? 'scale-125 bg-red-600' : 'hover:scale-110'}
+                                    `}
                                 >
-                                    <DeleteIcon fontSize="large" />
+                                    {snapshot.isDraggingOver ? (
+                                        <DeleteIcon fontSize="large" className="animate-bounce" />
+                                    ) : (
+                                        <DeleteOutlineIcon fontSize="large" />
+                                    )}
                                     {provided.placeholder}
                                 </div>
                             )}
