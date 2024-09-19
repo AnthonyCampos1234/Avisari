@@ -10,6 +10,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSession } from 'next-auth/react';
 import { supabase } from '@/lib/supabase';
+import SearchIcon from '@mui/icons-material/Search';
 
 type Course = {
     code: string;
@@ -48,6 +49,9 @@ export default function Insight() {
     const [error, setError] = useState<string | null>(null);
     const [debugInfo, setDebugInfo] = useState<string | null>(null);
     const [availableCourses, setAvailableCourses] = useState<Department[]>([]);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchResults, setSearchResults] = useState<Course[]>([]);
+    const [selectedCourses, setSelectedCourses] = useState<Course[]>([]);
 
     useEffect(() => {
         if (session?.user?.email) {
@@ -411,6 +415,43 @@ export default function Insight() {
         }
     };
 
+    const handleSearch = useCallback((query: string) => {
+        setSearchQuery(query);
+        if (query.trim() === '') {
+            setSearchResults([]);
+            return;
+        }
+
+        const results = availableCourses.flatMap(dept =>
+            dept.courses.filter(course =>
+                course.code.toLowerCase().includes(query.toLowerCase()) ||
+                course.title.toLowerCase().includes(query.toLowerCase()) ||
+                course.description.toLowerCase().includes(query.toLowerCase())
+            )
+        );
+        setSearchResults(results);
+    }, [availableCourses]);
+
+    const toggleCourseSelection = (course: Course) => {
+        setSelectedCourses(prev =>
+            prev.some(c => c.code === course.code)
+                ? prev.filter(c => c.code !== course.code)
+                : [...prev, course]
+        );
+    };
+
+    const addSelectedCourses = () => {
+        const newSchedule = [...schedule];
+        const firstYear = newSchedule[0];
+        const firstSemester = firstYear.semesters[0];
+        firstSemester.courses.push(...selectedCourses);
+        setSchedule(newSchedule);
+        saveSchedule(newSchedule);
+        setSelectedCourses([]);
+        setSearchQuery('');
+        setSearchResults([]);
+    };
+
     return (
         <div className="p-6">
             <div className="bg-white rounded-lg shadow-lg overflow-hidden">
@@ -444,6 +485,52 @@ export default function Insight() {
                 </div>
                 <div className="p-6">
                     <h1 className="text-3xl font-bold text-gray-900 mb-6">Insight</h1>
+
+                    {/* Add search functionality */}
+                    <div className="mb-6">
+                        <div className="flex items-center border rounded-lg overflow-hidden">
+                            <SearchIcon className="ml-3 text-gray-400" />
+                            <input
+                                type="text"
+                                placeholder="Search for courses..."
+                                value={searchQuery}
+                                onChange={(e) => handleSearch(e.target.value)}
+                                className="w-full p-2 outline-none"
+                            />
+                        </div>
+                        {searchResults.length > 0 && (
+                            <div className="mt-4 border rounded-lg p-4">
+                                <h3 className="font-semibold mb-2">Search Results:</h3>
+                                <ul>
+                                    {searchResults.map((course) => (
+                                        <li key={course.code} className="flex items-center mb-2">
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedCourses.some(c => c.code === course.code)}
+                                                onChange={() => toggleCourseSelection(course)}
+                                                className="mr-2"
+                                            />
+                                            <span>{course.code}: {course.title}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                                {selectedCourses.length > 0 && (
+                                    <Button
+                                        onClick={addSelectedCourses}
+                                        variant="contained"
+                                        sx={{
+                                            backgroundColor: '#111827',
+                                            '&:hover': { backgroundColor: '#374151' },
+                                            borderRadius: '9999px',
+                                            mt: 2
+                                        }}
+                                    >
+                                        Add Selected Courses
+                                    </Button>
+                                )}
+                            </div>
+                        )}
+                    </div>
                     <div className="mb-6">
                         <Button
                             onClick={handleGenerateAISchedule}
