@@ -123,8 +123,8 @@ export default function Insight() {
         // Parse the source IDs
         const [sourceYear, sourceSemester] = source.droppableId.split('-').map(Number);
 
-        if (!destination) {
-            // The item was dropped outside the list or on the trash
+        if (!destination || destination.droppableId === 'trash') {
+            // The item was dropped on the trash or outside any droppable
             newSchedule[sourceYear].semesters[sourceSemester].courses.splice(source.index, 1);
             setSchedule(newSchedule);
             saveSchedule(newSchedule);
