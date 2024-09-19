@@ -16,7 +16,7 @@ export async function GET(req: Request) {
     try {
         const { data: students, error } = await supabase
             .from('User')
-            .select('id, name')
+            .select('id, name, email')
             .eq('user_type', userType || 'student');
 
         if (error) {
