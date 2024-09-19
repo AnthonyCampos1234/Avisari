@@ -13,6 +13,10 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const studentId = searchParams.get('id');
 
+    if (!studentId) {
+        return NextResponse.json({ error: "Student ID is required" }, { status: 400 });
+    }
+
     try {
         const { data: student, error: studentError } = await supabase
             .from('User')
@@ -21,6 +25,7 @@ export async function GET(req: Request) {
             .single();
 
         if (studentError) {
+            console.error("Error fetching student:", studentError);
             throw studentError;
         }
 
@@ -31,6 +36,7 @@ export async function GET(req: Request) {
             .single();
 
         if (scheduleError) {
+            console.error("Error fetching schedule:", scheduleError);
             throw scheduleError;
         }
 
