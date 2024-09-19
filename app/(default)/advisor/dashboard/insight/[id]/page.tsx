@@ -19,7 +19,12 @@ export default function StudentDetails() {
     const studentId = params.id as string;
 
     useEffect(() => {
-        fetchStudentDetails();
+        if (studentId) {
+            fetchStudentDetails();
+        } else {
+            setError("Student ID is missing from the URL");
+            setLoading(false);
+        }
     }, [studentId]);
 
     const fetchStudentDetails = async () => {
