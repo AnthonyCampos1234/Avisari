@@ -392,7 +392,7 @@ export default function Insight() {
                                     borderRadius: '9999px',
                                 }}
                             >
-                                <SearchIcon sx={{ p: '10px', color: 'text.secondary' }} />
+                                <SearchIcon sx={{ p: '10px', color: 'text.primary', fontSize: 24 }} />
                                 <input
                                     type="text"
                                     placeholder="Search for courses..."
