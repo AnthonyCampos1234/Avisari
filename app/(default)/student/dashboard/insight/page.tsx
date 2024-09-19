@@ -76,9 +76,12 @@ export default function Insight() {
                 setDebugInfo('Initialized empty schedule');
             }
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : String(error);
+            const errorMessage = error instanceof Error
+                ? error.message
+                : JSON.stringify(error, null, 2);
             setVisibleError(`Failed to load schedule: ${errorMessage}`);
             setDebugInfo(`Load error: ${errorMessage}`);
+            console.error('Load error:', error);
             const initialSchedule = initializeEmptySchedule();
             setSchedule(initialSchedule);
             await saveSchedule(initialSchedule);
@@ -106,9 +109,12 @@ export default function Insight() {
 
             setDebugInfo(`Schedule saved successfully: ${JSON.stringify(data)}`);
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : String(error);
+            const errorMessage = error instanceof Error
+                ? error.message
+                : JSON.stringify(error, null, 2);
             setVisibleError(`Failed to save schedule: ${errorMessage}`);
             setDebugInfo(`Save error: ${errorMessage}`);
+            console.error('Save error:', error);
         }
     };
 
