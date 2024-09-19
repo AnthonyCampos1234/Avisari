@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
-import { Button, Chip, IconButton, Paper } from '@mui/material';
+import { Button, Chip, IconButton, Paper, Zoom } from '@mui/material';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import { useSession } from 'next-auth/react';
 import { supabase } from '@/lib/supabase';
@@ -43,6 +43,7 @@ export default function Insight() {
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState<Course[]>([]);
     const [selectedCourses, setSelectedCourses] = useState<Course[]>([]);
+    const [isDragging, setIsDragging] = useState(false);
 
     useEffect(() => {
         if (session?.user?.email) {
@@ -114,19 +115,24 @@ export default function Insight() {
         return semesterNames[index];
     };
 
+    const onDragStart = () => {
+        setIsDragging(true);
+    };
+
     const onDragEnd = (result: DropResult) => {
+        setIsDragging(false);
         const { source, destination } = result;
 
         if (!destination) {
-            // The item was dropped outside the list
-            if (result.reason === 'DROP') {
-                // The item was dropped on the trash can
-                const newSchedule = [...schedule];
-                const [sourceYear, sourceSemester] = source.droppableId.split('-').map(Number);
-                newSchedule[sourceYear].semesters[sourceSemester].courses.splice(source.index, 1);
-                setSchedule(newSchedule);
-                saveSchedule(newSchedule);
-            }
+            return;
+        }
+
+        if (destination.droppableId === 'trash') {
+            const newSchedule = [...schedule];
+            const [sourceYear, sourceSemester] = source.droppableId.split('-').map(Number);
+            newSchedule[sourceYear].semesters[sourceSemester].courses.splice(source.index, 1);
+            setSchedule(newSchedule);
+            saveSchedule(newSchedule);
             return;
         }
 
@@ -257,7 +263,19 @@ export default function Insight() {
         setSearchResults(results);
     }, [availableCourses]);
 
+    const isCourseInSchedule = useCallback((course: Course) => {
+        return schedule.some(year =>
+            year.semesters.some(semester =>
+                semester.courses.some(c => c.code === course.code)
+            )
+        );
+    }, [schedule]);
+
     const toggleCourseSelection = (course: Course) => {
+        if (isCourseInSchedule(course)) {
+            // Don't allow selection if the course is already in the schedule
+            return;
+        }
         setSelectedCourses(prev =>
             prev.some(c => c.code === course.code)
                 ? prev.filter(c => c.code !== course.code)
@@ -269,10 +287,13 @@ export default function Insight() {
         const newSchedule = [...schedule];
         const firstYear = newSchedule[0];
         const firstSemester = firstYear.semesters[0];
-        firstSemester.courses.push(...selectedCourses.map(course => ({
+        const coursesToAdd = selectedCourses.filter(course => !isCourseInSchedule(course));
+
+        firstSemester.courses.push(...coursesToAdd.map(course => ({
             ...course,
             id: `${course.code}-${Date.now()}`
         })));
+
         setSchedule(newSchedule);
         saveSchedule(newSchedule);
         setSelectedCourses([]);
@@ -281,7 +302,7 @@ export default function Insight() {
     };
 
     return (
-        <div className="p-6">
+        <div className="p-6 relative">
             <div className="bg-white rounded-lg shadow-lg overflow-hidden">
                 <div className="p-6">
                     <h1 className="text-3xl font-bold text-gray-900 mb-6">Insight</h1>
@@ -330,17 +351,18 @@ export default function Insight() {
                                         <div key={course.code} className="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg transition-colors">
                                             <span>{course.code}: {course.title}</span>
                                             <Chip
-                                                label={selectedCourses.some(c => c.code === course.code) ? "Selected" : "Select"}
+                                                label={isCourseInSchedule(course) ? "In Schedule" : selectedCourses.some(c => c.code === course.code) ? "Selected" : "Select"}
                                                 onClick={() => toggleCourseSelection(course)}
-                                                color={selectedCourses.some(c => c.code === course.code) ? "primary" : "default"}
+                                                color={isCourseInSchedule(course) ? "default" : selectedCourses.some(c => c.code === course.code) ? "primary" : "default"}
                                                 sx={{
                                                     borderRadius: '9999px',
                                                     '& .MuiChip-label': { px: 2 },
-                                                    bgcolor: selectedCourses.some(c => c.code === course.code) ? '#111827' : 'transparent',
-                                                    color: selectedCourses.some(c => c.code === course.code) ? 'white' : 'inherit',
+                                                    bgcolor: isCourseInSchedule(course) ? '#e0e0e0' : selectedCourses.some(c => c.code === course.code) ? '#111827' : 'transparent',
+                                                    color: isCourseInSchedule(course) ? '#757575' : selectedCourses.some(c => c.code === course.code) ? 'white' : 'inherit',
                                                     '&:hover': {
-                                                        bgcolor: selectedCourses.some(c => c.code === course.code) ? '#374151' : '#f3f4f6',
+                                                        bgcolor: isCourseInSchedule(course) ? '#e0e0e0' : selectedCourses.some(c => c.code === course.code) ? '#374151' : '#f3f4f6',
                                                     },
+                                                    pointerEvents: isCourseInSchedule(course) ? 'none' : 'auto',
                                                 }}
                                             />
                                         </div>
@@ -380,7 +402,7 @@ export default function Insight() {
                             {loading ? 'Generating...' : 'Generate with AI'}
                         </Button>
                     </div>
-                    <DragDropContext onDragEnd={onDragEnd}>
+                    <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
                         {schedule.map((year, yearIndex) => (
                             <div key={yearIndex} className="mb-8">
                                 <h2 className="text-2xl font-bold text-gray-800 mb-4">Year {year.year}</h2>
@@ -421,15 +443,18 @@ export default function Insight() {
                             </div>
                         ))}
                         <Droppable droppableId="trash">
-                            {(provided) => (
-                                <div
-                                    ref={provided.innerRef}
-                                    {...provided.droppableProps}
-                                    className="fixed bottom-4 right-4 p-4 bg-red-500 text-white rounded-full shadow-lg"
-                                >
-                                    <DeleteIcon fontSize="large" />
-                                    {provided.placeholder}
-                                </div>
+                            {(provided, snapshot) => (
+                                <Zoom in={isDragging}>
+                                    <div
+                                        ref={provided.innerRef}
+                                        {...provided.droppableProps}
+                                        className={`fixed bottom-8 left-1/2 transform -translate-x-1/2 p-4 rounded-full shadow-lg transition-all duration-200 ${snapshot.isDraggingOver ? 'bg-red-600 scale-110' : 'bg-red-500'
+                                            }`}
+                                    >
+                                        <DeleteIcon fontSize="large" className="text-white" />
+                                        {provided.placeholder}
+                                    </div>
+                                </Zoom>
                             )}
                         </Droppable>
                     </DragDropContext>
