@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Typography, Paper, CircularProgress, Box, Button, Chip, IconButton } from '@mui/material';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import { useParams } from 'next/navigation';
@@ -10,7 +10,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
 import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
-import { RealtimeChannel } from '@supabase/supabase-js';
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 type Course = {
     id: string;
@@ -55,28 +55,19 @@ export default function StudentDetails() {
     const [selectedCourses, setSelectedCourses] = useState<Course[]>([]);
     const [isDragging, setIsDragging] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
-    const deleteTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [refreshing, setRefreshing] = useState(false);
     const params = useParams();
     const studentId = params.id as string;
-    const [supabaseChannel, setSupabaseChannel] = useState<RealtimeChannel | null>(null);
 
     useEffect(() => {
         if (studentId) {
             fetchStudentDetails();
             loadAvailableCourses();
-            const channel = subscribeToScheduleChanges();
-            setSupabaseChannel(channel);
         } else {
             setError("Student ID is missing from the URL");
             setLoading(false);
         }
-
-        return () => {
-            if (supabaseChannel) {
-                supabaseChannel.unsubscribe();
-            }
-        };
     }, [studentId]);
 
     const fetchStudentDetails = async () => {
@@ -119,31 +110,10 @@ export default function StudentDetails() {
 
             if (error) throw error;
 
-            // The update will be automatically pushed to all subscribers
+            setSchedule(newSchedule);
         } catch (error) {
             console.error('Save error:', error);
         }
-    };
-
-    const subscribeToScheduleChanges = () => {
-        if (!studentId) return null;
-
-        const channel = supabase.channel('custom-all-channel')
-            .on(
-                'postgres_changes',
-                {
-                    event: 'UPDATE',
-                    schema: 'public',
-                    table: 'students',
-                    filter: `id=eq.${studentId}`,
-                },
-                (payload) => {
-                    setSchedule(payload.new.schedule);
-                }
-            )
-            .subscribe();
-
-        return channel;
     };
 
     const onDragStart = () => {
@@ -194,7 +164,7 @@ export default function StudentDetails() {
         saveSchedule(newSchedule);
     };
 
-    const handleSearch = useCallback((query: string) => {
+    const handleSearch = (query: string) => {
         setSearchQuery(query);
         if (query.trim() === '') {
             setSearchResults([]);
@@ -209,15 +179,15 @@ export default function StudentDetails() {
             )
         );
         setSearchResults(results);
-    }, [availableCourses]);
+    };
 
-    const isCourseInSchedule = useCallback((course: Course) => {
+    const isCourseInSchedule = (course: Course) => {
         return schedule.some(year =>
             year.semesters.some(semester =>
                 semester.courses.some(c => c.code === course.code)
             )
         );
-    }, [schedule]);
+    };
 
     const toggleCourseSelection = (course: Course) => {
         if (isCourseInSchedule(course)) {
@@ -275,6 +245,12 @@ export default function StudentDetails() {
         }
     };
 
+    const handleRefresh = async () => {
+        setRefreshing(true);
+        await fetchStudentDetails();
+        setRefreshing(false);
+    };
+
     if (loading) return <CircularProgress />;
     if (error) return <Typography color="error">{error}</Typography>;
     if (!student) return <Typography>No student found</Typography>;
@@ -320,9 +296,19 @@ export default function StudentDetails() {
                     <div className="p-6">
                         <div className="flex justify-between items-start mb-6">
                             <h1 className="text-3xl font-bold text-gray-900">Student Schedule</h1>
-                            <div className="text-right">
-                                <Typography variant="h6" className="mb-2">Name: {student.name}</Typography>
-                                <Typography variant="body1">Email: {student.email}</Typography>
+                            <div>
+                                <div className="text-right mb-2">
+                                    <Typography variant="h6">Name: {student?.name}</Typography>
+                                    <Typography variant="body1">Email: {student?.email}</Typography>
+                                </div>
+                                <Button
+                                    variant="outlined"
+                                    startIcon={<RefreshIcon />}
+                                    onClick={handleRefresh}
+                                    disabled={refreshing}
+                                >
+                                    {refreshing ? 'Refreshing...' : 'Refresh Schedule'}
+                                </Button>
                             </div>
                         </div>
 
