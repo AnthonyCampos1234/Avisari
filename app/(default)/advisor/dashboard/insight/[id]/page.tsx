@@ -79,16 +79,22 @@ export default function StudentDetails() {
                 .eq('id', studentId)
                 .single();
 
-            if (error) throw error;
+            if (error) {
+                console.error('Supabase error:', error);
+                throw error;
+            }
 
-            setStudent(data);
-            if (data.schedule) {
-                setSchedule(data.schedule);
+            if (!data) {
+                console.error('No data returned for student ID:', studentId);
+                setStudent(null);
             } else {
-                setSchedule(initializeEmptySchedule());
+                console.log('Fetched student data:', data);
+                setStudent(data);
+                setSchedule(data.schedule || initializeEmptySchedule());
             }
         } catch (err) {
             console.error('Error fetching student details:', err);
+            setStudent(null);
         } finally {
             setLoading(false);
         }
