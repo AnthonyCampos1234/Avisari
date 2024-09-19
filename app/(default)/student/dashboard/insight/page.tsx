@@ -1,5 +1,6 @@
 "use client";
 
+
 import { useState, useEffect, useCallback } from 'react';
 import { Button, Chip, IconButton, Paper, Tooltip } from '@mui/material';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
@@ -301,28 +302,26 @@ export default function Insight() {
                 <div className="p-6">
                     <h1 className="text-3xl font-bold text-gray-900 mb-6">Insight</h1>
 
-                    {/* Trash can positioned in the top-right corner */}
+                    {/* Trash can positioned at the top of the content */}
                     <Droppable droppableId="trash">
                         {(provided, snapshot) => (
-                            <Tooltip title="Drag courses here to delete" placement="left">
-                                <div
-                                    ref={provided.innerRef}
-                                    {...provided.droppableProps}
-                                    className={`fixed top-4 right-4 p-4 rounded-full shadow-lg transition-all duration-200 ${snapshot.isDraggingOver ? 'bg-gray-800 scale-110' : 'bg-gray-700'
-                                        }`}
-                                    style={{
-                                        width: '60px',
-                                        height: '60px',
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        zIndex: 1000,
-                                    }}
-                                >
-                                    <DeleteIcon sx={{ fontSize: 28 }} className="text-white" />
-                                    {provided.placeholder}
-                                </div>
-                            </Tooltip>
+                            <div
+                                ref={provided.innerRef}
+                                {...provided.droppableProps}
+                                className={`mb-4 p-4 rounded-lg shadow-md transition-all duration-200 ${snapshot.isDraggingOver ? 'bg-gray-800' : 'bg-gray-700'
+                                    }`}
+                                style={{
+                                    width: '100%',
+                                    height: '60px',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <DeleteIcon sx={{ fontSize: 28 }} className="text-white mr-2" />
+                                <span className="text-white">Drag courses here to delete</span>
+                                {provided.placeholder}
+                            </div>
                         )}
                     </Droppable>
 
