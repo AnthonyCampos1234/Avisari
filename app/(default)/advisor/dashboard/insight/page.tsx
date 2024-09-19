@@ -25,7 +25,8 @@ export default function AdvisorInsight() {
     useEffect(() => {
         setFilteredStudents(
             students.filter(student =>
-                student.name.toLowerCase().includes(searchTerm.toLowerCase())
+                student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                student.email.toLowerCase().includes(searchTerm.toLowerCase())
             )
         );
     }, [students, searchTerm]);
@@ -85,10 +86,10 @@ export default function AdvisorInsight() {
                                     }
                                 }}>
                                     <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '24px' }}>
-                                        <Typography variant="h6" component="div" align="center" sx={{ fontWeight: 'bold' }}>
+                                        <Typography variant="h6" component="div" align="center" sx={{ fontWeight: 'bold', marginBottom: '8px' }}>
                                             {student.name}
                                         </Typography>
-                                        <Typography variant="h6" component="div" align="center" sx={{ fontWeight: 'bold' }}>
+                                        <Typography variant="body2" color="text.secondary" align="center">
                                             {student.email}
                                         </Typography>
                                     </CardContent>
