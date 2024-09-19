@@ -518,8 +518,8 @@ export default function Insight() {
             </DragDropContext>
             <style jsx global>{`
                 @keyframes wiggle {
-                    0%, 100% { transform: rotate(-10deg); }
-                    50% { transform: rotate(10deg); }
+                    0%, 100% { transform: translate(-50%, 0) rotate(-10deg); }
+                    50% { transform: translate(-50%, 0) rotate(10deg); }
                 }
                 .animate-wiggle {
                     animation: wiggle 0.3s ease-in-out;
