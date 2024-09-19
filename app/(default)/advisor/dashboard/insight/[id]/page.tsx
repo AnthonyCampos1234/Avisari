@@ -75,7 +75,6 @@ export default function StudentDetails() {
                 <Typography variant="h6">{student.name}</Typography>
                 <Typography>{student.email}</Typography>
                 <Typography variant="h6" className="mt-4">Schedule</Typography>
-                <pre>{JSON.stringify(student.schedule, null, 2)}</pre>
                 {student.schedule.map((year, yearIndex) => (
                     <div key={yearIndex} className="mb-8">
                         <h2 className="text-2xl font-bold text-gray-800 mb-4">Year {year.year}</h2>
