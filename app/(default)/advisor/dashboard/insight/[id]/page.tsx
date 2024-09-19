@@ -9,6 +9,8 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
 import Image from 'next/image';
+import { supabase } from '@/lib/supabase';
+import { RealtimeChannel } from '@supabase/supabase-js';
 
 type Course = {
     id: string;
@@ -57,25 +59,36 @@ export default function StudentDetails() {
     const [error, setError] = useState<string | null>(null);
     const params = useParams();
     const studentId = params.id as string;
+    const [supabaseChannel, setSupabaseChannel] = useState<RealtimeChannel | null>(null);
 
     useEffect(() => {
         if (studentId) {
             fetchStudentDetails();
             loadAvailableCourses();
+            const channel = subscribeToScheduleChanges();
+            setSupabaseChannel(channel);
         } else {
             setError("Student ID is missing from the URL");
             setLoading(false);
         }
+
+        return () => {
+            if (supabaseChannel) {
+                supabaseChannel.unsubscribe();
+            }
+        };
     }, [studentId]);
 
     const fetchStudentDetails = async () => {
         try {
-            const response = await fetch(`/api/students/${studentId}`);
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Failed to fetch student details');
-            }
-            const data = await response.json();
+            const { data, error } = await supabase
+                .from('students')
+                .select('*')
+                .eq('id', studentId)
+                .single();
+
+            if (error) throw error;
+
             setStudent(data);
             setSchedule(data.schedule);
             setLoading(false);
@@ -99,20 +112,38 @@ export default function StudentDetails() {
 
     const saveSchedule = async (newSchedule: Year[]) => {
         try {
-            const response = await fetch(`/api/students/${studentId}/schedule`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ schedule: newSchedule }),
-            });
+            const { error } = await supabase
+                .from('students')
+                .update({ schedule: newSchedule })
+                .eq('id', studentId);
 
-            if (!response.ok) {
-                throw new Error('Failed to save schedule');
-            }
+            if (error) throw error;
+
+            // The update will be automatically pushed to all subscribers
         } catch (error) {
             console.error('Save error:', error);
         }
+    };
+
+    const subscribeToScheduleChanges = () => {
+        if (!studentId) return null;
+
+        const channel = supabase.channel('custom-all-channel')
+            .on(
+                'postgres_changes',
+                {
+                    event: 'UPDATE',
+                    schema: 'public',
+                    table: 'students',
+                    filter: `id=eq.${studentId}`,
+                },
+                (payload) => {
+                    setSchedule(payload.new.schedule);
+                }
+            )
+            .subscribe();
+
+        return channel;
     };
 
     const onDragStart = () => {
