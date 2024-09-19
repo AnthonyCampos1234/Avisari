@@ -8,7 +8,7 @@ type StudentDetails = {
     id: string;
     name: string;
     email: string;
-    // Add other relevant fields
+    schedule: any; // Adjust the type based on your schedule structure
 };
 
 export default function StudentDetails() {
@@ -48,6 +48,8 @@ export default function StudentDetails() {
                 <Typography variant="h6">{student.name}</Typography>
                 <Typography>{student.email}</Typography>
                 {/* Add more student details here */}
+                <Typography variant="h6" className="mt-4">Schedule</Typography>
+                <pre>{JSON.stringify(student.schedule, null, 2)}</pre>
             </Paper>
         </div>
     );
