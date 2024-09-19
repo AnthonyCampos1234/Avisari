@@ -10,6 +10,7 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
 import Image from 'next/image';
+import { RealtimeChannel } from '@supabase/supabase-js';
 
 type Course = {
     id: string;
@@ -48,12 +49,21 @@ export default function Insight() {
     const [isDragging, setIsDragging] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const deleteTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const [supabaseChannel, setSupabaseChannel] = useState<RealtimeChannel | null>(null);
 
     useEffect(() => {
         if (session?.user?.email) {
             loadSchedule();
             loadAvailableCourses();
+            const channel = subscribeToScheduleChanges();
+            setSupabaseChannel(channel);
         }
+
+        return () => {
+            if (supabaseChannel) {
+                supabaseChannel.unsubscribe();
+            }
+        };
     }, [session]);
 
     const loadSchedule = async () => {
@@ -61,25 +71,16 @@ export default function Insight() {
 
         try {
             const { data, error } = await supabase
-                .from('schedules')
-                .select('data')
-                .eq('user_email', session.user.email)
+                .from('students')
+                .select('schedule')
+                .eq('email', session.user.email)
                 .single();
 
             if (error) throw error;
 
-            if (data && data.data) {
-                setSchedule(data.data);
-            } else {
-                const initialSchedule = initializeEmptySchedule();
-                setSchedule(initialSchedule);
-                await saveSchedule(initialSchedule);
-            }
+            setSchedule(data.schedule);
         } catch (error) {
             console.error('Load error:', error);
-            const initialSchedule = initializeEmptySchedule();
-            setSchedule(initialSchedule);
-            await saveSchedule(initialSchedule);
         }
     };
 
@@ -88,18 +89,37 @@ export default function Insight() {
 
         try {
             const { error } = await supabase
-                .from('schedules')
-                .upsert({
-                    user_email: session.user.email,
-                    data: newSchedule
-                }, {
-                    onConflict: 'user_email'
-                });
+                .from('students')
+                .update({ schedule: newSchedule })
+                .eq('email', session.user.email);
 
             if (error) throw error;
+
+            // The update will be automatically pushed to all subscribers
         } catch (error) {
             console.error('Save error:', error);
         }
+    };
+
+    const subscribeToScheduleChanges = () => {
+        if (!session?.user?.email) return null;
+
+        const channel = supabase.channel('custom-all-channel')
+            .on(
+                'postgres_changes',
+                {
+                    event: 'UPDATE',
+                    schema: 'public',
+                    table: 'students',
+                    filter: `email=eq.${session.user.email}`,
+                },
+                (payload) => {
+                    setSchedule(payload.new.schedule);
+                }
+            )
+            .subscribe();
+
+        return channel;
     };
 
     const initializeEmptySchedule = (): Year[] => {
