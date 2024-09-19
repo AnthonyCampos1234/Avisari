@@ -59,7 +59,10 @@ export default function Insight() {
     }, [session]);
 
     const loadSchedule = async () => {
-        if (!session?.user?.email) return;
+        if (!session?.user?.email) {
+            console.error('No user email available');
+            return;
+        }
 
         setLoading(true);
         try {
@@ -69,15 +72,21 @@ export default function Insight() {
                 .eq('email', session.user.email)
                 .single();
 
-            if (error) throw error;
+            if (error) {
+                console.error('Supabase error:', error);
+                throw error;
+            }
 
-            if (data.schedule) {
-                setSchedule(data.schedule);
-            } else {
+            if (!data) {
+                console.error('No data returned for email:', session.user.email);
                 setSchedule(initializeEmptySchedule());
+            } else {
+                console.log('Fetched schedule data:', data.schedule);
+                setSchedule(data.schedule || initializeEmptySchedule());
             }
         } catch (error) {
             console.error('Load error:', error);
+            setSchedule(initializeEmptySchedule());
         } finally {
             setLoading(false);
         }
