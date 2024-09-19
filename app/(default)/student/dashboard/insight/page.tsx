@@ -307,107 +307,141 @@ export default function Insight() {
     };
 
     return (
-        <div className="p-6">
-            <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-                <div className="p-6">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-6">Insight</h1>
-
-                    <div className="mb-6">
-                        <Paper
-                            elevation={0}
-                            component="form"
-                            sx={{
-                                p: '2px 4px',
+        <div className="p-6 relative">
+            <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
+                <Droppable droppableId="trash">
+                    {(provided, snapshot) => (
+                        <div
+                            ref={provided.innerRef}
+                            {...provided.droppableProps}
+                            className={`
+                                absolute top-4 right-4 p-4 
+                                bg-black text-white rounded-full shadow-lg 
+                                transition-all duration-300 ease-in-out
+                                ${snapshot.isDraggingOver ? 'bg-gray-800' : ''}
+                                ${isDeleting ? 'animate-wiggle' : ''}
+                                ${isDragging ? 'opacity-100' : 'opacity-0 pointer-events-none'}
+                            `}
+                            style={{
                                 display: 'flex',
                                 alignItems: 'center',
-                                width: '100%',
-                                border: '1px solid #e0e0e0',
-                                borderRadius: '9999px',
+                                justifyContent: 'center',
+                                width: '80px',
+                                height: '80px',
                             }}
                         >
-                            <SearchIcon sx={{ p: '10px', color: 'text.secondary' }} />
-                            <input
-                                type="text"
-                                placeholder="Search for courses..."
-                                value={searchQuery}
-                                onChange={(e) => handleSearch(e.target.value)}
-                                className="w-full p-2 outline-none"
-                                style={{ border: 'none', backgroundColor: 'transparent' }}
-                            />
-                            {searchQuery && (
-                                <IconButton
-                                    type="button"
-                                    sx={{ p: '10px' }}
-                                    aria-label="clear"
-                                    onClick={() => {
-                                        setSearchQuery('');
-                                        setSearchResults([]);
-                                    }}
-                                >
-                                    <CloseIcon />
-                                </IconButton>
+                            {snapshot.isDraggingOver ? (
+                                <DeleteIcon
+                                    sx={{ fontSize: 40 }}
+                                    className="animate-pulse"
+                                />
+                            ) : (
+                                <DeleteOutlineIcon sx={{ fontSize: 40 }} />
                             )}
-                        </Paper>
-                        {searchResults.length > 0 && (
-                            <Paper elevation={3} sx={{ mt: 2, p: 2, borderRadius: '16px' }}>
-                                <h3 className="font-semibold mb-2">Search Results:</h3>
-                                <div className="space-y-2">
-                                    {searchResults.map((course) => (
-                                        <div key={course.code} className="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg transition-colors">
-                                            <span>{course.code}: {course.title}</span>
-                                            <Chip
-                                                label={isCourseInSchedule(course) ? "In Schedule" : selectedCourses.some(c => c.code === course.code) ? "Selected" : "Select"}
-                                                onClick={() => toggleCourseSelection(course)}
-                                                color={isCourseInSchedule(course) ? "default" : selectedCourses.some(c => c.code === course.code) ? "primary" : "default"}
-                                                sx={{
-                                                    borderRadius: '9999px',
-                                                    '& .MuiChip-label': { px: 2 },
-                                                    bgcolor: isCourseInSchedule(course) ? '#e0e0e0' : selectedCourses.some(c => c.code === course.code) ? '#111827' : 'transparent',
-                                                    color: isCourseInSchedule(course) ? '#757575' : selectedCourses.some(c => c.code === course.code) ? 'white' : 'inherit',
-                                                    '&:hover': {
-                                                        bgcolor: isCourseInSchedule(course) ? '#e0e0e0' : selectedCourses.some(c => c.code === course.code) ? '#374151' : '#f3f4f6',
-                                                    },
-                                                    pointerEvents: isCourseInSchedule(course) ? 'none' : 'auto',
-                                                }}
-                                            />
-                                        </div>
-                                    ))}
-                                </div>
-                                {selectedCourses.length > 0 && (
-                                    <Button
-                                        onClick={addSelectedCourses}
-                                        variant="contained"
-                                        fullWidth
-                                        sx={{
-                                            backgroundColor: '#111827',
-                                            '&:hover': { backgroundColor: '#374151' },
-                                            borderRadius: '9999px',
-                                            mt: 2
+                            {provided.placeholder}
+                        </div>
+                    )}
+                </Droppable>
+
+                <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div className="p-6">
+                        <h1 className="text-3xl font-bold text-gray-900 mb-6">Insight</h1>
+
+                        <div className="mb-6">
+                            <Paper
+                                elevation={0}
+                                component="form"
+                                sx={{
+                                    p: '2px 4px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    width: '100%',
+                                    border: '1px solid #e0e0e0',
+                                    borderRadius: '9999px',
+                                }}
+                            >
+                                <SearchIcon sx={{ p: '10px', color: 'text.secondary' }} />
+                                <input
+                                    type="text"
+                                    placeholder="Search for courses..."
+                                    value={searchQuery}
+                                    onChange={(e) => handleSearch(e.target.value)}
+                                    className="w-full p-2 outline-none"
+                                    style={{ border: 'none', backgroundColor: 'transparent' }}
+                                />
+                                {searchQuery && (
+                                    <IconButton
+                                        type="button"
+                                        sx={{ p: '10px' }}
+                                        aria-label="clear"
+                                        onClick={() => {
+                                            setSearchQuery('');
+                                            setSearchResults([]);
                                         }}
                                     >
-                                        Add Selected Courses
-                                    </Button>
+                                        <CloseIcon />
+                                    </IconButton>
                                 )}
                             </Paper>
-                        )}
-                    </div>
-                    <div className="mb-6">
-                        <Button
-                            onClick={handleGenerateAISchedule}
-                            variant="contained"
-                            disabled={loading}
-                            sx={{
-                                backgroundColor: '#111827',
-                                '&:hover': {
-                                    backgroundColor: '#374151',
-                                },
-                                borderRadius: '9999px',
-                            }}
-                        >
-                            {loading ? 'Generating...' : 'Generate with AI'}
-                        </Button>
-                    </div>
-                    <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
+                            {searchResults.length > 0 && (
+                                <Paper elevation={3} sx={{ mt: 2, p: 2, borderRadius: '16px' }}>
+                                    <h3 className="font-semibold mb-2">Search Results:</h3>
+                                    <div className="space-y-2">
+                                        {searchResults.map((course) => (
+                                            <div key={course.code} className="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg transition-colors">
+                                                <span>{course.code}: {course.title}</span>
+                                                <Chip
+                                                    label={isCourseInSchedule(course) ? "In Schedule" : selectedCourses.some(c => c.code === course.code) ? "Selected" : "Select"}
+                                                    onClick={() => toggleCourseSelection(course)}
+                                                    color={isCourseInSchedule(course) ? "default" : selectedCourses.some(c => c.code === course.code) ? "primary" : "default"}
+                                                    sx={{
+                                                        borderRadius: '9999px',
+                                                        '& .MuiChip-label': { px: 2 },
+                                                        bgcolor: isCourseInSchedule(course) ? '#e0e0e0' : selectedCourses.some(c => c.code === course.code) ? '#111827' : 'transparent',
+                                                        color: isCourseInSchedule(course) ? '#757575' : selectedCourses.some(c => c.code === course.code) ? 'white' : 'inherit',
+                                                        '&:hover': {
+                                                            bgcolor: isCourseInSchedule(course) ? '#e0e0e0' : selectedCourses.some(c => c.code === course.code) ? '#374151' : '#f3f4f6',
+                                                        },
+                                                        pointerEvents: isCourseInSchedule(course) ? 'none' : 'auto',
+                                                    }}
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                    {selectedCourses.length > 0 && (
+                                        <Button
+                                            onClick={addSelectedCourses}
+                                            variant="contained"
+                                            fullWidth
+                                            sx={{
+                                                backgroundColor: '#111827',
+                                                '&:hover': { backgroundColor: '#374151' },
+                                                borderRadius: '9999px',
+                                                mt: 2
+                                            }}
+                                        >
+                                            Add Selected Courses
+                                        </Button>
+                                    )}
+                                </Paper>
+                            )}
+                        </div>
+                        <div className="mb-6">
+                            <Button
+                                onClick={handleGenerateAISchedule}
+                                variant="contained"
+                                disabled={loading}
+                                sx={{
+                                    backgroundColor: '#111827',
+                                    '&:hover': {
+                                        backgroundColor: '#374151',
+                                    },
+                                    borderRadius: '9999px',
+                                }}
+                            >
+                                {loading ? 'Generating...' : 'Generate with AI'}
+                            </Button>
+                        </div>
                         {schedule.map((year, yearIndex) => (
                             <div key={yearIndex} className="mb-8">
                                 <h2 className="text-2xl font-bold text-gray-800 mb-4">Year {year.year}</h2>
@@ -447,41 +481,9 @@ export default function Insight() {
                                 </div>
                             </div>
                         ))}
-                        <Droppable droppableId="trash">
-                            {(provided, snapshot) => (
-                                <div
-                                    ref={provided.innerRef}
-                                    {...provided.droppableProps}
-                                    className={`
-                                        fixed bottom-8 right-8 p-4 
-                                        bg-black text-white rounded-full shadow-lg 
-                                        transition-all duration-300 ease-in-out
-                                        ${snapshot.isDraggingOver ? 'bg-gray-800' : ''}
-                                        ${isDeleting ? 'animate-wiggle' : ''}
-                                    `}
-                                    style={{
-                                        display: isDragging ? 'flex' : 'none',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        width: '80px',
-                                        height: '80px',
-                                    }}
-                                >
-                                    {snapshot.isDraggingOver ? (
-                                        <DeleteIcon
-                                            sx={{ fontSize: 40 }}
-                                            className="animate-pulse"
-                                        />
-                                    ) : (
-                                        <DeleteOutlineIcon sx={{ fontSize: 40 }} />
-                                    )}
-                                    {provided.placeholder}
-                                </div>
-                            )}
-                        </Droppable>
-                    </DragDropContext>
+                    </div>
                 </div>
-            </div>
+            </DragDropContext>
             <style jsx global>{`
                 @keyframes wiggle {
                     0%, 100% { transform: rotate(-10deg); }
