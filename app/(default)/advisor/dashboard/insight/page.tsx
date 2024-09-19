@@ -3,11 +3,12 @@
 import { useState, useEffect } from 'react';
 import { Typography, Paper, CircularProgress, Card, CardContent, Box, TextField, InputAdornment } from '@mui/material';
 import Link from 'next/link';
-import { Person as PersonIcon, Search as SearchIcon } from '@mui/icons-material';
+import { Search as SearchIcon } from '@mui/icons-material';
 
 type Student = {
     id: string;
     name: string;
+    email: string;
 };
 
 export default function AdvisorInsight() {
@@ -84,9 +85,11 @@ export default function AdvisorInsight() {
                                     }
                                 }}>
                                     <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '24px' }}>
-                                        <PersonIcon sx={{ fontSize: 60, color: 'primary.main', marginBottom: 2 }} />
                                         <Typography variant="h6" component="div" align="center" sx={{ fontWeight: 'bold' }}>
                                             {student.name}
+                                        </Typography>
+                                        <Typography variant="h6" component="div" align="center" sx={{ fontWeight: 'bold' }}>
+                                            {student.email}
                                         </Typography>
                                     </CardContent>
                                 </Card>
