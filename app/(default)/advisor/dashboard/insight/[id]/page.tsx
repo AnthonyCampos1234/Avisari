@@ -71,6 +71,7 @@ export default function StudentDetails() {
     }, [studentId]);
 
     const fetchStudentDetails = async () => {
+        setLoading(true);
         try {
             const { data, error } = await supabase
                 .from('students')
@@ -81,12 +82,33 @@ export default function StudentDetails() {
             if (error) throw error;
 
             setStudent(data);
-            setSchedule(data.schedule);
-            setLoading(false);
+            if (data.schedule) {
+                setSchedule(data.schedule);
+            } else {
+                setSchedule(initializeEmptySchedule());
+            }
         } catch (err) {
-            setError(`Error fetching student details: ${err instanceof Error ? err.message : String(err)}`);
+            console.error('Error fetching student details:', err);
+        } finally {
             setLoading(false);
         }
+    };
+
+    const initializeEmptySchedule = (): Year[] => {
+        const years = 4;
+        const semestersPerYear = 4;
+        return Array.from({ length: years }, (_, yearIndex) => ({
+            year: yearIndex + 1,
+            semesters: Array.from({ length: semestersPerYear }, (_, semesterIndex) => ({
+                name: getSemesterName(semesterIndex),
+                courses: []
+            }))
+        }));
+    };
+
+    const getSemesterName = (index: number): string => {
+        const semesterNames = ['Fall', 'Spring', 'Summer 1', 'Summer 2'];
+        return semesterNames[index];
     };
 
     const loadAvailableCourses = async () => {
