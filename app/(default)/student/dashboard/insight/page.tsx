@@ -444,15 +444,10 @@ export default function Insight() {
                                         bg-black text-white rounded-full shadow-lg 
                                         transition-all duration-300 ease-in-out
                                         ${snapshot.isDraggingOver ? 'scale-110 bg-gray-800' : ''}
-                                        ${snapshot.draggingFromThisWith ? 'hidden' : ''}
                                     `}
-                                    style={{ display: snapshot.isDraggingOver || snapshot.draggingFromThisWith ? 'block' : 'none' }}
+                                    style={{ display: snapshot.draggingOverWith ? 'block' : 'none' }}
                                 >
-                                    {snapshot.isDraggingOver ? (
-                                        <DeleteIcon fontSize="large" />
-                                    ) : (
-                                        <DeleteOutlineIcon fontSize="large" />
-                                    )}
+                                    <DeleteOutlineIcon fontSize="large" />
                                     {provided.placeholder}
                                 </div>
                             )}
