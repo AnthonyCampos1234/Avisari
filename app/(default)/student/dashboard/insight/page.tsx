@@ -8,12 +8,22 @@ import ChatIcon from '@mui/icons-material/Chat';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import ShareIcon from '@mui/icons-material/Share';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useSession } from 'next-auth/react';
+import { supabase } from '@/lib/supabase';
 
 type Course = {
-    id: string;
     code: string;
-    name: string;
+    title: string;
     credits: number;
+    description: string;
+    prerequisites?: string[];
+    corequisites?: string[];
+    attributes?: string[];
+};
+
+type Department = {
+    name: string;
+    courses: Course[];
 };
 
 type Semester = {
@@ -27,15 +37,60 @@ type Year = {
 };
 
 export default function Insight() {
+    const { data: session } = useSession();
     const [schedule, setSchedule] = useState<Year[]>([]);
     const [openPopover, setOpenPopover] = useState('');
-    const [newCourse, setNewCourse] = useState({ code: '', name: '' });
+    const [newCourse, setNewCourse] = useState<Partial<Course>>({ code: '', title: '', credits: 0, description: '' });
     const [chatMessage, setChatMessage] = useState('');
     const [chatHistory, setChatHistory] = useState<string[]>([]);
     const popoverRef = useRef<HTMLDivElement>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [debugInfo, setDebugInfo] = useState<string | null>(null);
+    const [availableCourses, setAvailableCourses] = useState<Department[]>([]);
+
+    useEffect(() => {
+        if (session?.user?.email) {
+            loadSchedule();
+            loadAvailableCourses();
+        }
+    }, [session]);
+
+    const loadSchedule = async () => {
+        if (!session?.user?.email) return;
+
+        try {
+            const { data, error } = await supabase
+                .from('schedules')
+                .select('data')
+                .eq('user_email', session.user.email)
+                .single();
+
+            if (error) throw error;
+            if (data) setSchedule(data.data);
+        } catch (error) {
+            console.error('Failed to load schedule:', error);
+        }
+    };
+
+    const saveSchedule = async (newSchedule: any[]) => {
+        if (!session?.user?.email) return;
+
+        try {
+            const { error } = await supabase
+                .from('schedules')
+                .upsert({
+                    user_email: session.user.email,
+                    data: newSchedule
+                }, {
+                    onConflict: 'user_email'
+                });
+
+            if (error) throw error;
+        } catch (error) {
+            console.error('Failed to save schedule:', error);
+        }
+    };
 
     useEffect(() => {
         // Initialize empty schedule structure
@@ -57,7 +112,33 @@ export default function Insight() {
     };
 
     const onDragEnd = (result: DropResult) => {
-        // Implement drag and drop logic here
+        const { source, destination } = result;
+
+        // If there's no destination, we don't need to do anything
+        if (!destination) return;
+
+        // If the item is dropped in the same place, we don't need to do anything
+        if (
+            source.droppableId === destination.droppableId &&
+            source.index === destination.index
+        ) return;
+
+        // Create a copy of the current schedule
+        const newSchedule = JSON.parse(JSON.stringify(schedule));
+
+        // Parse the source and destination IDs
+        const [sourceYear, sourceSemester] = source.droppableId.split('-');
+        const [destYear, destSemester] = destination.droppableId.split('-');
+
+        // Remove the course from the source
+        const [movedCourse] = newSchedule[parseInt(sourceYear)].semesters[parseInt(sourceSemester)].courses.splice(source.index, 1);
+
+        // Add the course to the destination
+        newSchedule[parseInt(destYear)].semesters[parseInt(destSemester)].courses.splice(destination.index, 0, movedCourse);
+
+        // Update the state and save to the database
+        setSchedule(newSchedule);
+        saveSchedule(newSchedule);
     };
 
     const handleGenerateAISchedule = async () => {
@@ -146,21 +227,21 @@ export default function Insight() {
         setOpenPopover(prevState => prevState === popoverId ? '' : popoverId);
     }, []);
 
-    const handleAddCourse = () => {
-        if (newCourse.code && newCourse.name) {
-            // Add the new course to the first available semester
-            const updatedSchedule = [...schedule];
-            const firstYear = updatedSchedule[0];
-            const firstSemester = firstYear.semesters[0];
-            firstSemester.courses.push({
-                id: `course-${Date.now()}`, // Generate a unique ID
-                ...newCourse,
-                credits: 0 // Add a default value for credits
-            });
-            setSchedule(updatedSchedule);
-            setNewCourse({ code: '', name: '' });
-            handlePopoverToggle(''); // Close the popover
-        }
+    const handleAddCourse = (course: Course) => {
+        const newSchedule = [...schedule];
+        const firstYear = newSchedule[0];
+        const firstSemester = firstYear.semesters[0];
+        firstSemester.courses.push({
+            code: course.code,
+            title: course.title,
+            credits: course.credits,
+            description: course.description,
+            prerequisites: course.prerequisites,
+            corequisites: course.corequisites,
+            attributes: course.attributes
+        });
+        setSchedule(newSchedule);
+        saveSchedule(newSchedule);
     };
 
     const handleChatSubmit = () => {
@@ -199,13 +280,40 @@ export default function Insight() {
                             margin="normal"
                         />
                         <TextField
-                            label="Course Name"
-                            value={newCourse.name}
-                            onChange={(e) => setNewCourse({ ...newCourse, name: e.target.value })}
+                            label="Course Title"
+                            value={newCourse.title}
+                            onChange={(e) => setNewCourse({ ...newCourse, title: e.target.value })}
                             fullWidth
                             margin="normal"
                         />
-                        <Button onClick={handleAddCourse} variant="contained" fullWidth sx={buttonStyle}>
+                        <TextField
+                            label="Credits"
+                            type="number"
+                            value={newCourse.credits}
+                            onChange={(e) => setNewCourse({ ...newCourse, credits: Number(e.target.value) })}
+                            fullWidth
+                            margin="normal"
+                        />
+                        <TextField
+                            label="Description"
+                            value={newCourse.description}
+                            onChange={(e) => setNewCourse({ ...newCourse, description: e.target.value })}
+                            fullWidth
+                            margin="normal"
+                            multiline
+                            rows={3}
+                        />
+                        <Button
+                            onClick={() => {
+                                if (newCourse.code && newCourse.title && newCourse.credits && newCourse.description) {
+                                    handleAddCourse(newCourse as Course);
+                                    setNewCourse({ code: '', title: '', credits: 0, description: '' });
+                                }
+                            }}
+                            variant="contained"
+                            fullWidth
+                            sx={buttonStyle}
+                        >
                             Add Course
                         </Button>
                     </div>
@@ -291,6 +399,18 @@ export default function Insight() {
         };
     }, []);
 
+    const loadAvailableCourses = async () => {
+        try {
+            const response = await fetch('/courses.json');
+            if (response.ok) {
+                const data = await response.json();
+                setAvailableCourses(data.departments);
+            }
+        } catch (error) {
+            console.error('Failed to load available courses:', error);
+        }
+    };
+
     return (
         <div className="p-6">
             <div className="bg-white rounded-lg shadow-lg overflow-hidden">
@@ -375,7 +495,7 @@ export default function Insight() {
                                                                         {...provided.dragHandleProps}
                                                                         className="bg-white p-3 mb-2 rounded-md shadow-sm border border-gray-200 transition-all hover:shadow-md"
                                                                     >
-                                                                        <span className="font-medium">{course.code}:</span> {course.name}
+                                                                        <span className="font-medium">{course.code}:</span> {course.title}
                                                                     </div>
                                                                 )}
                                                             </Draggable>
@@ -392,6 +512,20 @@ export default function Insight() {
                             </div>
                         ))}
                     </DragDropContext>
+                    <h2 className="text-lg font-bold mb-2">Available Courses</h2>
+                    {availableCourses.map((department) => (
+                        <div key={department.name}>
+                            <h3 className="text-md font-semibold">{department.name}</h3>
+                            <ul>
+                                {department.courses.map((course) => (
+                                    <li key={course.code}>
+                                        {course.code}: {course.title} - {course.credits} credits
+                                        <button onClick={() => handleAddCourse(course)}>Add to Schedule</button>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>
