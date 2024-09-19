@@ -26,13 +26,14 @@ export default function StudentDetails() {
         try {
             const response = await fetch(`/api/students/${studentId}`);
             if (!response.ok) {
-                throw new Error('Failed to fetch student details');
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to fetch student details');
             }
             const data = await response.json();
             setStudent(data);
             setLoading(false);
         } catch (err) {
-            setError('Error fetching student details');
+            setError(`Error fetching student details: ${err instanceof Error ? err.message : String(err)}`);
             setLoading(false);
         }
     };
