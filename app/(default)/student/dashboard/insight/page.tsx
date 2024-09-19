@@ -44,6 +44,7 @@ export default function Insight() {
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState<Course[]>([]);
     const [selectedCourses, setSelectedCourses] = useState<Course[]>([]);
+    const [isDragging, setIsDragging] = useState(false);
 
     useEffect(() => {
         if (session?.user?.email) {
@@ -115,7 +116,12 @@ export default function Insight() {
         return semesterNames[index];
     };
 
+    const onDragStart = () => {
+        setIsDragging(true);
+    };
+
     const onDragEnd = (result: DropResult) => {
+        setIsDragging(false);
         const { source, destination } = result;
 
         // Create a copy of the current schedule
@@ -394,7 +400,7 @@ export default function Insight() {
                             {loading ? 'Generating...' : 'Generate with AI'}
                         </Button>
                     </div>
-                    <DragDropContext onDragEnd={onDragEnd}>
+                    <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
                         {schedule.map((year, yearIndex) => (
                             <div key={yearIndex} className="mb-8">
                                 <h2 className="text-2xl font-bold text-gray-800 mb-4">Year {year.year}</h2>
@@ -445,7 +451,7 @@ export default function Insight() {
                                         transition-all duration-300 ease-in-out
                                         ${snapshot.isDraggingOver ? 'scale-110 bg-gray-800' : ''}
                                     `}
-                                    style={{ display: snapshot.draggingOverWith ? 'block' : 'none' }}
+                                    style={{ display: isDragging ? 'block' : 'none' }}
                                 >
                                     <DeleteOutlineIcon fontSize="large" />
                                     {provided.placeholder}
