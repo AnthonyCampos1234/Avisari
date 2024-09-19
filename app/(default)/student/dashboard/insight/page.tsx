@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
-import { Button } from '@mui/material';
+import { Button, Chip, IconButton, Paper } from '@mui/material';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import { useSession } from 'next-auth/react';
 import { supabase } from '@/lib/supabase';
 import SearchIcon from '@mui/icons-material/Search';
 import DeleteIcon from '@mui/icons-material/Delete';
+import CloseIcon from '@mui/icons-material/Close';
 
 type Course = {
     id: string;
@@ -286,36 +287,70 @@ export default function Insight() {
                     <h1 className="text-3xl font-bold text-gray-900 mb-6">Insight</h1>
 
                     <div className="mb-6">
-                        <div className="flex items-center border rounded-lg overflow-hidden">
-                            <SearchIcon className="ml-3 text-gray-400" />
+                        <Paper
+                            elevation={0}
+                            component="form"
+                            sx={{
+                                p: '2px 4px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                width: '100%',
+                                border: '1px solid #e0e0e0',
+                                borderRadius: '9999px',
+                            }}
+                        >
+                            <SearchIcon sx={{ p: '10px', color: 'text.secondary' }} />
                             <input
                                 type="text"
                                 placeholder="Search for courses..."
                                 value={searchQuery}
                                 onChange={(e) => handleSearch(e.target.value)}
                                 className="w-full p-2 outline-none"
+                                style={{ border: 'none', backgroundColor: 'transparent' }}
                             />
-                        </div>
+                            {searchQuery && (
+                                <IconButton
+                                    type="button"
+                                    sx={{ p: '10px' }}
+                                    aria-label="clear"
+                                    onClick={() => {
+                                        setSearchQuery('');
+                                        setSearchResults([]);
+                                    }}
+                                >
+                                    <CloseIcon />
+                                </IconButton>
+                            )}
+                        </Paper>
                         {searchResults.length > 0 && (
-                            <div className="mt-4 border rounded-lg p-4">
+                            <Paper elevation={3} sx={{ mt: 2, p: 2, borderRadius: '16px' }}>
                                 <h3 className="font-semibold mb-2">Search Results:</h3>
-                                <ul>
+                                <div className="space-y-2">
                                     {searchResults.map((course) => (
-                                        <li key={course.code} className="flex items-center mb-2">
-                                            <input
-                                                type="checkbox"
-                                                checked={selectedCourses.some(c => c.code === course.code)}
-                                                onChange={() => toggleCourseSelection(course)}
-                                                className="mr-2"
-                                            />
+                                        <div key={course.code} className="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg transition-colors">
                                             <span>{course.code}: {course.title}</span>
-                                        </li>
+                                            <Chip
+                                                label={selectedCourses.some(c => c.code === course.code) ? "Selected" : "Select"}
+                                                onClick={() => toggleCourseSelection(course)}
+                                                color={selectedCourses.some(c => c.code === course.code) ? "primary" : "default"}
+                                                sx={{
+                                                    borderRadius: '9999px',
+                                                    '& .MuiChip-label': { px: 2 },
+                                                    bgcolor: selectedCourses.some(c => c.code === course.code) ? '#111827' : 'transparent',
+                                                    color: selectedCourses.some(c => c.code === course.code) ? 'white' : 'inherit',
+                                                    '&:hover': {
+                                                        bgcolor: selectedCourses.some(c => c.code === course.code) ? '#374151' : '#f3f4f6',
+                                                    },
+                                                }}
+                                            />
+                                        </div>
                                     ))}
-                                </ul>
+                                </div>
                                 {selectedCourses.length > 0 && (
                                     <Button
                                         onClick={addSelectedCourses}
                                         variant="contained"
+                                        fullWidth
                                         sx={{
                                             backgroundColor: '#111827',
                                             '&:hover': { backgroundColor: '#374151' },
@@ -326,7 +361,7 @@ export default function Insight() {
                                         Add Selected Courses
                                     </Button>
                                 )}
-                            </div>
+                            </Paper>
                         )}
                     </div>
                     <div className="mb-6">
