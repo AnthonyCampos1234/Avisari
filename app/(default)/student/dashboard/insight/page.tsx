@@ -448,10 +448,17 @@ export default function Insight() {
                                     <div
                                         ref={provided.innerRef}
                                         {...provided.droppableProps}
-                                        className={`fixed bottom-8 left-1/2 transform -translate-x-1/2 p-4 rounded-full shadow-lg transition-all duration-200 ${snapshot.isDraggingOver ? 'bg-red-600 scale-110' : 'bg-red-500'
+                                        className={`fixed bottom-8 left-1/2 transform -translate-x-1/2 p-6 rounded-2xl shadow-lg transition-all duration-200 ${snapshot.isDraggingOver ? 'bg-gray-800 scale-110' : 'bg-gray-700'
                                             }`}
+                                        style={{
+                                            width: '120px',
+                                            height: '120px',
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                        }}
                                     >
-                                        <DeleteIcon fontSize="large" className="text-white" />
+                                        <DeleteIcon sx={{ fontSize: 48 }} className="text-white" />
                                         {provided.placeholder}
                                     </div>
                                 </Zoom>
