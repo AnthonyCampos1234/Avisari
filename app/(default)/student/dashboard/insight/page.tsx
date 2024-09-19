@@ -154,6 +154,12 @@ export default function Insight() {
         // Parse the destination IDs
         const [destYear, destSemester] = destination.droppableId.split('-').map(Number);
 
+        // Check if the destination semester already has 5 courses
+        if (newSchedule[destYear].semesters[destSemester].courses.length >= 5) {
+            // If it does, don't allow the drop
+            return;
+        }
+
         // Remove the course from the source
         const [movedCourse] = newSchedule[sourceYear].semesters[sourceSemester].courses.splice(source.index, 1);
 
@@ -294,10 +300,21 @@ export default function Insight() {
         const firstSemester = firstYear.semesters[0];
         const coursesToAdd = selectedCourses.filter(course => !isCourseInSchedule(course));
 
-        firstSemester.courses.push(...coursesToAdd.map(course => ({
-            ...course,
-            id: `${course.code}-${Date.now()}`
-        })));
+        // Check if adding these courses would exceed the 5 course limit
+        if (firstSemester.courses.length + coursesToAdd.length > 5) {
+            // If it would, only add courses up to the limit
+            const availableSlots = 5 - firstSemester.courses.length;
+            firstSemester.courses.push(...coursesToAdd.slice(0, availableSlots).map(course => ({
+                ...course,
+                id: `${course.code}-${Date.now()}`
+            })));
+            // You might want to show a message to the user here about not all courses being added
+        } else {
+            firstSemester.courses.push(...coursesToAdd.map(course => ({
+                ...course,
+                id: `${course.code}-${Date.now()}`
+            })));
+        }
 
         setSchedule(newSchedule);
         saveSchedule(newSchedule);
