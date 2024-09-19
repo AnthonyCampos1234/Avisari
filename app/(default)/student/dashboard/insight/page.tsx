@@ -420,21 +420,29 @@ export default function Insight() {
                                     <h3 className="font-semibold mb-2">Search Results:</h3>
                                     <div className="space-y-2">
                                         {searchResults.map((course) => (
-                                            <div key={course.code} className="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg transition-colors">
+                                            <div
+                                                key={course.code}
+                                                className={`
+                        flex items-center justify-between p-2 rounded-lg transition-colors cursor-pointer
+                        ${isCourseInSchedule(course)
+                                                        ? 'bg-gray-100 cursor-not-allowed'
+                                                        : selectedCourses.some(c => c.code === course.code)
+                                                            ? 'bg-gray-200 hover:bg-gray-300'
+                                                            : 'hover:bg-gray-50'
+                                                    }
+                    `}
+                                                onClick={() => !isCourseInSchedule(course) && toggleCourseSelection(course)}
+                                            >
                                                 <span>{course.code}: {course.title}</span>
                                                 <Chip
                                                     label={isCourseInSchedule(course) ? "In Schedule" : selectedCourses.some(c => c.code === course.code) ? "Selected" : "Select"}
-                                                    onClick={() => toggleCourseSelection(course)}
                                                     color={isCourseInSchedule(course) ? "default" : selectedCourses.some(c => c.code === course.code) ? "primary" : "default"}
                                                     sx={{
                                                         borderRadius: '9999px',
                                                         '& .MuiChip-label': { px: 2 },
                                                         bgcolor: isCourseInSchedule(course) ? '#e0e0e0' : selectedCourses.some(c => c.code === course.code) ? '#111827' : 'transparent',
                                                         color: isCourseInSchedule(course) ? '#757575' : selectedCourses.some(c => c.code === course.code) ? 'white' : 'inherit',
-                                                        '&:hover': {
-                                                            bgcolor: isCourseInSchedule(course) ? '#e0e0e0' : selectedCourses.some(c => c.code === course.code) ? '#374151' : '#f3f4f6',
-                                                        },
-                                                        pointerEvents: isCourseInSchedule(course) ? 'none' : 'auto',
+                                                        pointerEvents: 'none',
                                                     }}
                                                 />
                                             </div>
@@ -518,8 +526,8 @@ export default function Insight() {
             </DragDropContext>
             <style jsx global>{`
                 @keyframes wiggle {
-                    0%, 100% { transform: translate(-50%, 0) rotate(-10deg); }
-                    50% { transform: translate(-50%, 0) rotate(10deg); }
+                    0%, 100% { transform: rotate(-10deg); }
+                    50% { transform: rotate(10deg); }
                 }
                 .animate-wiggle {
                     animation: wiggle 0.3s ease-in-out;
