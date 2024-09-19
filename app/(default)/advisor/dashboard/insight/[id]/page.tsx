@@ -4,11 +4,32 @@ import { useState, useEffect } from 'react';
 import { Typography, Paper, CircularProgress } from '@mui/material';
 import { useParams } from 'next/navigation';
 
+type Course = {
+    id: string;
+    code: string;
+    title: string;
+    credits: number;
+    description: string;
+    prerequisites?: string[];
+    corequisites?: string[];
+    attributes?: string[];
+};
+
+type Semester = {
+    name: string;
+    courses: Course[];
+};
+
+type Year = {
+    year: number;
+    semesters: Semester[];
+};
+
 type StudentDetails = {
     id: string;
     name: string;
     email: string;
-    schedule: any; // Adjust the type based on your schedule structure
+    schedule: Year[];
 };
 
 export default function StudentDetails() {
@@ -53,9 +74,29 @@ export default function StudentDetails() {
                 <Typography variant="h4" className="mb-4">Student Details</Typography>
                 <Typography variant="h6">{student.name}</Typography>
                 <Typography>{student.email}</Typography>
-                {/* Add more student details here */}
                 <Typography variant="h6" className="mt-4">Schedule</Typography>
                 <pre>{JSON.stringify(student.schedule, null, 2)}</pre>
+                {student.schedule.map((year, yearIndex) => (
+                    <div key={yearIndex} className="mb-8">
+                        <h2 className="text-2xl font-bold text-gray-800 mb-4">Year {year.year}</h2>
+                        <div className="grid grid-cols-4 gap-4">
+                            {year.semesters.map((semester, semesterIndex) => (
+                                <div key={semesterIndex} className="p-4 bg-gray-50 rounded-lg">
+                                    <h3 className="font-semibold text-lg text-gray-900 mb-3">{semester.name}</h3>
+                                    {semester.courses.length > 0 ? (
+                                        semester.courses.map((course: Course, index: number) => (
+                                            <div key={course.id} className="bg-white p-3 mb-2 rounded-md shadow-sm border border-gray-200 transition-all hover:shadow-md">
+                                                <span className="font-medium">{course.code}:</span> {course.title}
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <p className="text-gray-500 italic">No courses added yet</p>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                ))}
             </Paper>
         </div>
     );
