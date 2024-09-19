@@ -44,6 +44,7 @@ export default function Insight() {
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState<Course[]>([]);
     const [selectedCourses, setSelectedCourses] = useState<Course[]>([]);
+    const [isItemDropped, setIsItemDropped] = useState(false);
 
     useEffect(() => {
         if (session?.user?.email) {
@@ -51,6 +52,13 @@ export default function Insight() {
             loadAvailableCourses();
         }
     }, [session]);
+
+    useEffect(() => {
+        if (isItemDropped) {
+            const timer = setTimeout(() => setIsItemDropped(false), 300);
+            return () => clearTimeout(timer);
+        }
+    }, [isItemDropped]);
 
     const loadSchedule = async () => {
         if (!session?.user?.email) return;
@@ -129,6 +137,7 @@ export default function Insight() {
             newSchedule[sourceYear].semesters[sourceSemester].courses.splice(source.index, 1);
             setSchedule(newSchedule);
             saveSchedule(newSchedule);
+            setIsItemDropped(true);
             return;
         }
 
@@ -443,11 +452,12 @@ export default function Insight() {
                                         fixed bottom-8 right-8 p-4 
                                         bg-red-500 text-white rounded-full shadow-lg 
                                         transition-all duration-300 ease-in-out
-                                        ${snapshot.isDraggingOver ? 'scale-125 bg-red-600' : 'hover:scale-110'}
+                                        ${snapshot.isDraggingOver ? 'scale-110 bg-red-600' : 'hover:scale-105'}
+                                        ${isItemDropped ? 'animate-swallow' : ''}
                                     `}
                                 >
-                                    {snapshot.isDraggingOver ? (
-                                        <DeleteIcon fontSize="large" className="animate-bounce" />
+                                    {snapshot.isDraggingOver || isItemDropped ? (
+                                        <DeleteIcon fontSize="large" className={isItemDropped ? '' : 'animate-bounce'} />
                                     ) : (
                                         <DeleteOutlineIcon fontSize="large" />
                                     )}
