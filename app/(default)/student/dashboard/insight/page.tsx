@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Button, Chip, IconButton, Paper } from '@mui/material';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import { useSession } from 'next-auth/react';
@@ -45,6 +45,8 @@ export default function Insight() {
     const [searchResults, setSearchResults] = useState<Course[]>([]);
     const [selectedCourses, setSelectedCourses] = useState<Course[]>([]);
     const [isDragging, setIsDragging] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const deleteTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
         if (session?.user?.email) {
@@ -135,6 +137,11 @@ export default function Insight() {
             newSchedule[sourceYear].semesters[sourceSemester].courses.splice(source.index, 1);
             setSchedule(newSchedule);
             saveSchedule(newSchedule);
+
+            // Trigger delete animation
+            setIsDeleting(true);
+            if (deleteTimeoutRef.current) clearTimeout(deleteTimeoutRef.current);
+            deleteTimeoutRef.current = setTimeout(() => setIsDeleting(false), 300);
             return;
         }
 
@@ -457,6 +464,7 @@ export default function Insight() {
                                         justifyContent: 'center',
                                         width: '60px',
                                         height: '60px',
+                                        animation: isDeleting ? 'wiggle 0.3s ease-in-out' : 'none',
                                     }}
                                 >
                                     {snapshot.isDraggingOver ? (
@@ -474,6 +482,12 @@ export default function Insight() {
                     </DragDropContext>
                 </div>
             </div>
+            <style jsx global>{`
+                @keyframes wiggle {
+                    0%, 100% { transform: rotate(-3deg); }
+                    50% { transform: rotate(3deg); }
+                }
+            `}</style>
         </div>
     );
 }
