@@ -40,3 +40,21 @@
 .fill-gradient {
     fill: url(#gradient);
 }
+
+@keyframes swallow {
+    0% {
+        transform: scale(1.1);
+    }
+
+    50% {
+        transform: scale(0.9);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.animate-swallow {
+    animation: swallow 0.3s ease-in-out;
+}
