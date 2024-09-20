@@ -37,7 +37,7 @@ type StudentDetails = {
     id: string;
     name: string;
     email: string;
-    schedule: Year[];
+    schedule: Year[] | null;
 };
 
 type Department = {
@@ -73,27 +73,43 @@ export default function StudentDetails() {
     const fetchStudentDetails = async () => {
         setLoading(true);
         try {
-            const { data, error } = await supabase
-                .from('students')
+            // First, fetch the student's basic info from the 'users' table
+            const { data: userData, error: userError } = await supabase
+                .from('users')
                 .select('*')
                 .eq('id', studentId)
                 .single();
 
-            if (error) {
-                console.error('Supabase error:', error);
-                throw error;
-            }
+            if (userError) throw userError;
 
-            if (!data) {
-                console.error('No data returned for student ID:', studentId);
+            if (!userData) {
+                console.error('No user data returned for student ID:', studentId);
+                setError("No student found with the given ID");
                 setStudent(null);
             } else {
-                console.log('Fetched student data:', data);
-                setStudent(data);
-                setSchedule(data.schedule || initializeEmptySchedule());
+                // Now fetch the student's schedule from the 'schedules' table
+                const { data: scheduleData, error: scheduleError } = await supabase
+                    .from('schedules')
+                    .select('*')
+                    .eq('user_email', userData.email)
+                    .single();
+
+                if (scheduleError && scheduleError.code !== 'PGRST116') throw scheduleError;
+
+                setStudent({
+                    ...userData,
+                    schedule: scheduleData ? scheduleData.data : null
+                });
+
+                if (scheduleData && scheduleData.data) {
+                    setSchedule(scheduleData.data);
+                } else {
+                    setSchedule(initializeEmptySchedule());
+                }
             }
         } catch (err) {
             console.error('Error fetching student details:', err);
+            setError("Error fetching student details");
             setStudent(null);
         } finally {
             setLoading(false);
@@ -130,11 +146,17 @@ export default function StudentDetails() {
     };
 
     const saveSchedule = async (newSchedule: Year[]) => {
+        if (!student) return;
+
         try {
             const { error } = await supabase
-                .from('students')
-                .update({ schedule: newSchedule })
-                .eq('id', studentId);
+                .from('schedules')
+                .upsert({
+                    user_email: student.email,
+                    data: newSchedule
+                }, {
+                    onConflict: 'user_email'
+                });
 
             if (error) throw error;
 
