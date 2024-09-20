@@ -78,7 +78,7 @@ export default function StudentDetails() {
 
             // Fetch the student's basic info from the 'user' table
             const { data: userData, error: userError } = await supabase
-                .from('user')  // Note: changed from 'users' to 'user'
+                .from('User')  // Changed to 'User' with capital 'U'
                 .select('*')
                 .eq('id', studentId)
                 .single();
