@@ -67,29 +67,38 @@ export default function Insight() {
 
         setLoading(true);
         try {
-            const { data, error } = await supabase
-                .from('students')
+            let { data, error } = await supabase
+                .from('schedules')
                 .select('*')
-                .eq('email', session.user.email)
+                .eq('user_email', session.user.email)
                 .single();
 
             if (error) {
-                setDebugInfo(`Supabase error: ${error.message}, Details: ${JSON.stringify(error)}`);
-                throw error;
+                if (error.code === 'PGRST116') {
+                    // Schedule not found, create a new entry
+                    const newSchedule = {
+                        user_email: session.user.email,
+                        data: initializeEmptySchedule()
+                    };
+                    const { data: insertedData, error: insertError } = await supabase
+                        .from('schedules')
+                        .insert(newSchedule)
+                        .single();
+
+                    if (insertError) throw insertError;
+                    data = insertedData;
+                } else {
+                    throw error;
+                }
             }
 
-            if (!data) {
-                setDebugInfo(`No data returned for email: ${session.user.email}`);
-                setSchedule(initializeEmptySchedule());
+            setDebugInfo(`Fetched schedule data: ${JSON.stringify(data, null, 2)}`);
+            if (data.data && Array.isArray(data.data) && data.data.length > 0) {
+                setSchedule(data.data);
+                setDebugInfo(prevInfo => `${prevInfo}\nSchedule set from data`);
             } else {
-                setDebugInfo(`Fetched student data: ${JSON.stringify(data, null, 2)}`);
-                if (data.schedule && Array.isArray(data.schedule) && data.schedule.length > 0) {
-                    setSchedule(data.schedule);
-                    setDebugInfo(prevInfo => `${prevInfo}\nSchedule set from data`);
-                } else {
-                    setDebugInfo(prevInfo => `${prevInfo}\nSchedule is empty or invalid, initializing empty schedule`);
-                    setSchedule(initializeEmptySchedule());
-                }
+                setDebugInfo(prevInfo => `${prevInfo}\nSchedule is empty or invalid, initializing empty schedule`);
+                setSchedule(initializeEmptySchedule());
             }
         } catch (error) {
             if (error instanceof Error) {
@@ -108,15 +117,20 @@ export default function Insight() {
 
         try {
             const { error } = await supabase
-                .from('students')
-                .update({ schedule: newSchedule })
-                .eq('email', session.user.email);
+                .from('schedules')
+                .upsert({
+                    user_email: session.user.email,
+                    data: newSchedule
+                }, {
+                    onConflict: 'user_email'
+                });
 
             if (error) throw error;
 
             setSchedule(newSchedule);
         } catch (error) {
             console.error('Save error:', error);
+            setDebugInfo(`Save error: ${JSON.stringify(error)}`);
         }
     };
 
