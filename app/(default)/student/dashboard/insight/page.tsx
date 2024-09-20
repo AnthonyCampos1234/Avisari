@@ -74,7 +74,7 @@ export default function Insight() {
                 .single();
 
             if (error) {
-                setDebugInfo(`Supabase error: ${error.message}`);
+                setDebugInfo(`Supabase error: ${error.message}, Details: ${JSON.stringify(error)}`);
                 throw error;
             }
 
@@ -82,7 +82,7 @@ export default function Insight() {
                 setDebugInfo(`No data returned for email: ${session.user.email}`);
                 setSchedule(initializeEmptySchedule());
             } else {
-                setDebugInfo(`Fetched student data: ${JSON.stringify(data)}`);
+                setDebugInfo(`Fetched student data: ${JSON.stringify(data, null, 2)}`);
                 if (data.schedule && Array.isArray(data.schedule) && data.schedule.length > 0) {
                     setSchedule(data.schedule);
                     setDebugInfo(prevInfo => `${prevInfo}\nSchedule set from data`);
@@ -92,7 +92,11 @@ export default function Insight() {
                 }
             }
         } catch (error) {
-            setDebugInfo(`Load error: ${error instanceof Error ? error.message : String(error)}`);
+            if (error instanceof Error) {
+                setDebugInfo(`Load error: ${error.message}, Stack: ${error.stack}`);
+            } else {
+                setDebugInfo(`Load error: ${JSON.stringify(error)}`);
+            }
             setSchedule(initializeEmptySchedule());
         } finally {
             setLoading(false);
