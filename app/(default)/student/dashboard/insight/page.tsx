@@ -50,7 +50,6 @@ export default function Insight() {
     const [isDeleting, setIsDeleting] = useState(false);
     const deleteTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const [refreshing, setRefreshing] = useState(false);
-    const [debugInfo, setDebugInfo] = useState<string>('');
 
     useEffect(() => {
         if (session?.user?.email) {
@@ -60,10 +59,7 @@ export default function Insight() {
     }, [session]);
 
     const loadSchedule = async () => {
-        if (!session?.user?.email) {
-            setDebugInfo('No user email available');
-            return;
-        }
+        if (!session?.user?.email) return;
 
         setLoading(true);
         try {
@@ -92,20 +88,12 @@ export default function Insight() {
                 }
             }
 
-            setDebugInfo(`Fetched schedule data: ${JSON.stringify(data, null, 2)}`);
             if (data.data && Array.isArray(data.data) && data.data.length > 0) {
                 setSchedule(data.data);
-                setDebugInfo(prevInfo => `${prevInfo}\nSchedule set from data`);
             } else {
-                setDebugInfo(prevInfo => `${prevInfo}\nSchedule is empty or invalid, initializing empty schedule`);
                 setSchedule(initializeEmptySchedule());
             }
         } catch (error) {
-            if (error instanceof Error) {
-                setDebugInfo(`Load error: ${error.message}, Stack: ${error.stack}`);
-            } else {
-                setDebugInfo(`Load error: ${JSON.stringify(error)}`);
-            }
             setSchedule(initializeEmptySchedule());
         } finally {
             setLoading(false);
@@ -129,8 +117,7 @@ export default function Insight() {
 
             setSchedule(newSchedule);
         } catch (error) {
-            console.error('Save error:', error);
-            setDebugInfo(`Save error: ${JSON.stringify(error)}`);
+            // Handle error silently or show a generic error message
         }
     };
 
@@ -228,51 +215,23 @@ export default function Insight() {
                 body: JSON.stringify({ jsonData, userPreference }),
             });
 
-            const rawResponse = await response.text();
-
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}, body: ${rawResponse}`);
+                throw new Error('Failed to generate schedule');
             }
 
-            let parsedSchedule;
-            try {
-                const initialParse = JSON.parse(rawResponse);
-                if (initialParse && initialParse.schedule) {
-                    // Extract the JSON string from the backticks
-                    const jsonMatch = initialParse.schedule.match(/```json\n([\s\S]*?)\n```/);
-                    if (jsonMatch && jsonMatch[1]) {
-                        parsedSchedule = JSON.parse(jsonMatch[1]);
-                    } else {
-                        throw new Error('Could not find valid JSON in the schedule');
-                    }
+            const data = await response.json();
+            if (data && data.schedule) {
+                const parsedSchedule = JSON.parse(data.schedule);
+                if (Array.isArray(parsedSchedule) && parsedSchedule.length > 0) {
+                    setSchedule(parsedSchedule);
                 } else {
-                    throw new Error('Unexpected response structure');
+                    throw new Error('Invalid schedule data');
                 }
-            } catch (parseError) {
-                const errorMessage = parseError instanceof Error ? parseError.message : String(parseError);
-                throw new Error(`Failed to parse API response: ${errorMessage}, raw response: ${rawResponse}`);
+            } else {
+                throw new Error('Invalid response format');
             }
-
-            if (!Array.isArray(parsedSchedule)) {
-                throw new Error(`Invalid API response format. Received: ${typeof parsedSchedule}`);
-            }
-
-            const isValidStructure = parsedSchedule.every(year =>
-                typeof year.year === 'number' &&
-                Array.isArray(year.semesters) &&
-                year.semesters.every((semester: Semester) =>
-                    typeof semester.name === 'string' &&
-                    Array.isArray(semester.courses)
-                )
-            );
-
-            if (!isValidStructure) {
-                throw new Error(`Invalid schedule structure. Received: ${JSON.stringify(parsedSchedule)}`);
-            }
-
-            setSchedule(parsedSchedule);
         } catch (err) {
-            console.error('Failed to generate schedule:', err);
+            // Handle error silently or show a generic error message
         } finally {
             setLoading(false);
         }
@@ -429,12 +388,6 @@ export default function Insight() {
                                 {refreshing ? 'Refreshing...' : 'Refresh Schedule'}
                             </Button>
                         </div>
-
-                        {/* Debug Information */}
-                        <Paper elevation={3} className="p-4 mb-4 bg-gray-100">
-                            <Typography variant="h6">Debug Information:</Typography>
-                            <pre className="whitespace-pre-wrap">{debugInfo}</pre>
-                        </Paper>
 
                         <div className="mb-6">
                             <Paper
