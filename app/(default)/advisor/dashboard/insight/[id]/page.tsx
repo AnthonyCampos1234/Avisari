@@ -85,45 +85,44 @@ export default function StudentDetails() {
 
             if (userError) {
                 console.error('Error fetching user data:', userError);
-                throw userError;
+                throw new Error(`User data error: ${userError.message}`);
             }
 
             if (!userData) {
                 console.error('No user data returned for student ID:', studentId);
-                setError("No student found with the given ID");
-                setStudent(null);
+                throw new Error("No student found with the given ID");
+            }
+
+            console.log('User data fetched:', userData);
+
+            // Now fetch the student's schedule from the 'schedules' table
+            const { data: scheduleData, error: scheduleError } = await supabase
+                .from('schedules')
+                .select('*')
+                .eq('user_email', userData.email)
+                .single();
+
+            if (scheduleError && scheduleError.code !== 'PGRST116') {
+                console.error('Error fetching schedule data:', scheduleError);
+                throw new Error(`Schedule data error: ${scheduleError.message}`);
+            }
+
+            console.log('Schedule data fetched:', scheduleData);
+
+            setStudent({
+                ...userData,
+                schedule: scheduleData ? scheduleData.data : null
+            });
+
+            if (scheduleData && scheduleData.data) {
+                setSchedule(scheduleData.data);
             } else {
-                console.log('User data fetched:', userData);
-
-                // Now fetch the student's schedule from the 'schedules' table
-                const { data: scheduleData, error: scheduleError } = await supabase
-                    .from('schedules')
-                    .select('*')
-                    .eq('user_email', userData.email)
-                    .single();
-
-                if (scheduleError && scheduleError.code !== 'PGRST116') {
-                    console.error('Error fetching schedule data:', scheduleError);
-                    throw scheduleError;
-                }
-
-                console.log('Schedule data fetched:', scheduleData);
-
-                setStudent({
-                    ...userData,
-                    schedule: scheduleData ? scheduleData.data : null
-                });
-
-                if (scheduleData && scheduleData.data) {
-                    setSchedule(scheduleData.data);
-                } else {
-                    console.log('No schedule data found, initializing empty schedule');
-                    setSchedule(initializeEmptySchedule());
-                }
+                console.log('No schedule data found, initializing empty schedule');
+                setSchedule(initializeEmptySchedule());
             }
         } catch (err) {
             console.error('Error in fetchStudentDetails:', err);
-            setError(`Error fetching student details: ${err instanceof Error ? err.message : String(err)}`);
+            setError(`Error fetching student details: ${err instanceof Error ? err.message : JSON.stringify(err)}`);
             setStudent(null);
         } finally {
             setLoading(false);
@@ -315,7 +314,13 @@ export default function StudentDetails() {
         setRefreshing(false);
     };
 
-    if (error) return <Typography color="error">{error}</Typography>;
+    if (error) return (
+        <div>
+            <Typography color="error">Error: {error}</Typography>
+            <Typography>Student ID: {studentId}</Typography>
+            <pre>{JSON.stringify(student, null, 2)}</pre>
+        </div>
+    );
     if (loading) return <CircularProgress />;
     if (!student) return <Typography>No student found</Typography>;
 
