@@ -513,20 +513,24 @@ export default function Insight() {
                                                         className="p-4 bg-gray-50 rounded-lg"
                                                     >
                                                         <h3 className="font-semibold text-lg text-gray-900 mb-3">{semester.name}</h3>
-                                                        {semester.courses.map((course, index) => (
-                                                            <Draggable key={course.id} draggableId={course.id} index={index}>
-                                                                {(provided) => (
-                                                                    <div
-                                                                        ref={provided.innerRef}
-                                                                        {...provided.draggableProps}
-                                                                        {...provided.dragHandleProps}
-                                                                        className="bg-white p-3 mb-2 rounded-md shadow-sm border border-gray-200 transition-all hover:shadow-md"
-                                                                    >
-                                                                        <span className="font-medium">{course.code}:</span> {course.title}
-                                                                    </div>
-                                                                )}
-                                                            </Draggable>
-                                                        ))}
+                                                        {semester.courses.length > 0 ? (
+                                                            semester.courses.map((course, index) => (
+                                                                <Draggable key={course.id} draggableId={course.id} index={index}>
+                                                                    {(provided) => (
+                                                                        <div
+                                                                            ref={provided.innerRef}
+                                                                            {...provided.draggableProps}
+                                                                            {...provided.dragHandleProps}
+                                                                            className="bg-white p-3 mb-2 rounded-md shadow-sm border border-gray-200 transition-all hover:shadow-md"
+                                                                        >
+                                                                            <span className="font-medium">{course.code}:</span> {course.title}
+                                                                        </div>
+                                                                    )}
+                                                                </Draggable>
+                                                            ))
+                                                        ) : (
+                                                            <div className="text-gray-500 italic">No courses added yet</div>
+                                                        )}
                                                         {provided.placeholder}
                                                     </div>
                                                 )}
