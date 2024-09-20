@@ -50,21 +50,21 @@ export default function Sidebar({ expanded, setExpanded }: SidebarProps) {
                         title="Insight"
                         href="/advisor/dashboard/insight"
                         expanded={expanded}
-                        active={pathname === "/advisor/dashboard/insight"}
+                        active={pathname.startsWith("/advisor/dashboard/insight")}
                     />
                     <SidebarLink
                         icon={<FiDollarSign />}
                         title="Savior"
                         href="/advisor/dashboard/savior"
                         expanded={expanded}
-                        active={pathname === "/advisor/dashboard/savior"}
+                        active={pathname.startsWith("/advisor/dashboard/savior")}
                     />
                     <SidebarLink
                         icon={<FiUser />}
                         title="Profile"
                         href="/advisor/dashboard/profile"
                         expanded={expanded}
-                        active={pathname === "/advisor/dashboard/profile"}
+                        active={pathname.startsWith("/advisor/dashboard/profile")}
                     />
                 </div>
                 <div className="mb-8 flex justify-center w-full">
