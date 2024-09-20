@@ -72,13 +72,13 @@ export default function StudentDetails() {
 
     const fetchStudentDetails = async () => {
         setLoading(true);
-        setError(null); // Reset error state
+        setError(null);
         try {
             console.log('Fetching student details for ID:', studentId);
 
-            // First, fetch the student's basic info from the 'users' table
+            // Fetch the student's basic info from the correct table (replace 'students' if necessary)
             const { data: userData, error: userError } = await supabase
-                .from('users')
+                .from('students')  // Change this to the correct table name
                 .select('*')
                 .eq('id', studentId)
                 .single();
