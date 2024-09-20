@@ -76,6 +76,19 @@ export default function StudentDetails() {
         try {
             console.log('Fetching student details for ID:', studentId);
 
+            // List all tables in the database
+            const { data: tables, error: tablesError } = await supabase
+                .from('information_schema.tables')
+                .select('table_name')
+                .eq('table_schema', 'public');
+
+            if (tablesError) {
+                console.error('Error fetching tables:', tablesError);
+                throw new Error(`Error fetching tables: ${tablesError.message}`);
+            }
+
+            console.log('Available tables:', tables);
+
             // Fetch the student's basic info from the 'users' table
             const { data: userData, error: userError } = await supabase
                 .from('users')
