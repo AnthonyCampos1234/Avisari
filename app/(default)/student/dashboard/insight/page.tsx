@@ -11,7 +11,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
 import Image from 'next/image';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import VideocamIcon from '@mui/icons-material/Videocam';
+import JoinFullIcon from '@mui/icons-material/JoinFull';
 
 type Course = {
     id: string;
@@ -391,7 +391,7 @@ export default function Insight() {
                                 </Button>
                                 <Button
                                     variant="contained"
-                                    startIcon={<VideocamIcon />}
+                                    startIcon={<JoinFullIcon />}
                                     sx={{
                                         backgroundColor: '#4CAF50',
                                         '&:hover': {

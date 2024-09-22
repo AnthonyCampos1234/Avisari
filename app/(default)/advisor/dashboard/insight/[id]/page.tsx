@@ -11,6 +11,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import JoinFullIcon from '@mui/icons-material/JoinFull';
 
 type Course = {
     id: string;
@@ -377,6 +378,18 @@ export default function StudentDetails() {
                                     disabled={refreshing}
                                 >
                                     {refreshing ? 'Refreshing...' : 'Refresh Schedule'}
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    startIcon={<JoinFullIcon />}
+                                    sx={{
+                                        backgroundColor: '#4CAF50',
+                                        '&:hover': {
+                                            backgroundColor: '#45a049',
+                                        },
+                                    }}
+                                >
+                                    Join Live
                                 </Button>
                             </div>
                         </div>
