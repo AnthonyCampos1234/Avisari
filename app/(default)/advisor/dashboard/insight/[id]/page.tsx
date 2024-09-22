@@ -366,7 +366,7 @@ export default function StudentDetails() {
                     <div className="p-6">
                         <div className="flex justify-between items-start mb-6">
                             <h1 className="text-3xl font-bold text-gray-900">Student Schedule</h1>
-                            <div>
+                            <div className="flex space-x-4">
                                 <div className="text-right mb-2">
                                     <Typography variant="h6">Name: {student?.name}</Typography>
                                     <Typography variant="body1">Email: {student?.email}</Typography>
