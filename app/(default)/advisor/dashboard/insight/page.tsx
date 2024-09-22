@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Typography, Paper, CircularProgress, Card, CardContent, Box, TextField, InputAdornment, Button } from '@mui/material';
 import Link from 'next/link';
-import { Search as SearchIcon, Videocam as VideocamIcon } from '@mui/icons-material';
+import { Search as SearchIcon } from '@mui/icons-material';
 
 type Student = {
     id: string;
@@ -56,18 +56,6 @@ export default function AdvisorInsight() {
             <Paper elevation={3} className="p-6 mb-6">
                 <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
                     <Typography variant="h4">Student List</Typography>
-                    <Button
-                        variant="contained"
-                        startIcon={<VideocamIcon />}
-                        sx={{
-                            backgroundColor: '#4CAF50',
-                            '&:hover': {
-                                backgroundColor: '#45a049',
-                            },
-                        }}
-                    >
-                        Join Live
-                    </Button>
                 </Box>
                 <TextField
                     fullWidth
