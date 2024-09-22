@@ -11,6 +11,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
 import Image from 'next/image';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import VideocamIcon from '@mui/icons-material/Videocam';
 
 type Course = {
     id: string;
@@ -379,14 +380,28 @@ export default function Insight() {
                     <div className="p-6">
                         <div className="flex justify-between items-center mb-6">
                             <h1 className="text-3xl font-bold text-gray-900">Insight</h1>
-                            <Button
-                                variant="outlined"
-                                startIcon={<RefreshIcon />}
-                                onClick={handleRefresh}
-                                disabled={refreshing}
-                            >
-                                {refreshing ? 'Refreshing...' : 'Refresh Schedule'}
-                            </Button>
+                            <div className="flex space-x-4">
+                                <Button
+                                    variant="outlined"
+                                    startIcon={<RefreshIcon />}
+                                    onClick={handleRefresh}
+                                    disabled={refreshing}
+                                >
+                                    {refreshing ? 'Refreshing...' : 'Refresh Schedule'}
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    startIcon={<VideocamIcon />}
+                                    sx={{
+                                        backgroundColor: '#4CAF50',
+                                        '&:hover': {
+                                            backgroundColor: '#45a049',
+                                        },
+                                    }}
+                                >
+                                    Join Live
+                                </Button>
+                            </div>
                         </div>
 
                         <div className="mb-6">
