@@ -11,6 +11,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
 import Image from 'next/image';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import { useRouter } from 'next/navigation';
 
 type Course = {
     id: string;
@@ -50,6 +51,7 @@ export default function Insight() {
     const [isDeleting, setIsDeleting] = useState(false);
     const deleteTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const [refreshing, setRefreshing] = useState(false);
+    const router = useRouter();
 
     useEffect(() => {
         if (session?.user?.email) {
@@ -336,6 +338,11 @@ export default function Insight() {
         setRefreshing(false);
     };
 
+    const startLiveSession = () => {
+        const sessionId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        router.push(`/live-session/${sessionId}`);
+    };
+
     if (loading) return <CircularProgress />;
 
     return (
@@ -499,6 +506,18 @@ export default function Insight() {
                                 {loading ? 'Generating...' : 'Generate with AI'}
                             </Button>
                         </div>
+                        <Button
+                            onClick={startLiveSession}
+                            variant="contained"
+                            sx={{
+                                backgroundColor: '#111827',
+                                '&:hover': { backgroundColor: '#374151' },
+                                borderRadius: '9999px',
+                                mb: 2
+                            }}
+                        >
+                            Start Live Session
+                        </Button>
                         {schedule.length > 0 ? (
                             schedule.map((year, yearIndex) => (
                                 <div key={yearIndex} className="mb-8">
@@ -513,24 +532,20 @@ export default function Insight() {
                                                         className="p-4 bg-gray-50 rounded-lg"
                                                     >
                                                         <h3 className="font-semibold text-lg text-gray-900 mb-3">{semester.name}</h3>
-                                                        {semester.courses.length > 0 ? (
-                                                            semester.courses.map((course, index) => (
-                                                                <Draggable key={course.id} draggableId={course.id} index={index}>
-                                                                    {(provided) => (
-                                                                        <div
-                                                                            ref={provided.innerRef}
-                                                                            {...provided.draggableProps}
-                                                                            {...provided.dragHandleProps}
-                                                                            className="bg-white p-3 mb-2 rounded-md shadow-sm border border-gray-200 transition-all hover:shadow-md"
-                                                                        >
-                                                                            <span className="font-medium">{course.code}:</span> {course.title}
-                                                                        </div>
-                                                                    )}
-                                                                </Draggable>
-                                                            ))
-                                                        ) : (
-                                                            <div className="text-gray-500 italic">No courses added yet</div>
-                                                        )}
+                                                        {semester.courses.map((course, index) => (
+                                                            <Draggable key={course.id} draggableId={course.id} index={index}>
+                                                                {(provided) => (
+                                                                    <div
+                                                                        ref={provided.innerRef}
+                                                                        {...provided.draggableProps}
+                                                                        {...provided.dragHandleProps}
+                                                                        className="bg-white p-3 mb-2 rounded-md shadow-sm border border-gray-200 transition-all hover:shadow-md"
+                                                                    >
+                                                                        <span className="font-medium">{course.code}:</span> {course.title}
+                                                                    </div>
+                                                                )}
+                                                            </Draggable>
+                                                        ))}
                                                         {provided.placeholder}
                                                     </div>
                                                 )}
