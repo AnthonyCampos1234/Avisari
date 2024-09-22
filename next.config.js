@@ -6,8 +6,4 @@ const nextConfig = {
     },
 }
 
-module.exports = {
-    ...nextConfig,
-    // Disable the default server
-    useFileSystemPublicRoutes: false,
-}
+module.exports = nextConfig

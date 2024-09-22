@@ -1,10 +1,9 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { Typography, Paper, CircularProgress, Card, CardContent, Box, TextField, InputAdornment, Button } from '@mui/material';
+import { Typography, Paper, CircularProgress, Card, CardContent, Box, TextField, InputAdornment } from '@mui/material';
 import Link from 'next/link';
 import { Search as SearchIcon } from '@mui/icons-material';
-import { useRouter } from 'next/navigation';
 
 type Student = {
     id: string;
@@ -18,7 +17,6 @@ export default function AdvisorInsight() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
-    const router = useRouter();
 
     useEffect(() => {
         fetchStudents();
@@ -53,11 +51,6 @@ export default function AdvisorInsight() {
         }
     };
 
-    const startLiveSession = () => {
-        const sessionId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-        router.push(`/live-session/${sessionId}`);
-    };
-
     return (
         <div className="p-6">
             <Paper elevation={3} className="p-6 mb-6">
@@ -82,7 +75,7 @@ export default function AdvisorInsight() {
                 ) : error ? (
                     <Typography color="error">{error}</Typography>
                 ) : filteredStudents.length > 0 ? (
-                    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: 3, marginTop: 4 }}>
+                    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: 3 }}>
                         {filteredStudents.map((student) => (
                             <Link key={student.id} href={`/advisor/dashboard/insight/${student.id}`} passHref style={{ textDecoration: 'none' }}>
                                 <Card elevation={2} sx={{
@@ -107,18 +100,6 @@ export default function AdvisorInsight() {
                 ) : (
                     <Typography>No students found.</Typography>
                 )}
-                <Button
-                    onClick={startLiveSession}
-                    variant="contained"
-                    sx={{
-                        backgroundColor: '#111827',
-                        '&:hover': { backgroundColor: '#374151' },
-                        borderRadius: '9999px',
-                        mb: 2
-                    }}
-                >
-                    Start Live Session
-                </Button>
             </Paper>
         </div>
     );
