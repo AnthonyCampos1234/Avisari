@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Typography, Paper, CircularProgress, Box, Button, Chip, IconButton } from '@mui/material';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import SearchIcon from '@mui/icons-material/Search';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -60,7 +60,6 @@ export default function StudentDetails() {
     const [refreshing, setRefreshing] = useState(false);
     const params = useParams();
     const studentId = params.id as string;
-    const router = useRouter();
 
     useEffect(() => {
         if (studentId) {
@@ -316,10 +315,6 @@ export default function StudentDetails() {
         setRefreshing(false);
     };
 
-    const handleJoinLive = () => {
-        router.push(`/advisor/dashboard/insight/${studentId}/live`);
-    };
-
     if (error) return (
         <div>
             <Typography color="error">Error: {error}</Typography>
@@ -331,7 +326,7 @@ export default function StudentDetails() {
     if (!student) return <Typography>No student found</Typography>;
 
     return (
-        <div className="p-6 relative">
+        <div className="p-6">
             <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
                 <Droppable droppableId="trash">
                     {(provided, snapshot) => (
@@ -383,7 +378,6 @@ export default function StudentDetails() {
                                 <Button
                                     variant="contained"
                                     startIcon={<JoinFullIcon />}
-                                    onClick={handleJoinLive}
                                     sx={{
                                         backgroundColor: '#4CAF50',
                                         '&:hover': {
@@ -394,10 +388,11 @@ export default function StudentDetails() {
                                     Join Live
                                 </Button>
                             </div>
-                            <div className="text-right mb-2">
-                                <Typography variant="h6">Name: {student?.name}</Typography>
-                                <Typography variant="body1">Email: {student?.email}</Typography>
-                            </div>
+                        </div>
+
+                        <div className="mb-6">
+                            <Typography variant="h6">Name: {student?.name}</Typography>
+                            <Typography variant="body1">Email: {student?.email}</Typography>
                         </div>
 
                         <div className="mb-6">
