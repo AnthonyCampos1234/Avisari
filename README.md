@@ -30,4 +30,4 @@ Visit us at [Avisari.com](https://www.avisari.com)
 4. Business Categories: Illustrates different aspects of the platform.
 
 
-Built with ❤️ by the Avisari team
+Built with ❤️ by the Avisari team (Anthony Campos) lol
