@@ -1,7 +1,6 @@
 import nodemailer from "nodemailer";
 
 export async function sendPasswordResetEmail(email: string, token: string) {
-    // Create a transporter using SMTP
     const transporter = nodemailer.createTransport({
         host: process.env.EMAIL_SERVER_HOST,
         port: Number(process.env.EMAIL_SERVER_PORT),
@@ -9,14 +8,12 @@ export async function sendPasswordResetEmail(email: string, token: string) {
             user: process.env.EMAIL_SERVER_USER,
             pass: process.env.EMAIL_SERVER_PASSWORD,
         },
-        secure: false, // Use TLS
+        secure: false,
         requireTLS: true,
     });
 
-    // Construct the reset URL
     const resetUrl = `${process.env.NEXTAUTH_URL}/forgot-password?token=${token}`;
 
-    // Define email content
     const mailOptions = {
         from: process.env.EMAIL_FROM,
         to: email,
@@ -30,7 +27,6 @@ export async function sendPasswordResetEmail(email: string, token: string) {
     `,
     };
 
-    // Send the email
     try {
         const info = await transporter.sendMail(mailOptions);
         console.log("Password reset email sent successfully", info);

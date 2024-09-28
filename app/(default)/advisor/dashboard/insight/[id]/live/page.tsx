@@ -77,9 +77,8 @@ export default function StudentDetails() {
         try {
             console.log('Fetching student details for ID:', studentId);
 
-            // Fetch the student's basic info from the 'user' table
             const { data: userData, error: userError } = await supabase
-                .from('User')  // Changed to 'User' with capital 'U'
+                .from('User')
                 .select('*')
                 .eq('id', studentId)
                 .single();
@@ -96,7 +95,6 @@ export default function StudentDetails() {
 
             console.log('User data fetched:', userData);
 
-            // Now fetch the student's schedule from the 'schedules' table
             const { data: scheduleData, error: scheduleError } = await supabase
                 .from('schedules')
                 .select('*')
@@ -187,43 +185,31 @@ export default function StudentDetails() {
     const onDragEnd = (result: DropResult) => {
         setIsDragging(false);
         const { source, destination } = result;
-
-        // Create a copy of the current schedule
         const newSchedule = JSON.parse(JSON.stringify(schedule));
-
-        // Parse the source IDs
         const [sourceYear, sourceSemester] = source.droppableId.split('-').map(Number);
 
         if (!destination || destination.droppableId === 'trash') {
-            // If the item is dropped in the trash, remove it from the source
             newSchedule[sourceYear].semesters[sourceSemester].courses.splice(source.index, 1);
             setSchedule(newSchedule);
             saveSchedule(newSchedule);
             return;
         }
 
-        // If the item is dropped in the same place, we don't need to do anything
         if (
             source.droppableId === destination.droppableId &&
             source.index === destination.index
         ) return;
 
-        // Parse the destination IDs
         const [destYear, destSemester] = destination.droppableId.split('-').map(Number);
 
-        // Check if the destination semester already has 5 courses
         if (newSchedule[destYear].semesters[destSemester].courses.length >= 5) {
-            // If it does, don't allow the drop
             return;
         }
 
-        // Remove the course from the source
         const [movedCourse] = newSchedule[sourceYear].semesters[sourceSemester].courses.splice(source.index, 1);
 
-        // Add the course to the destination
         newSchedule[destYear].semesters[destSemester].courses.splice(destination.index, 0, movedCourse);
 
-        // Update the state and save to the database
         setSchedule(newSchedule);
         saveSchedule(newSchedule);
     };
@@ -255,7 +241,6 @@ export default function StudentDetails() {
 
     const toggleCourseSelection = (course: Course) => {
         if (isCourseInSchedule(course)) {
-            // Don't allow selection if the course is already in the schedule
             return;
         }
         setSelectedCourses(prev =>
@@ -284,13 +269,11 @@ export default function StudentDetails() {
                 id: `${course.code}-${Date.now()}`
             })));
 
-            // Move to the next semester
             currentSemesterIndex++;
             if (currentSemesterIndex >= currentYear.semesters.length) {
                 currentSemesterIndex = 0;
                 currentYearIndex++;
 
-                // If we've run out of years, we need to stop
                 if (currentYearIndex >= newSchedule.length) {
                     break;
                 }
@@ -303,7 +286,6 @@ export default function StudentDetails() {
         setSearchQuery('');
         setSearchResults([]);
 
-        // If we couldn't add all courses, inform the user
         if (coursesToAdd.length > 0) {
             alert(`Could not add ${coursesToAdd.length} course(s) due to lack of space in the schedule.`);
         }

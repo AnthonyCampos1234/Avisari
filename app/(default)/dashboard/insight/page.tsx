@@ -38,7 +38,6 @@ export default function Insight() {
     const [debugInfo, setDebugInfo] = useState<string | null>(null);
 
     useEffect(() => {
-        // Initialize empty schedule structure
         const years = 4;
         const semestersPerYear = 4;
         const newSchedule = Array.from({ length: years }, (_, yearIndex) => ({
@@ -57,7 +56,7 @@ export default function Insight() {
     };
 
     const onDragEnd = (result: DropResult) => {
-        // Implement drag and drop logic here
+        // need to implement drag and drop logic here
     };
 
     const handleGenerateAISchedule = async () => {
@@ -97,7 +96,6 @@ export default function Insight() {
             try {
                 const initialParse = JSON.parse(rawResponse);
                 if (initialParse && initialParse.schedule) {
-                    // Extract the JSON string from the backticks
                     const jsonMatch = initialParse.schedule.match(/```json\n([\s\S]*?)\n```/);
                     if (jsonMatch && jsonMatch[1]) {
                         parsedSchedule = JSON.parse(jsonMatch[1]);
@@ -148,26 +146,23 @@ export default function Insight() {
 
     const handleAddCourse = () => {
         if (newCourse.code && newCourse.name) {
-            // Add the new course to the first available semester
             const updatedSchedule = [...schedule];
             const firstYear = updatedSchedule[0];
             const firstSemester = firstYear.semesters[0];
             firstSemester.courses.push({
-                id: `course-${Date.now()}`, // Generate a unique ID
+                id: `course-${Date.now()}`,
                 ...newCourse,
-                credits: 0 // Add a default value for credits
+                credits: 0
             });
             setSchedule(updatedSchedule);
             setNewCourse({ code: '', name: '' });
-            handlePopoverToggle(''); // Close the popover
+            handlePopoverToggle('');
         }
     };
 
     const handleChatSubmit = () => {
         if (chatMessage.trim()) {
             setChatHistory(prev => [...prev, `You: ${chatMessage}`]);
-            // Here you would typically send the message to an AI service and get a response
-            // For now, we'll just echo a simple response
             setTimeout(() => {
                 setChatHistory(prev => [...prev, `AI: Thanks for your message about "${chatMessage}". How can I assist you further?`]);
             }, 1000);

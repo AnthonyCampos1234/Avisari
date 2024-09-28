@@ -51,7 +51,6 @@ export default function FinancialAid() {
         }
     };
 
-    // Mock data for students (in a real app, this would come from an API or database)
     const students = [
         { id: 1, name: "John Doe", chatSummary: "Discussed scholarship options and application process", appointment: "2023-06-15 10:00 AM" },
         { id: 2, name: "Jane Smith", chatSummary: "Reviewed financial aid package and next steps", appointment: "2023-06-16 2:00 PM" },

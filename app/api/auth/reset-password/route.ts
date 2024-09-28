@@ -6,7 +6,6 @@ export async function POST(req: Request) {
     const { token, password } = await req.json();
 
     try {
-        // Find user with valid reset token
         const { data: user, error: findError } = await supabase
             .from('User')
             .select('id')
@@ -20,7 +19,6 @@ export async function POST(req: Request) {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Update user's password and clear reset token
         const { error: updateError } = await supabase
             .from('User')
             .update({

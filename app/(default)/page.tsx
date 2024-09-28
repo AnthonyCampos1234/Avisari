@@ -22,11 +22,11 @@ export default function Home() {
   }, [status, session, router])
 
   if (status === 'loading') {
-    return null // or a loading spinner
+    return null
   }
 
   if (status === 'authenticated') {
-    return null // This will briefly show before the redirect happens
+    return null
   }
 
   return (
