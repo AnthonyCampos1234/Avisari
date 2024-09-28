@@ -16,7 +16,7 @@ export default function AuthLayout({
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        bgcolor: '#f0f4f8', // Light background color
+        bgcolor: '#f0f4f8',
       }}
     >
       <PageIllustration />

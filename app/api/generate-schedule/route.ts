@@ -9,12 +9,10 @@ export async function POST(request: Request) {
   try {
     const { jsonData, userPreference } = await request.json();
 
-    // Check if API key is set
     if (!process.env.ANTHROPIC_API_KEY) {
       throw new Error('ANTHROPIC_API_KEY is not set in environment variables');
     }
 
-    // Construct the prompt for the model, ensuring it starts and ends with the required "Human:" and "Assistant:"
     const prompt = `
 \n\nHuman: Given the following course data: ${jsonData}
       
@@ -41,21 +39,17 @@ Please provide the schedule in the following format:
 ]
 
 \n\nAssistant:`;
-
-    // Call the Anthropic API to generate the schedule
     const completion = await anthropic.completions.create({
       model: 'claude-2.0',
       max_tokens_to_sample: 1000,
       prompt
     });
 
-    // Return the generated schedule as JSON
     return NextResponse.json({ schedule: completion.completion });
   } catch (error) {
     console.error('Error generating schedule:', error);
     const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
 
-    // Return a detailed error response
     return NextResponse.json({ error: `Failed to generate schedule: ${errorMessage}` }, { status: 500 });
   }
 }

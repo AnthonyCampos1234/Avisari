@@ -67,7 +67,6 @@ function ForgotPasswordContent() {
       </div>
 
       {token ? (
-        // Password reset form
         <form onSubmit={handlePasswordReset}>
           <div className="space-y-4">
             <div>

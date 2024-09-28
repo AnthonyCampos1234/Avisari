@@ -54,7 +54,6 @@ export default function SignInComponent() {
             setError(result.error);
             setIsLoading(false);
         }
-        // No else block needed here, as the useEffect will handle redirection
     };
 
     return (

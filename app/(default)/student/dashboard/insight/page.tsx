@@ -72,7 +72,6 @@ export default function Insight() {
 
             if (error) {
                 if (error.code === 'PGRST116') {
-                    // Schedule not found, create a new entry
                     const newSchedule = {
                         user_email: session.user.email,
                         data: initializeEmptySchedule()
@@ -118,7 +117,6 @@ export default function Insight() {
 
             setSchedule(newSchedule);
         } catch (error) {
-            // Handle error silently or show a generic error message
         }
     };
 
@@ -147,47 +145,36 @@ export default function Insight() {
         setIsDragging(false);
         const { source, destination } = result;
 
-        // Create a copy of the current schedule
         const newSchedule = JSON.parse(JSON.stringify(schedule));
 
-        // Parse the source IDs
         const [sourceYear, sourceSemester] = source.droppableId.split('-').map(Number);
 
         if (!destination || destination.droppableId === 'trash') {
-            // The item was dropped on the trash or outside any droppable
             newSchedule[sourceYear].semesters[sourceSemester].courses.splice(source.index, 1);
             setSchedule(newSchedule);
             saveSchedule(newSchedule);
 
-            // Trigger delete animation
             setIsDeleting(true);
             if (deleteTimeoutRef.current) clearTimeout(deleteTimeoutRef.current);
             deleteTimeoutRef.current = setTimeout(() => setIsDeleting(false), 300);
             return;
         }
 
-        // If the item is dropped in the same place, we don't need to do anything
         if (
             source.droppableId === destination.droppableId &&
             source.index === destination.index
         ) return;
 
-        // Parse the destination IDs
         const [destYear, destSemester] = destination.droppableId.split('-').map(Number);
 
-        // Check if the destination semester already has 5 courses
         if (newSchedule[destYear].semesters[destSemester].courses.length >= 5) {
-            // If it does, don't allow the drop
             return;
         }
 
-        // Remove the course from the source
         const [movedCourse] = newSchedule[sourceYear].semesters[sourceSemester].courses.splice(source.index, 1);
 
-        // Add the course to the destination
         newSchedule[destYear].semesters[destSemester].courses.splice(destination.index, 0, movedCourse);
 
-        // Update the state and save to the database
         setSchedule(newSchedule);
         saveSchedule(newSchedule);
     };
@@ -232,7 +219,6 @@ export default function Insight() {
                 throw new Error('Invalid response format');
             }
         } catch (err) {
-            // Handle error silently or show a generic error message
         } finally {
             setLoading(false);
         }
@@ -277,7 +263,6 @@ export default function Insight() {
 
     const toggleCourseSelection = (course: Course) => {
         if (isCourseInSchedule(course)) {
-            // Don't allow selection if the course is already in the schedule
             return;
         }
         setSelectedCourses(prev =>
@@ -306,13 +291,11 @@ export default function Insight() {
                 id: `${course.code}-${Date.now()}`
             })));
 
-            // Move to the next semester
             currentSemesterIndex++;
             if (currentSemesterIndex >= currentYear.semesters.length) {
                 currentSemesterIndex = 0;
                 currentYearIndex++;
 
-                // If we've run out of years, we need to stop
                 if (currentYearIndex >= newSchedule.length) {
                     break;
                 }
@@ -325,7 +308,6 @@ export default function Insight() {
         setSearchQuery('');
         setSearchResults([]);
 
-        // If we couldn't add all courses, inform the user
         if (coursesToAdd.length > 0) {
             alert(`Could not add ${coursesToAdd.length} course(s) due to lack of space in the schedule.`);
         }

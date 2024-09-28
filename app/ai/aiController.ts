@@ -41,7 +41,6 @@ class AIController {
         return await finalAgent.runTask(finalTask);
     }
 
-    // New methods for specific tasks
     async processCourseData(jsonData: string): Promise<string> {
         const task = `
             Process and organize the provided JSON course data into a structured, queryable database.
