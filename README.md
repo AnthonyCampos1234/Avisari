@@ -42,7 +42,7 @@ Visit us at [Avisari.com](https://www.avisari.com)
 - Responsive Design: Mobile-friendly, adaptive user interface.
 - Real-time Interactions: Live chat and updates.
 - Secure Authentication: Robust user authentication system.
-- 
+  
 ## Technology Stack
 
 - Frontend: Next.js with React and TypeScript
@@ -51,7 +51,7 @@ Visit us at [Avisari.com](https://www.avisari.com)
 - Authentication: Next-Auth
 - Hosting: Netlify
 - Real-time Features: Socket.io
-- 
+  
 ## Key Components
 
 1. Hero Section: Introduces the platform and its benefits.
