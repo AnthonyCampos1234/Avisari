@@ -17,7 +17,7 @@ Student:
   
 Feel free to register as a student or an advisor. I just wanted to make the process easier for you!
 
-Visit us at [Avisari.com](https://www.avisari.com)
+Visit it at [Avisari.com](https://www.avisari.com)
 
 <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
   <img src="pics/Sept 29 Screenshot from CloudConvert.png" alt="Home Page" width="325" style="margin: 10px;"/>
@@ -51,13 +51,5 @@ Visit us at [Avisari.com](https://www.avisari.com)
 - Authentication: Next-Auth
 - Hosting: Netlify
 - Real-time Features: Socket.io
-  
-## Key Components
-
-1. Hero Section: Introduces the platform and its benefits.
-2. Features Overview: Highlights the main features of Avisari.
-3. Testimonials: Showcases user feedback and success stories.
-4. Business Categories: Illustrates different aspects of the platform.
-
 
 Built with ❤️ by the Avisari team (Anthony Campos) lol
