@@ -1,4 +1,5 @@
 import PageIllustration from "@/components/page-illustration";
+import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 
 type ChatBubbleProps = {
@@ -92,7 +93,12 @@ export default function HeroHome() {
                     href="#0"
                   >
                     <span className="relative inline-flex items-center">
-                      Register{" "}
+                      <Link
+                        href="/signup"
+                        className="btn-sm bg-gray-800 text-gray-200 shadow hover:bg-gray-900"
+                      >
+                        Register
+                      </Link>
                       <span className="ml-1 tracking-normal text-gray-300 transition-transform group-hover:translate-x-0.5">
                         -&gt;
                       </span>
@@ -102,7 +108,12 @@ export default function HeroHome() {
                     className="btn w-full bg-white text-gray-800 shadow hover:bg-gray-50 sm:ml-4 sm:w-auto"
                     href="#0"
                   >
-                    Sign In
+                    <Link
+                      href="/signin"
+                      className="btn-sm bg-white text-gray-800 shadow hover:bg-gray-50"
+                    >
+                      Login
+                    </Link>
                   </a>
                 </div>
               </div>

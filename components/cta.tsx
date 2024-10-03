@@ -1,3 +1,4 @@
+import Link from 'next/link';
 
 export default function Cta() {
   return (
@@ -47,7 +48,12 @@ export default function Cta() {
                 href="#0"
               >
                 <span className="relative inline-flex items-center">
-                  Register{" "}
+                  <Link
+                    href="/signup"
+                    className="btn-sm bg-gray-800 text-gray-200 shadow hover:bg-gray-900"
+                  >
+                    Register
+                  </Link>
                   <span className="ml-1 tracking-normal text-gray-300 transition-transform group-hover:translate-x-0.5">
                     -&gt;
                   </span>
