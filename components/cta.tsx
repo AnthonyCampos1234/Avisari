@@ -1,4 +1,3 @@
-import Image from "next/image";
 
 export default function Cta() {
   return (
@@ -48,7 +47,7 @@ export default function Cta() {
                 href="#0"
               >
                 <span className="relative inline-flex items-center">
-                  Join Our Network{" "}
+                  Register{" "}
                   <span className="ml-1 tracking-normal text-gray-300 transition-transform group-hover:translate-x-0.5">
                     -&gt;
                   </span>

@@ -1,8 +1,8 @@
-import Image from "next/image";
 import Boston_University_wordmark from "@/public/images/Boston_University_wordmark.svg";
 import Harvard_University_logo from "@/public/images/Harvard University logo.svg";
 import MIT_logo from "@/public/images/MIT_logo.svg";
 import Northeastern_Huskies from "@/public/images/Northeastern_Huskies.svg";
+import Image from "next/image";
 
 export default function FeaturesPlanet() {
   return (
@@ -18,7 +18,7 @@ export default function FeaturesPlanet() {
           {/* Trusted by universities */}
           <div className="pb-16 md:pb-20" data-aos="fade-up">
             <div className="text-center">
-              <h3 className="mb-8 text-2xl font-semibold text-gray-700">Trusted by leading universities</h3>
+              <h3 className="mb-8 text-2xl font-semibold text-gray-700">Trusted by leading universities (Hope to eventually be true)</h3>
               <div className="flex flex-wrap justify-center items-center gap-8">
                 <Image src={Northeastern_Huskies} width={120} height={40} alt="Northeastern University" className="opacity-70 hover:opacity-100 transition-opacity duration-300" />
                 <Image src={Boston_University_wordmark} width={120} height={40} alt="Boston University" className="opacity-70 hover:opacity-100 transition-opacity duration-300" />

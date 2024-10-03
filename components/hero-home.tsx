@@ -1,12 +1,5 @@
-import Image from "next/image";
 import PageIllustration from "@/components/page-illustration";
-import Avatar01 from "@/public/images/avatar-01.jpg";
-import Avatar02 from "@/public/images/avatar-02.jpg";
-import Avatar03 from "@/public/images/avatar-03.jpg";
-import Avatar04 from "@/public/images/avatar-04.jpg";
-import Avatar05 from "@/public/images/avatar-05.jpg";
-import Avatar06 from "@/public/images/avatar-06.jpg";
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 type ChatBubbleProps = {
   type: 'student' | 'ai' | 'advisor' | 'system';
@@ -99,7 +92,7 @@ export default function HeroHome() {
                     href="#0"
                   >
                     <span className="relative inline-flex items-center">
-                      Request Demo{" "}
+                      Register{" "}
                       <span className="ml-1 tracking-normal text-gray-300 transition-transform group-hover:translate-x-0.5">
                         -&gt;
                       </span>
@@ -109,7 +102,7 @@ export default function HeroHome() {
                     className="btn w-full bg-white text-gray-800 shadow hover:bg-gray-50 sm:ml-4 sm:w-auto"
                     href="#0"
                   >
-                    Learn More
+                    Sign In
                   </a>
                 </div>
               </div>
