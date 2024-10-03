@@ -51,6 +51,6 @@ Visit us at [Avisari.com](https://www.avisari.com)
 - Backend: Supabase
 - Authentication: Next-Auth
 - Hosting: Netlify
-- Real-time Features: Socket.io
+- Working on adding Real-time Features: Socket.io
 
 Built with ❤️ by the Avisari team (Anthony Campos lol)
