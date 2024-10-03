@@ -18,7 +18,7 @@ Student:
 
 Feel free to register as a student or an advisor. I just wanted to make the process easier for you!
 
-Visit us at [Avisari.com](https://www.avisari.com)
+Visit at [Avisari.com](https://www.avisari.com)
 
 <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
   <img src="pics/Sept 29 Screenshot from CloudConvert.png" alt="Home Page" width="325" style="margin: 10px;"/>
