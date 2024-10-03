@@ -92,29 +92,21 @@ export default function HeroHome() {
                     className="btn group mb-4 w-full bg-gradient-to-t from-black to-gray-800 bg-[length:100%_100%] bg-[bottom] text-white shadow hover:bg-[length:100%_150%] sm:mb-0 sm:w-auto"
                     href="#0"
                   >
-                    <span className="relative inline-flex items-center">
-                      <Link
-                        href="/signup"
-                        className="btn-sm bg-gray-800 text-gray-200 shadow hover:bg-gray-900"
-                      >
-                        Register
-                      </Link>
-                      <span className="ml-1 tracking-normal text-gray-300 transition-transform group-hover:translate-x-0.5">
-                        -&gt;
-                      </span>
+                    <Link
+                      href="/signup"
+                      className="relative inline-flex items-center"
+                    >
+                      Register
+                    </Link>
+                    <span className="ml-1 tracking-normal text-gray-300 transition-transform group-hover:translate-x-0.5">
+                      -&gt;
                     </span>
                   </a>
-                  <a
-                    className="btn w-full bg-white text-gray-800 shadow hover:bg-gray-50 sm:ml-4 sm:w-auto"
-                    href="#0"
+                  <Link className="btn w-full bg-white text-gray-800 shadow hover:bg-gray-50 sm:ml-4 sm:w-auto"
+                    href="/signin"
                   >
-                    <Link
-                      href="/signin"
-                      className="btn-sm bg-white text-gray-800 shadow hover:bg-gray-50"
-                    >
-                      Login
-                    </Link>
-                  </a>
+                    Login
+                  </Link>
                 </div>
               </div>
             </div>

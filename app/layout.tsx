@@ -1,5 +1,5 @@
-import "./css/style.css";
 import { Inter } from "next/font/google";
+import "./css/style.css";
 import { Providers } from "./providers";
 
 const inter = Inter({
@@ -10,6 +10,9 @@ const inter = Inter({
 
 export const metadata = {
   title: "Avisari",
+  icons: {
+    icon: "/images/logo-01.svg",
+  },
 };
 
 export default function RootLayout({

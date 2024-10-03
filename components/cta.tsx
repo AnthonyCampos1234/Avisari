@@ -47,16 +47,14 @@ export default function Cta() {
                 className="btn group mb-4 w-full bg-gray-800 text-white shadow hover:bg-gray-700 sm:mb-0 sm:w-auto"
                 href="#0"
               >
-                <span className="relative inline-flex items-center">
-                  <Link
-                    href="/signup"
-                    className="btn-sm bg-gray-800 text-gray-200 shadow hover:bg-gray-900"
-                  >
-                    Register
-                  </Link>
-                  <span className="ml-1 tracking-normal text-gray-300 transition-transform group-hover:translate-x-0.5">
-                    -&gt;
-                  </span>
+                <Link
+                  href="/signup"
+                  className="relative inline-flex items-center"
+                >
+                  Register
+                </Link>
+                <span className="ml-1 tracking-normal text-gray-300 transition-transform group-hover:translate-x-0.5">
+                  -&gt;
                 </span>
               </a>
             </div>
